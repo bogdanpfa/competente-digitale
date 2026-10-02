@@ -1,0 +1,709 @@
+<!doctype html><html><head><meta charset=utf8><meta name="robots" content="noindex,nofollow"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Panou curs Competențe digitale</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: antet cu ceas → teorie (butoane mici) → practică (calendar Lu–Vi, pe subgrupă) → ziua aleasă.
+   Paleta și fonturile continuă Panoul de curs local (verde = învățare, chihlimbar = acum / notă). */
+:root{
+  --bg:#0f1720; --bg2:#0b1119; --surface:#16202b; --line:#233241; --line2:#2c3d4e;
+  --text:#eaf0f5; --dim:#92a9ba; --accent:#8ecb9d; --warm:#e7ad6b; --sel:#1c2b39; --onaccent:#0f1720;
+  --hd:"Manrope",ui-sans-serif,system-ui,"Segoe UI",sans-serif;
+  --bd:"IBM Plex Sans",ui-sans-serif,system-ui,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f3f5f8; --bg2:#e8ecf1; --surface:#ffffff; --line:#d5dce4; --line2:#bfc9d4;
+    --text:#14202b; --dim:#506476; --accent:#1c7a47; --warm:#935408; --sel:#fff3df; --onaccent:#ffffff;
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#f3f5f8; --bg2:#e8ecf1; --surface:#ffffff; --line:#d5dce4; --line2:#bfc9d4;
+  --text:#14202b; --dim:#506476; --accent:#1c7a47; --warm:#935408; --sel:#fff3df; --onaccent:#ffffff;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 var(--bd);padding-inline:16px;padding-block:0 48px}
+a{color:inherit}
+button{font:inherit;color:inherit}
+.wrap{max-width:1040px;margin:0 auto}
+:focus-visible{outline:2px solid var(--warm);outline-offset:2px}
+code{font-family:Consolas,"SFMono-Regular",monospace;font-size:.92em;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;overflow-wrap:anywhere}
+
+/* antet */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-block:26px 16px;border-bottom:1px solid var(--line)}
+.top>div:first-child{flex:1 1 420px;min-width:0}
+.eyebrow{font:600 12px/1 var(--hd);letter-spacing:.14em;text-transform:uppercase;color:var(--warm);margin:0 0 8px}
+h1{font:800 clamp(21px,3vw,28px)/1.18 var(--hd);margin:0;text-wrap:balance}
+.clock{text-align:right;margin-left:auto}
+.clock .t{font:800 clamp(30px,4.6vw,44px)/1 var(--hd);font-variant-numeric:tabular-nums}
+.clock .d{color:var(--dim);font-size:13px;margin-top:4px}
+.tools{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+
+/* butoane comune */
+.btn{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:0 13px;border-radius:999px;border:1px solid var(--line2);
+     background:transparent;color:var(--text);font:600 13px var(--bd);cursor:pointer;text-decoration:none}
+.btn:hover{border-color:var(--dim)}
+.btn.warm{background:color-mix(in srgb,var(--warm) 16%,transparent);border-color:transparent;color:var(--warm)}
+.btn.green{background:color-mix(in srgb,var(--accent) 16%,transparent);border-color:transparent;color:var(--accent)}
+.btn.sol{background:var(--accent);border-color:var(--accent);color:var(--onaccent);font-weight:700}
+.btn:disabled{opacity:.5;cursor:default}
+
+/* secțiuni de selectare */
+.sec{padding-block:14px 4px}
+.sec>h2{font:600 12px/1 var(--hd);letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin:0 0 10px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.sec>h2 .rng{font:500 12px var(--bd);letter-spacing:0;text-transform:none}
+
+/* teorie: butoane mici, într-un rând */
+.theory{display:flex;flex-wrap:wrap;gap:6px}
+.tb{display:inline-flex;align-items:baseline;gap:6px;min-height:32px;padding:5px 11px;border-radius:9px;border:1px solid var(--line);background:var(--surface);cursor:pointer;white-space:nowrap}
+.tb b{font:800 13px var(--hd)}
+.tb span{color:var(--dim);font-size:12.5px;font-variant-numeric:tabular-nums}
+.tb:hover{border-color:var(--line2)}
+.tb[aria-pressed=true],.pb[aria-pressed=true]{background:var(--sel);border-color:var(--warm)}
+
+/* practică: comutator de subgrupă + calendar Lu–Vi */
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:16px;padding:3px;gap:2px;margin-bottom:12px;max-width:100%;flex-wrap:wrap}
+.seg button{border:0;background:transparent;border-radius:13px;padding:6px 14px;cursor:pointer;font:600 13px var(--bd);color:var(--dim)}
+.seg button[aria-pressed=true]{background:var(--accent);color:var(--onaccent)}
+.cal{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;max-width:660px}
+.cal .wd{font:600 11px var(--hd);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-align:center;padding-bottom:2px}
+.pb{position:relative;min-width:0;text-align:left;padding:8px 9px 9px;border-radius:11px;border:1px solid var(--line);background:var(--surface);cursor:pointer}
+.pb:hover{border-color:var(--line2)}
+.pb .n{display:block;font:800 13px var(--hd)}
+.pb .dt{display:block;color:var(--dim);font-size:12.5px;font-variant-numeric:tabular-nums}
+.pb .nt{display:block;margin-top:3px;font:700 10px/1 var(--hd);letter-spacing:.06em;color:var(--warm);min-height:10px}
+.pb.past .dt::after{content:" ✓";color:var(--accent)}
+.pb .azi{position:absolute;top:6px;right:6px;font:700 9px var(--hd);letter-spacing:.08em;text-transform:uppercase;background:var(--warm);color:var(--bg);border-radius:999px;padding:2px 6px}
+.cal .gol{visibility:hidden}
+
+/* ziua aleasă */
+.dayhead{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 16px;margin:26px 0 4px}
+h3.zi{font:800 clamp(19px,2.5vw,25px)/1.2 var(--hd);margin:0}
+.sub{color:var(--dim);font-size:14px}
+.tag{display:inline-block;margin-left:8px;font:700 10px var(--hd);letter-spacing:.08em;text-transform:uppercase;color:var(--bg);background:var(--warm);border-radius:999px;padding:2px 8px;vertical-align:2px}
+.half{margin-top:16px;border-top:1px solid var(--line)}
+.half>h4{font:600 12px/1 var(--hd);letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin:14px 0 4px}
+.row{display:grid;grid-template-columns:128px minmax(0,1fr);gap:6px 18px;padding:14px 10px;border-bottom:1px solid var(--line)}
+.row.acum{background:color-mix(in srgb,var(--warm) 13%,transparent);border-radius:10px}
+.when{font:600 13px var(--hd);color:var(--dim);font-variant-numeric:tabular-nums}
+.when b{display:block;color:var(--text);font:800 16px var(--hd);margin-bottom:2px}
+.what{min-width:0}
+.what .title{font:600 17px/1.3 var(--hd)}
+.what .kind{color:var(--dim);font-size:13.5px;margin-top:2px}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.bdg{font:700 11px/1 var(--hd);letter-spacing:.05em;border-radius:6px;padding:4px 7px;border:1px solid var(--line2);color:var(--dim)}
+.bdg.nota{background:var(--warm);border-color:var(--warm);color:var(--bg)}
+.bdg.ob{border-color:var(--accent);color:var(--accent)}
+.pred{margin-top:10px;font-size:13.5px;display:grid;gap:4px}
+.pred div{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.pred .l{color:var(--dim);min-width:120px}
+.acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.miss{display:inline-flex;align-items:center;min-height:34px;padding:0 13px;border-radius:999px;border:1px dashed var(--line2);color:var(--dim);font-size:13px}
+.th{display:inline-block;font:700 10px var(--hd);letter-spacing:.06em;border-radius:5px;padding:2px 6px;background:var(--accent);color:var(--onaccent);margin-right:8px}
+.th.ex{background:var(--warm);color:var(--bg)}
+@media(max-width:700px){.row{grid-template-columns:1fr}}
+
+/* detalii: arhivare + legendă */
+details.arh{margin-top:22px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:0 16px}
+details.arh summary{cursor:pointer;padding:13px 0;font:700 14px var(--hd)}
+details.arh .in{padding-bottom:14px;display:grid;gap:8px;font-size:14px;max-width:80ch}
+details.arh ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.foot{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);color:var(--dim);font-size:13px;display:grid;gap:4px;max-width:90ch}
+
+
+/* ghid pentru cursanți */
+.ghid{margin:18px 0 6px;padding:18px 18px 8px;border:1px solid var(--line2);border-radius:16px;background:var(--surface)}
+.ghid>h2{font:800 clamp(18px,2.4vw,23px)/1.2 var(--hd);margin:0 0 4px}
+.ghid .lead{color:var(--dim);margin:0 0 14px;max-width:70ch}
+.gg{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:12px}
+.gc{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.gc h3{font:800 15px/1.25 var(--hd);margin:0 0 6px;display:flex;gap:8px;align-items:baseline}
+.gc h3 .nr{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:50%;background:var(--warm);color:var(--bg);font:800 12px var(--hd)}
+.gc p,.gc ol,.gc ul{margin:0 0 6px;font-size:14.5px}
+.gc ol,.gc ul{padding-left:20px;display:grid;gap:3px}
+.gc .ex{display:block;margin-top:4px}
+.gc .notes{display:grid;gap:4px}
+.gc .notes b{color:var(--warm)}
+.ghid .ask{margin:4px 0 12px;font-size:14.5px}
+/* ecran de sală */
+#ecran{padding-block:18px 24px}
+.ehead{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;margin-bottom:14px}
+.ehead h2{font:800 clamp(18px,2.4vw,24px)/1.2 var(--hd);margin:0}
+.ehead .sub{margin:0}
+.egrid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px}
+@media(max-width:860px){.egrid{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.cnt{font:800 clamp(52px,12vw,104px)/1 var(--hd);font-variant-numeric:tabular-nums;letter-spacing:.01em;overflow-wrap:anywhere}
+.cnt.putin{color:var(--warm)}
+.cnt.depasit{color:#d9534f}
+.eli{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:6px 18px}
+.eli small{display:block;color:var(--dim);font-size:13px}
+.bar{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin:14px 0 4px}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .4s linear}
+.pe{color:var(--dim);font:600 12px var(--hd);letter-spacing:.08em;text-transform:uppercase;margin:16px 0 2px}
+#pasT{font:800 clamp(24px,4vw,38px)/1.15 var(--hd);margin:0 0 6px}
+#pasD{font-size:clamp(17px,2.2vw,22px);margin:0 0 6px}
+#pasTm{color:var(--dim);font-variant-numeric:tabular-nums;font-size:14px}
+#pasTm.peste{color:var(--warm);font-weight:700}
+#av{display:none;margin-top:12px;padding:10px 12px;border-radius:10px;border:1px solid var(--warm);font-size:16px}
+#av.on{display:block}
+#gl{display:none;margin-top:10px;font-style:italic;color:var(--dim)}
+#gl.on{display:block}
+ol.pasi{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+ol.pasi li{display:grid;grid-template-columns:2.4rem minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 9px;border:1px solid transparent;border-radius:9px}
+ol.pasi .nr{font-weight:700;color:var(--dim)}
+ol.pasi .mn{color:var(--dim);font-size:12.5px}
+ol.pasi li.activ{background:var(--sel);border-color:var(--warm);font-weight:700}
+ol.pasi li.gata{color:var(--dim)}
+ol.pasi li.gata .nr::after{content:" ✓";color:var(--accent)}
+ol.pasi li.activ .nr::after{content:" ▶";color:var(--warm)}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+
+/* fișa (dialog) */
+dialog{width:min(980px,94vw);max-height:90vh;overflow:auto;border:1px solid var(--warm);border-radius:16px;padding:18px 22px;background:var(--surface);color:var(--text)}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+dialog h2{font:800 20px/1.25 var(--hd);margin:0 0 6px;padding-right:110px}
+dialog h3{font:700 15px var(--hd);margin:14px 0 4px}
+.dx{position:absolute;top:14px;right:16px}
+.tabs{display:flex;gap:6px;margin:8px 0 10px}
+.tabs button[aria-pressed=true]{background:var(--accent);color:var(--onaccent);border-color:var(--accent)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;margin:6px 0 12px;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--sel)}
+td.dr{text-align:right;font-variant-numeric:tabular-nums}
+td.c{text-align:center}
+.nota{color:var(--dim);font-size:13.5px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+ <div id="panou">
+  <header class="top">
+    <div>
+      <p class="eyebrow">Panou de curs · 22 sept – 18 nov 2026</p>
+      <h1>Competențe digitale, inclusiv de siguranță pe internet și securitate cibernetică</h1>
+    </div>
+    <div class="clock">
+      <div class="t" id="ora" aria-live="off">--:--:--</div>
+      <div class="d" id="data"></div>
+      <div class="tools"><a class="btn" href="index.html">← Recap pe zile</a><button class="btn" id="bAsp" type="button" aria-label="Schimbă aspectul deschis sau închis">Aspect ◐</button></div>
+    </div>
+  </header>
+
+
+  <section class="ghid" aria-labelledby="hGhid">
+    <h2 id="hGhid">Cum funcționează practica — pe scurt</h2>
+    <p class="lead">După cele 8 zile de teorie urmează <b>practica</b>: lucrezi singur, pe calculator, la teme scurte, iar formatorul e online să te ajute. Mai jos ai tot ce trebuie, în 6 pași simpli.</p>
+    <div class="gg">
+      <div class="gc"><h3><span class="nr">1</span>Când și unde</h3>
+        <p><b>Luni–vineri, între 17:00 și 21:00</b>, online (pe Zoom). Câte <b>4 ore pe zi</b>, 17 zile în total. Datele de conectare le primești de la formator.</p>
+        <ul><li><b>Subgrupa 1:</b> 2 – 26 octombrie 2026</li><li><b>Subgrupa 2:</b> 27 octombrie – 18 noiembrie 2026</li></ul>
+        <p>Ești într-o singură subgrupă; formatorul îți spune care.</p></div>
+      <div class="gc"><h3><span class="nr">2</span>Cum găsești ce ai de făcut</h3>
+        <ol><li>Mai jos, la <b>Practică</b>, alege <b>subgrupa ta</b>.</li><li>Apasă pe <b>ziua</b> din calendar (P1, P2 … P17). Ziua de azi are semnul <b>„azi”</b>, iar zilele trecute au <b>✓</b>.</li><li>Vezi <b>ce temă lucrăm și în ce interval</b>, de ex. 17:00–19:00.</li></ol></div>
+      <div class="gc"><h3><span class="nr">3</span>Fișa temei (instrucțiunile)</h3>
+        <p>La fiecare temă apasă <b>📄 Fișa</b>. Se deschide o fereastră cu două părți:</p>
+        <ul><li><b>Exemplu</b> — cum arată, aproximativ, rezultatul final.</li><li><b>Barem</b> — cum se punctează lucrarea (maximum 100 de puncte).</li></ul>
+        <p>Poți <b>descărca fișa</b> (.docx) cu butonul din fereastră. Fișele se adaugă pe măsură ce ajungem la fiecare temă.</p></div>
+      <div class="gc"><h3><span class="nr">4</span>Cum predai o temă</h3>
+        <ol><li><b>Salvează fișierul</b> cu numele cerut, de ex. <code class="ex">T01_Excel_Popescu_Maria.xlsx</code></li><li><b>Trimite un e-mail</b> la <code>bogdan@pandapc.ro</code>, cu fișierul atașat.</li><li>La <b>Subiect</b> scrii exact textul din pagină (e un buton <b>Copiază</b>), de ex. <code class="ex">Tema 1 – Excel – Nume Prenume</code></li></ol>
+        <p>Dacă tema nu cere fișier, o arăți pe ecran sau în chat, în timpul orei.</p></div>
+      <div class="gc"><h3><span class="nr">5</span>Cum se notează</h3>
+        <div class="notes">
+          <span><b>NOTA 1</b> — e-mail și surse (Temele 3 și 4)</span>
+          <span><b>NOTA 2</b> — egalitate de șanse și nediscriminare (Tema 7)</span>
+          <span><b>NOTA 3</b> — Excel, formula SUM (Tema 1)</span>
+        </div>
+        <p style="margin-top:8px">Restul temelor <b>nu se notează</b>: sunt exerciții ca să exersezi. <b>OBLIGATORIU</b> înseamnă că tema e cerută de organizatorul cursului. Din cele 100 de puncte ale unei lucrări, 10 sunt <b>din oficiu</b> (pentru prezență și participare).</p></div>
+      <div class="gc"><h3><span class="nr">6</span>Ai o problemă sau o întrebare?</h3>
+        <p>În timpul orelor scrie în <b>chat</b> sau ridică mâna pe Zoom. În afara orelor scrie la <code>bogdan@pandapc.ro</code>.</p>
+        <p><b>Nu te speria dacă nu termini:</b> poți preda și o variantă incompletă, dar trimite-o până la finalul orei.</p></div>
+    </div>
+    <p class="ask"><b>Butonul „▶ Ecran cu cronometru (pentru formator)”</b> îl folosește formatorul: arată timpul rămas și pașii temei, iar el îl partajează pe Zoom. Tu nu trebuie să-l deschizi.</p>
+  </section>
+
+  <section class="sec" aria-labelledby="hTeo">
+    <h2 id="hTeo">Teorie <span class="rng">8 zile · Zoom · 22 sept – 1 oct</span></h2>
+    <div class="theory" id="teorie"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="hPra">
+    <h2 id="hPra">Practică <span class="rng">17 zile pe subgrupă · 17:00–21:00 · online</span></h2>
+    <div class="seg" role="group" aria-label="Subgrupa" id="sg">
+      <button type="button" id="sg1" aria-pressed="true">Subgrupa 1 · 2–26 oct</button>
+      <button type="button" id="sg2" aria-pressed="false">Subgrupa 2 · 27 oct – 18 nov</button>
+    </div>
+    <div class="cal" id="cal"></div>
+  </section>
+
+  <main id="zi" aria-live="polite"></main>
+
+  <details class="arh">
+    <summary>Cum numim și arhivăm temele predate</summary>
+    <div class="in">
+      <p style="margin:0">Fișierul primește codul temei, ca să se sorteze și să se recunoască singur: <code>Txx_Subiect_Nume_Prenume.ext</code>, de exemplu <code>T01_Excel_Popescu_Maria.xlsx</code>. Două teme ale aceluiași cursant nu se suprascriu, iar fișierul rămâne clar și când e salvat în afara e-mailului.</p>
+      <ul>
+        <li>Subiectul e-mailului rămâne cel anunțat: <code>Tema 1 – Excel – Nume Prenume</code>.</li>
+        <li>Pe calculatorul tău: un folder pe subgrupă și pe temă, de exemplu <code>Practica/SG1/T01_Excel/</code>, cu fișierele cursanților.</li>
+        <li>În Gmail: o etichetă pe temă (<code>Practică/T01</code>), aplicată automat printr-un filtru pe subiect.</li>
+        <li>Notele se trec în Foaia de notare (coloanele Nota 1, 2 și 3), pe măsură ce primești lucrările.</li>
+      </ul>
+    </div>
+  </details>
+
+  <div class="foot">
+    <span><b>Legendă:</b> NOTA 1, 2, 3 = notele din Fișa de evaluare (e-mail și surse; nediscriminare; Excel). „Obligatoriu” = cerut de organizator (nediscriminare, competențe verzi).</span>
+    <span>Zilele de practică sunt calculate: 4 ore pe zi, luni–vineri, fără sărbători legale în interval. Cele 21 de teme urmează blocurile din cuprins, în ordine; Modulul 1 este împărțit în Temele 1–5.</span>
+    <span>Zilele de teorie sunt luate din panoul local, generat la 30.09.2026.</span>
+  </div>
+ </div>
+
+ <!-- ecran de sală: cronometru + pași, de partajat în Zoom -->
+ <section id="ecran" hidden aria-label="Ecran de sală">
+   <div class="ehead">
+     <div><h2 id="eTitlu">Tema</h2><p class="sub" id="eSub"></p></div>
+     <div style="display:flex;flex-wrap:wrap;gap:8px">
+       <button class="btn" id="eBack" type="button">← Înapoi la panou</button>
+       <button class="btn" id="eFisa" type="button">📄 Fișa</button>
+       <button class="btn" id="eFull" type="button">Ecran complet</button>
+     </div>
+   </div>
+   <div class="egrid">
+     <div class="card">
+       <div class="eli">
+         <div><small>Timp rămas în temă</small><div class="cnt" id="cnt" role="timer" aria-live="off">02:00:00</div></div>
+         <div style="text-align:right"><small id="eDur"></small><small id="eFin"></small></div>
+       </div>
+       <div class="bar" role="progressbar" aria-label="Progres temă" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="bar"></i></div>
+       <p class="pe" id="pasE">Pasul – din –</p>
+       <h3 id="pasT" style="margin:0">—</h3>
+       <p id="pasD"></p>
+       <div id="pasTm"></div>
+       <div id="av" role="status"></div>
+       <div id="gl"></div>
+       <div class="ctrl">
+         <button class="btn sol" id="bGo" type="button">▶ Start</button>
+         <button class="btn" id="bPrev" type="button">◀ Anterior</button>
+         <button class="btn" id="bNext" type="button">Următorul ▶</button>
+         <button class="btn" id="bRes" type="button">Resetare</button>
+       </div>
+     </div>
+     <aside class="card" aria-label="Toți pașii">
+       <h3 style="margin:0 0 8px;font:600 12px var(--hd);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)">Pașii temei</h3>
+       <ol class="pasi" id="lPasi"></ol>
+     </aside>
+   </div>
+   <p class="sub" style="margin-top:12px">Taste: Spațiu start/pauză · → pasul următor · ← pasul anterior · E fișa · F ecran complet · Esc înapoi la panou (din fișă).</p>
+ </section>
+</div>
+
+<dialog id="dFisa" closedby="any" aria-labelledby="dFT">
+  <button class="btn dx" id="dClose" type="button">Închide</button>
+  <h2 id="dFT">Fișa</h2>
+  <div class="tabs" role="group" aria-label="Părți din fișă">
+    <button class="btn" type="button" id="tEx" aria-pressed="true">Exemplu</button>
+    <button class="btn" type="button" id="tBa" aria-pressed="false">Barem</button>
+  </div>
+  <div id="dBody"></div>
+</dialog>
+
+<script>
+"use strict";
+/* =================== DATE =================== */
+/* Zilele de teorie, extrase din panoul local (generat 30.09.2026). s/e = ora de început/sfârșit. */
+const TEORIE = [{"n":1,"sapt":"Marți","iso":"2026-09-22","data":"22 septembrie","scurt":"22 sep","orele":"Ora 1–4","ore":[{"ora":1,"tip":"predare","s":"17:00","e":"18:00","t":"Deschidere · alfabetizare digitală · istoric SO desktop"},{"ora":2,"tip":"exercitiu","s":"18:00","e":"19:00","t":"Test grilă · materia din Ora 1"},{"ora":3,"tip":"predare","s":"19:00","e":"20:00","t":"Browsere și internet"},{"ora":4,"tip":"exercitiu","s":"20:00","e":"21:00","t":"Test grilă + montaj „de la abac la cloud”"}]},{"n":2,"sapt":"Miercuri","iso":"2026-09-23","data":"23 septembrie","scurt":"23 sep","orele":"Ora 5–8","ore":[{"ora":5,"tip":"predare","s":"17:00","e":"18:00","t":"Motoare de căutare"},{"ora":6,"tip":"exercitiu","s":"18:00","e":"19:00","t":"Exerciții de căutare (site:, filetype:)"},{"ora":7,"tip":"predare","s":"19:00","e":"20:00","t":"Word, Excel și drumul fișierului (OneDrive)"},{"ora":8,"tip":"exercitiu","s":"20:00","e":"21:00","t":"Test și sarcini pe calculator + montaj „de la mașina de scris la Copilot”"}]},{"n":3,"sapt":"Joi","iso":"2026-09-24","data":"24 septembrie","scurt":"24 sep","orele":"Ora 9–12","ore":[{"ora":9,"tip":"predare","s":"17:00","e":"18:00","t":"Comunicare digitală"},{"ora":10,"tip":"exercitiu","s":"18:00","e":"19:00","t":"E-mail formal pe scenariu"},{"ora":11,"tip":"predare","s":"19:00","e":"20:00","t":"Gândire critică · recap Modul 1"},{"ora":12,"tip":"exercitiu","s":"20:00","e":"21:00","t":"Test de verificare știri + montaj „istoria unui zvon”"}]},{"n":4,"sapt":"Vineri","iso":"2026-09-25","data":"25 septembrie","scurt":"25 sep","orele":"Ora 13–16","ore":[{"ora":13,"tip":"predare","s":"17:00","e":"18:00","t":"Modul 2 (1/3) · Comunicarea digitală la serviciu"},{"ora":14,"tip":"exercitiu","s":"18:00","e":"19:00","t":"Test grilă + analiza unui schimb de mesaje"},{"ora":15,"tip":"predare","s":"19:00","e":"20:00","t":"Modul 2 (2/3) · Egalitate de șanse și nediscriminare"},{"ora":16,"tip":"exercitiu","s":"20:00","e":"21:00","t":"Test grilă + analiza unui caz de excludere + montaj „de la ședința pe hârtie la Teams și Zoom”"}]},{"n":5,"sapt":"Luni","iso":"2026-09-28","data":"28 septembrie","scurt":"28 sep","orele":"Ora 17–20","ore":[{"ora":17,"tip":"predare","s":"17:00","e":"18:00","t":"Modul 2 (3/3) · Colaborare la distanță, în practică"},{"ora":18,"tip":"exercitiu","s":"18:00","e":"19:00","t":"Test grilă + analiza unei ședințe dezorganizate — recap Modul 2"},{"ora":19,"tip":"predare","s":"19:00","e":"20:00","t":"Modul 3 (1/2) · Conținut digital, Word, PowerPoint pas cu pas"},{"ora":20,"tip":"exercitiu","s":"20:00","e":"21:00","t":"Test grilă + analiza unei prezentări dezorganizate + montaj „de la retroproiector la PowerPoint”"}]},{"n":6,"sapt":"Marți","iso":"2026-09-29","data":"29 septembrie","scurt":"29 sep","orele":"Ora 21–24","ore":[{"ora":21,"tip":"predare","s":"17:00","e":"18:00","t":"Modul 3 (2/2)"},{"ora":22,"tip":"exercitiu","s":"18:00","e":"19:00","t":"Exercițiu — de stabilit"},{"ora":23,"tip":"predare","s":"19:00","e":"20:00","t":"Modul 4 (1/4)"},{"ora":24,"tip":"exercitiu","s":"20:00","e":"21:00","t":"Exercițiu — de stabilit"}]},{"n":7,"sapt":"Miercuri","iso":"2026-09-30","data":"30 septembrie","scurt":"30 sep","orele":"Ora 25–28","ore":[{"ora":25,"tip":"predare","s":"17:00","e":"18:00","t":"Modul 4 (2/4)"},{"ora":26,"tip":"exercitiu","s":"18:00","e":"19:00","t":"Exercițiu — de stabilit"},{"ora":27,"tip":"predare","s":"19:00","e":"20:00","t":"Modul 4 (3/4)"},{"ora":28,"tip":"exercitiu","s":"20:00","e":"21:00","t":"Exercițiu — de stabilit"}]},{"n":8,"sapt":"Joi","iso":"2026-10-01","data":"1 octombrie","scurt":"1 oct","orele":"Ora 29–32","ore":[{"ora":29,"tip":"predare","s":"17:00","e":"18:00","t":"Modul 4 (4/4)"},{"ora":30,"tip":"exercitiu","s":"18:00","e":"19:00","t":"Exercițiu — de stabilit"},{"ora":31,"tip":"predare","s":"19:00","e":"20:00","t":"Modul 5"},{"ora":32,"tip":"exercitiu","s":"20:00","e":"21:00","t":"Exercițiu — de stabilit"}]}];
+
+/* Temele de pe ecran (cronometru + pași + fișă). Aici se adaugă temele noi pe măsură ce scriem fișele. */
+const TEME = [
+ {
+  id:"t1", titlu:"Tema 1 – Excel: „Bugetul lunii”", sub:"Modulul 1 · Nota 3 · 17:00–19:00",
+  durataMin:120,
+  predare:"Predare: e-mail la bogdan@pandapc.ro · subiect „Tema 1 – Excel – Nume Prenume” · fișier T01_Excel_Nume_Prenume.xlsx",
+  glume:["Dacă totalul nu se schimbă singur, Matrix te-a păcălit: ai tastat numărul de mână.",
+         "James Bond are buget nelimitat. Noi avem 5 rânduri și o formulă."],
+  pasi:[
+   {t:"Pornim: scenariul și fișierul",            min:10, d:"Deschidem Excel, registru nou, salvăm imediat ca <code>T01_Excel_Nume_Prenume.xlsx</code>."},
+   {t:"Titlul și antetul",                         min:10, d:"A1 = titlul „Bugetul meu – luna …”. Rândul 3: Nr., Cheltuiala, Suma (lei)."},
+   {t:"Cele 5 cheltuieli",                         min:20, d:"Rândurile 4–8: chirie, mâncare, transport, utilități, telefon. Sume realiste, numere (nu text)."},
+   {t:"Totalul cu formulă",                        min:15, d:"În C9 scriem <code>=SUM(C4:C8)</code>. Nu tastăm totalul de mână!"},
+   {t:"Testul: se schimbă totalul singur?",        min:10, d:"Schimbăm suma de la chirie. Dacă totalul s-a actualizat, e corect."},
+   {t:"Formatare",                                 min:20, d:"Antet îngroșat și colorat, borduri, două zecimale + „lei”, coloana C destul de lată (fără #####)."},
+   {t:"Verificare pe lista din fișă",              min:10, d:"Titlu, antet, 5 rânduri, <code>=SUM</code>, diacritice. 💡 Bonus: rândul „Neprevăzute (a căzut pisica din dulap)”."},
+   {t:"Trimitem pe e-mail",                        min:15, d:"Către bogdan@pandapc.ro, subiect „Tema 1 – Excel – Nume Prenume”, atașăm T01_Excel_Nume_Prenume.xlsx."},
+   {t:"Întrebări și retușuri",                     min:10, d:"Cine are probleme cu formula sau cu e-mailul ridică mâna / scrie în chat."}
+  ],
+  exemplu:`
+   <h3>Aspect orientativ</h3>
+   <table><thead><tr><th>Nr.</th><th>Cheltuiala</th><th>Suma (lei)</th></tr></thead><tbody>
+    <tr><td class="c">1</td><td>Chirie</td><td class="dr">1200,00</td></tr>
+    <tr><td class="c">2</td><td>Mâncare</td><td class="dr">1500,00</td></tr>
+    <tr><td class="c">3</td><td>Transport</td><td class="dr">300,00</td></tr>
+    <tr><td class="c">4</td><td>Utilități</td><td class="dr">450,00</td></tr>
+    <tr><td class="c">5</td><td>Telefon</td><td class="dr">60,00</td></tr>
+    <tr><td></td><td><strong>TOTAL</strong></td><td class="dr"><strong>3510,00</strong> &nbsp;<code>=SUM(C4:C8)</code></td></tr>
+   </tbody></table>
+   <p class="nota">Cifrele sunt doar un exemplu: fiecare folosește ale lui. Titlul în A1, antetul pe rândul 3, datele pe rândurile 4–8, TOTAL pe rândul 9.</p>`,
+  barem:[
+   ["Planificarea conținutului","Titlu, antet, 5 cheltuieli, rând TOTAL",10],
+   ["Calitatea informației","Sume realiste, numere, total corect",15],
+   ["Creativitate și design","Antet evidențiat, borduri, aliniere, lățime coloane",10],
+   ["Utilizarea instrumentelor digitale","<code>=SUM</code> corect, se actualizează, .xlsx",10],
+   ["Respectarea drepturilor de autor","Lucrare proprie, nu copiată de la colegi",10],
+   ["Adaptarea la publicul țintă","Titlu clar, unitate (lei), denumiri simple",15],
+   ["Corectitudine lingvistică","Denumiri corecte, cu diacritice",10],
+   ["Finalizare și prezentare","Nume fișier, e-mail corect, în termen",10]
+  ]
+ },
+ {
+  id:"t2", titlu:"Tema 2 – „Misterul fișierelor FINAL_v7_copie”", sub:"Modulul 1 · nenotată · 19:00–21:00",
+  durataMin:120,
+  predare:"Rezultat: partajăm ecranul în Zoom sau punem linkul OneDrive în chat · fără partajare: captură de ecran cu folderele",
+  glume:["Cuvântul „FINAL” nu înseamnă că documentul chiar e final. Regulă de aur: dacă are „_v7”, nu e.",
+         "Detectivul digital își lasă lupa în sertar. Ordinea o fac regulile, nu norocul."],
+  pasi:[
+   {t:"Scenariul și dosarul cazului",              min:10, d:"Citim cele 12 fișiere ale Costinei (secțiunea 3 din fișă – buton „Fișa”)."},
+   {t:"Nume noi pentru cele 12 fișiere",           min:15, d:"Regula: <code>AAAA-LL_Subiect_vN</code>. Fără „final”, „copie”, „nou”, fără spații."},
+   {t:"Alegem 4 foldere numerotate",               min:10, d:"Ex.: <code>01_Munca</code>, <code>02_Acte</code>, <code>03_Bani</code>, <code>04_Poze</code> – sau alte nume, dar cu număr."},
+   {t:"Tabelul din Word",                          min:25, d:"Tabel real, 4 coloane: Nr. | Nume vechi | Nume nou | Folder – 12 rânduri."},
+   {t:"3–4 propoziții despre reguli",              min:10, d:"Ce reguli am ales și de ce ajută. Duplicatele: care se păstrează? Nu ștergem nimic, doar propunem."},
+   {t:"Salvăm documentul",                         min:5,  d:"<code>T02_Fisiere_Nume_Prenume.docx</code>"},
+   {t:"OneDrive: foldere + încărcare",             min:20, d:"Creăm cele 4 foldere și încărcăm documentul Word într-unul dintre ele."},
+   {t:"Partajare (sau captură de ecran)",          min:15, d:"Partajare → „Oricine are linkul poate vizualiza”. Dacă e blocat: captură cu structura de foldere."},
+   {t:"Prezentăm rezultatul",                      min:10, d:"Câțiva cursanți arată ecranul sau pun linkul în chat. Retușuri finale."}
+  ],
+  exemplu:`
+   <h3>Dosarul cazului – cele 12 fișiere</h3>
+   <table><thead><tr><th>Nr.</th><th>Nume actual (haotic)</th><th>Ce este, de fapt</th></tr></thead><tbody>
+    <tr><td class="c">1</td><td>document nou (7).docx</td><td>Cerere de concediu</td></tr>
+    <tr><td class="c">2</td><td>FINAL_FINAL_ACUM.docx</td><td>Raport lunar, versiunea trimisă la șef</td></tr>
+    <tr><td class="c">3</td><td>buget aprilie FINAL_v7_copie.xlsx</td><td>Bugetul din aprilie 2026</td></tr>
+    <tr><td class="c">4</td><td>scan0012.pdf</td><td>Adeverință de salariat</td></tr>
+    <tr><td class="c">5</td><td>IMG_20250914_103455.jpg</td><td>Poză de la nunta verișoarei</td></tr>
+    <tr><td class="c">6</td><td>Cerere concediu - Copy.docx</td><td>Copie a cererii de concediu (nr. 1)</td></tr>
+    <tr><td class="c">7</td><td>adeverinta (1).pdf</td><td>Adeverință medicală</td></tr>
+    <tr><td class="c">8</td><td>Prezentare1.pptx</td><td>Prezentare pentru ședința de luni</td></tr>
+    <tr><td class="c">9</td><td>NU STERGE!!!.docx</td><td>Lista cu adresele de e-mail ale furnizorilor</td></tr>
+    <tr><td class="c">10</td><td>factura gaz sept IMPORTANTA_.pdf</td><td>Factura de gaze din septembrie 2026</td></tr>
+    <tr><td class="c">11</td><td>reteta sarmale bunica v3 BUNA.docx</td><td>Rețeta de sarmale (a treia variantă, cea bună)</td></tr>
+    <tr><td class="c">12</td><td>poza2_copie_copie.jpg</td><td>Poză cu pisica Mițu pe tastatură</td></tr>
+   </tbody></table>
+   <h3>Model Înainte / După (3 rânduri)</h3>
+   <table><thead><tr><th>Înainte</th><th>După</th></tr></thead><tbody>
+    <tr><td>document nou (7).docx</td><td><code>01_Munca / 2026-09_Cerere_concediu_v1.docx</code></td></tr>
+    <tr><td>buget aprilie FINAL_v7_copie.xlsx</td><td><code>03_Bani / 2026-04_Buget_v1.xlsx</code></td></tr>
+    <tr><td>IMG_20250914_103455.jpg</td><td><code>04_Poze / 2025-09_Nunta_verisoara.jpg</code></td></tr>
+   </tbody></table>
+   <p class="nota">Celelalte 9 rânduri le completează fiecare. Important: o regulă și respectarea ei.</p>`,
+  barem:[
+   ["Planificarea conținutului","Tabel complet (12 rânduri, 4 coloane), 4 foldere bine alese",10],
+   ["Calitatea informației","Nume clare, fișiere în foldere potrivite, duplicate tratate",15],
+   ["Creativitate și design","Document Word ordonat: titlu, tabel cu antet, spațiere",10],
+   ["Utilizarea instrumentelor digitale","Tabel real în Word; foldere în OneDrive; link sau captură",10],
+   ["Respectarea drepturilor de autor","Lucrare proprie; fără date personale reale ale altora",10],
+   ["Adaptarea la publicul țintă","Regula poate fi folosită de orice coleg; explicație clară",15],
+   ["Corectitudine lingvistică","Propoziții corecte, cu diacritice; nume scrise fără greșeli",10],
+   ["Finalizare și prezentare","T02_Fisiere_Nume_Prenume.docx; rezultat prezentat în timp",10]
+  ],
+  notaBarem:"Tema nu se notează – baremul e orientativ, pentru autoevaluare."
+ },
+ {
+  id:"liber", titlu:"Cronometru liber", sub:"Pauză, discuții, orice interval",
+  durataMin:15, predare:"",
+  glume:["Pauza e parte din curs. Cafeaua nu se ia în calcul la punctaj."],
+  pasi:[{t:"Pauză / discuție", min:15, d:"Se reia la ora indicată de cronometru."}],
+  exemplu:"<p class='nota'>Pentru acest cronometru nu există fișă.</p>", barem:[]
+ }
+ ];
+const ECRAN = TEME.filter(t=>t.id!=="liber");
+
+const MODUL = {1:"Modulul 1 · Bazele digitale",2:"Modulul 2 · Comunicare și colaborare",3:"Modulul 3 · Crearea de conținut digital",4:"Modulul 4 · Siguranța pe internet",5:"Modulul 5 · Rezolvarea problemelor"};
+/* Cele 21 de teme, în ordinea din cuprins. ore = durata; nota = nota din Fișa de evaluare; ob = obligatoriu (organizator);
+   ecran = id din ECRAN (fișă gata); fis/sub = nume fișier și subiect e-mail, doar pentru temele predate. */
+const BLOC = [
+ {m:1,nume:"Excel: Bugetul lunii",ore:2,recap:"Ora 7",nota:3,ecran:"t1",fis:"T01_Excel_Nume_Prenume.xlsx",sub:"Tema 1 – Excel – Nume Prenume"},
+ {m:1,nume:"Misterul fișierelor „FINAL_v7_copie”",ore:2,recap:"Ora 7",ecran:"t2",fis:"T02_Fisiere_Nume_Prenume.docx",sub:"Tema 2 – Fișiere – Nume Prenume",opt:true},
+ {m:1,nume:"Detectivul de surse",ore:2,recap:"Ora 5, 11",nota:1,fis:"T03_Surse_Nume_Prenume.docx",sub:"Tema 3 – Surse – Nume Prenume",dupa:"Nota 1 se dă după Temele 3 și 4"},
+ {m:1,nume:"E-mailul de la 07:58",ore:2,recap:"Ora 9",nota:1,fis:"T04_Email_Nume_Prenume.docx",sub:"Tema 4 – Email – Nume Prenume"},
+ {m:1,nume:"Șeful final al Modulului 1: AVERAGE",ore:1,recap:"Ora 7"},
+ {m:2,nume:"Comunicare digitală la locul de muncă",ore:4,recap:"Ora 13"},
+ {m:2,nume:"Egalitate de șanse și nediscriminare în mediul digital",ore:4,recap:"Ora 15",nota:2,ob:true,fis:"T07_Nediscriminare_Nume_Prenume",sub:"Tema 7 – Nediscriminare – Nume Prenume"},
+ {m:2,nume:"Accesibilitate digitală",ore:4,recap:"Ora 17"},
+ {m:2,nume:"Colaborare: co-editare, modificări, ședință online",ore:4,recap:"Ora 17, 21"},
+ {m:3,nume:"Prezentare PowerPoint pe temă dată",ore:4,recap:"Ora 19"},
+ {m:3,nume:"Word în PDF și partajare corectă pe OneDrive",ore:3,recap:"Ora 21"},
+ {m:3,nume:"Proiect integrator: document + prezentare",ore:2},
+ {m:4,nume:"Audit personal de securitate: parole și 2FA",ore:4,recap:"Ora 23"},
+ {m:4,nume:"Identificare phishing avansată („spot the phish”)",ore:5,recap:"Ora 25"},
+ {m:4,nume:"Protecția datelor personale, pe scenarii",ore:3,recap:"Ora 27"},
+ {m:4,nume:"Siguranța copiilor pe internet, pe scenarii",ore:3,recap:"Ora 27"},
+ {m:4,nume:"Competențe verzi și sustenabilitate digitală",ore:4,ob:true},
+ {m:4,nume:"Actualizări și plăți online în siguranță",ore:3,recap:"Ora 29"},
+ {m:4,nume:"Recapitulare completă + test practic de phishing",ore:5},
+ {m:5,nume:"Troubleshooting pe scenarii comune",ore:5,recap:"Ora 31"},
+ {m:5,nume:"Checklist de auto-diagnosticare + recapitulare finală",ore:2}
+].map((b,i)=>Object.assign({id:i+1,cod:"T"+String(i+1).padStart(2,"0")},b));
+
+const START = {1:"2026-10-02", 2:"2026-10-27"};
+const ZS = ["duminică","luni","marți","miercuri","joi","vineri","sâmbătă"];
+const ZSC = ["Du","Lu","Ma","Mi","Jo","Vi","Sâ"];
+const LUNI = ["ianuarie","februarie","martie","aprilie","mai","iunie","iulie","august","septembrie","octombrie","noiembrie","decembrie"];
+const LS = ["ian","feb","mar","apr","mai","iun","iul","aug","sep","oct","nov","dec"];
+const iso2d = s => new Date(s+"T12:00:00Z");
+const fData = (s,l) => { const d=iso2d(s); return d.getUTCDate()+" "+(l?LUNI:LS)[d.getUTCMonth()]; };
+const pad = n => String(n).padStart(2,"0");
+const azi = () => { const d=new Date(); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); };
+
+/* Calendarul de practică: 17 zile lucrătoare pe subgrupă, 4 ore pe zi (două sloturi de câte 2 ore). */
+function zileLucratoare(start,n){
+  const o=[]; let d=iso2d(start);
+  while(o.length<n){ const w=d.getUTCDay(); if(w!==0&&w!==6) o.push(d.toISOString().slice(0,10)); d=new Date(d.getTime()+864e5); }
+  return o;
+}
+const ORE_PE_ZI = []; BLOC.forEach(b=>{ for(let k=0;k<b.ore;k++) ORE_PE_ZI.push(b.id); });  // 68 ore, în ordine
+const PRACTICA = {1:zileLucratoare(START[1],17), 2:zileLucratoare(START[2],17)};
+
+/* Segmentele unei zile: pe fiecare slot de 2 ore, rândurile consecutive din aceeași temă. */
+function segmente(i){
+  const out=[];
+  for(let h=0;h<2;h++){
+    let cur=null;
+    for(let k=0;k<2;k++){
+      const idx=4*i+2*h+k, id=ORE_PE_ZI[idx], start=17+2*h+k;
+      if(cur && cur.id===id){ cur.len++; }
+      else { const dinainte=ORE_PE_ZI.slice(0,idx).filter(x=>x===id).length; cur={slot:h,id,start,len:1,dinainte}; out.push(cur); }
+    }
+  }
+  return out;
+}
+
+/* =================== Stare selecție =================== */
+const $ = id => document.getElementById(id);
+const CH = "panou-curs-v1";
+let sel = {tip:"practica", sg:1, i:0};
+function salveazaSel(){ try{ localStorage.setItem(CH, JSON.stringify(sel)); }catch(e){} }
+function incarcaSel(){
+  const a=azi();
+  const t=TEORIE.findIndex(z=>z.iso===a);
+  if(t>=0){ sel={tip:"teorie",i:t}; return; }
+  for(const g of [1,2]){ const i=PRACTICA[g].indexOf(a); if(i>=0){ sel={tip:"practica",sg:g,i}; return; } }
+  try{ const s=JSON.parse(localStorage.getItem(CH)||"null"); if(s&&(s.tip==="teorie"||s.tip==="practica")) sel=s; }catch(e){}
+}
+
+/* =================== Desenare panou =================== */
+function deseneazaButoane(){
+  const a=azi();
+  $("teorie").innerHTML = TEORIE.map((z,i)=>
+    `<button type="button" class="tb" data-t="${i}" aria-pressed="${sel.tip==="teorie"&&sel.i===i}" title="${z.sapt}, ${z.data} · ${z.orele}"><b>Z${z.n}</b><span>${z.scurt}</span></button>`).join("");
+  $("sg1").setAttribute("aria-pressed", sel.sg===1||sel.tip==="teorie"&&false);
+  const g = sel.tip==="practica" ? sel.sg : (sel.sgVazut||1);
+  $("sg1").setAttribute("aria-pressed", g===1); $("sg2").setAttribute("aria-pressed", g===2);
+  const zile=PRACTICA[g];
+  // grila Lu–Vi: coloana = ziua săptămânii, rândul = săptămâna
+  const prima=iso2d(zile[0]); const col0=(prima.getUTCDay()+6)%7;      // 0 = luni
+  let h='<div class="wd">Lu</div><div class="wd">Ma</div><div class="wd">Mi</div><div class="wd">Jo</div><div class="wd">Vi</div>';
+  for(let k=0;k<col0;k++) h+='<div class="gol"></div>';
+  zile.forEach((s,i)=>{
+    const nt=[...new Set(segmente(i).map(x=>BLOC[x.id-1].nota).filter(Boolean))].map(n=>"NOTA "+n).join(" · ");
+    const dayCol=(iso2d(s).getUTCDay()+6)%7;
+    h+=`<button type="button" class="pb${s<a?" past":""}" data-p="${i}" aria-pressed="${sel.tip==="practica"&&sel.sg===g&&sel.i===i}" aria-label="Ziua de practică ${i+1}, ${ZS[iso2d(s).getUTCDay()]} ${fData(s,true)}">`+
+       `<span class="n">P${i+1}</span><span class="dt">${fData(s)}</span><span class="nt">${nt}</span>${s===a?'<span class="azi">azi</span>':''}</button>`;
+    if(dayCol===4 && i<zile.length-1){ /* rând nou se face automat prin grilă de 5 coloane */ }
+  });
+  $("cal").innerHTML=h;
+}
+
+function randTeorie(z){
+  const a=azi();
+  let h=`<div class="dayhead"><h3 class="zi">Ziua ${z.n} de teorie · ${z.sapt}, ${fData(z.iso,true)}${z.iso===a?'<span class="tag">azi</span>':''}</h3><span class="sub">${z.orele} · 17:00–21:00 · Zoom</span></div>`;
+  [[0,1],[2,3]].forEach(par=>{
+    const o=par.map(k=>z.ore[k]);
+    h+=`<div class="half"><h4>${o[0].s}–${o[1].e}</h4>`+o.map(x=>{
+      const titlu = /de stabilit/.test(x.t) ? "Test grilă" : x.t;
+      return `<div class="row"><div class="when"><b>Ora ${x.ora}</b>${x.s}–${x.e}</div><div class="what"><div class="title">${titlu}</div><div class="kind">${x.tip==="predare"?"Predare":"Exercițiu"}</div></div></div>`;
+    }).join("")+`</div>`;
+  });
+  return h;
+}
+
+function randPractica(g,i){
+  const s=PRACTICA[g][i], a=azi(), d=iso2d(s);
+  let h=`<div class="dayhead"><h3 class="zi">Ziua de practică ${i+1} din 17 · ${ZS[d.getUTCDay()][0].toUpperCase()+ZS[d.getUTCDay()].slice(1)}, ${fData(s,true)}${s===a?'<span class="tag">azi</span>':''}</h3><span class="sub">Subgrupa ${g} · 17:00–21:00 · online</span></div>`;
+  const seg=segmente(i);
+  [0,1].forEach(sl=>{
+    const dinSlot=seg.filter(x=>x.slot===sl);
+    h+=`<div class="half">${dinSlot.length>1?`<h4>${17+2*sl}:00–${19+2*sl}:00</h4>`:'<div style="height:6px"></div>'}`;
+    dinSlot.forEach(x=>{
+      const b=BLOC[x.id-1], intreaga=x.len===b.ore;
+      const clock=`${pad(x.start)}:00–${pad(x.start+x.len)}:00`;
+      const parte = intreaga ? "" : ` · ora ${x.dinainte+1}${x.len>1?"–"+(x.dinainte+x.len):""} din ${b.ore}`;
+      const bd=[]; if(b.nota) bd.push(`<span class="bdg nota">NOTA ${b.nota} · se notează</span>`); if(b.ob) bd.push(`<span class="bdg ob">OBLIGATORIU · cerut de organizator</span>`);
+      if(!b.nota) bd.push(`<span class="bdg">${b.opt?"nu se notează · predai doar dacă ți se cere":"nu se notează · exercițiu"}</span>`);
+      const ec=b.ecran && ECRAN.find(t=>t.id===b.ecran);
+      const acts = ec && intreaga
+        ? `<div class="acts"><button class="btn sol" type="button" data-ec="${b.ecran}">▶ Ecran cu cronometru</button><button class="btn warm" type="button" data-fisa="${b.ecran}">📄 Fișa</button></div>`
+        : `<div class="acts"><span class="miss">${ec?"Fișa e gata, dar tema continuă în altă zi — o găsești în ziua în care începe":"Fișa apare aici înainte de această temă"}</span></div>`;
+      let pr="";
+      if(b.fis){
+        pr=`<div class="pred"><div><span class="l">Cum se numește fișierul</span><code>${b.fis}</code></div>`+
+           `<div><span class="l">Subiectul e-mailului</span><code>${b.sub}</code> <button class="btn" type="button" data-cp="${b.sub}">Copiază</button></div>`+
+           `<div><span class="l">Trimiți la adresa</span><code>bogdan@pandapc.ro</code></div>`+(b.dupa?`<div class="nota">${b.dupa}.</div>`:"")+`</div>`;
+      }
+      const acum = s===a && new Date().getHours()>=x.start && new Date().getHours()<x.start+x.len;
+      h+=`<div class="row${acum?" acum":""}"><div class="when"><b>${clock}</b>${x.len} ${x.len===1?"oră":"ore"}</div><div class="what">`+
+         `<div class="title"><span class="th${b.nota?" ex":""}">${b.cod}</span>${b.nume}</div>`+
+         `<div class="kind">${MODUL[b.m]}${b.recap?" · recapitulare din teorie: "+b.recap:""}${parte}</div><div class="badges">${bd.join("")}</div>${pr}${acts}</div></div>`;
+    });
+    h+=`</div>`;
+  });
+  return h;
+}
+
+function deseneazaZi(){
+  $("zi").innerHTML = sel.tip==="teorie" ? randTeorie(TEORIE[sel.i]) : randPractica(sel.sg,sel.i);
+}
+function deseneazaTot(){ deseneazaButoane(); deseneazaZi(); }
+
+/* clic pe butoane (delegare) */
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-t],[data-p],[data-ec],[data-fisa],[data-cp]"); if(!t) return;
+  if(t.dataset.t!==undefined){ sel={tip:"teorie",i:+t.dataset.t,sgVazut:sel.sg||sel.sgVazut||1}; salveazaSel(); deseneazaTot(); }
+  else if(t.dataset.p!==undefined){ const g=$("sg2").getAttribute("aria-pressed")==="true"?2:1; sel={tip:"practica",sg:g,i:+t.dataset.p}; salveazaSel(); deseneazaTot(); }
+  else if(t.dataset.ec) deschideEcran(t.dataset.ec);
+  else if(t.dataset.fisa) deschideFisa(t.dataset.fisa,"ex");
+  else if(t.dataset.cp) copiaza(t.dataset.cp,t);
+});
+function alegeSg(g){ sel={tip:"practica",sg:g,i:Math.min(sel.tip==="practica"?sel.i:0,16)}; if(sel.tip==="practica"&&g!==1&&false){} salveazaSel(); deseneazaTot(); }
+$("sg1").addEventListener("click",()=>{ sel={tip:"practica",sg:1,i:0}; salveazaSel(); deseneazaTot(); });
+$("sg2").addEventListener("click",()=>{ sel={tip:"practica",sg:2,i:0}; salveazaSel(); deseneazaTot(); });
+
+/* copiere cu rezervă: dacă clipboard e refuzat, selectăm textul ca să se poată copia cu Ctrl+C */
+function copiaza(txt,btn){
+  const ok=()=>{ const v=btn.textContent; btn.textContent="Copiat ✓"; setTimeout(()=>{btn.textContent=v==="Copiat ✓"?"Copiază":v;},1500); };
+  const rez=()=>{ const c=btn.previousElementSibling; if(c&&c.tagName==="CODE"){ const r=document.createRange(); r.selectNodeContents(c); const s=getSelection(); s.removeAllRanges(); s.addRange(r); } btn.textContent="Selectat · Ctrl+C"; };
+  try{ navigator.clipboard.writeText(txt).then(ok,rez); }catch(e){ rez(); }
+}
+
+/* ceas real + aspect */
+function tick(){
+  const d=new Date();
+  $("ora").textContent=pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds());
+  $("data").textContent=ZS[d.getDay()]+", "+d.getDate()+" "+LUNI[d.getMonth()]+" "+d.getFullYear();
+}
+$("bAsp").addEventListener("click",()=>{
+  const r=document.documentElement;
+  const acum=r.dataset.theme||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");
+  r.dataset.theme=acum==="dark"?"light":"dark";
+  try{ localStorage.setItem(CH+"-aspect",r.dataset.theme); }catch(e){}
+});
+
+/* =================== Fișa (dialog) =================== */
+const dlg=$("dFisa"); let fisaTema=null, fisaTab="ex";
+function deseneazaFisa(){
+  const t=ECRAN.find(x=>x.id===fisaTema); if(!t) return;
+  $("dFT").textContent="Fișa – "+t.titlu;
+  $("tEx").setAttribute("aria-pressed",fisaTab==="ex"); $("tBa").setAttribute("aria-pressed",fisaTab==="ba");
+  $("tBa").hidden=!(t.barem&&t.barem.length);
+  if(fisaTab==="ba"&&t.barem&&t.barem.length){
+    const tot=t.barem.reduce((a,r)=>a+r[2],0)+10;
+    $("dBody").innerHTML=`<div class="tw"><table><thead><tr><th>Criteriu</th><th>Ce verificăm</th><th>Max.</th></tr></thead><tbody>`+
+      t.barem.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td class="c">${r[2]}</td></tr>`).join("")+
+      `<tr><td>Din oficiu</td><td>Prezență și participare</td><td class="c">10</td></tr><tr><td><b>TOTAL</b></td><td></td><td class="c"><b>${tot}</b></td></tr></tbody></table></div>`+
+      (t.notaBarem?`<p class="nota">${t.notaBarem}</p>`:"");
+  } else { $("dBody").innerHTML=`<div class="tw">${t.exemplu}</div>`; }
+}
+function addDocx(){ const id=fisaTema; if(FISE_DOCX[id]){ const a=document.createElement("p"); a.innerHTML='<a class="btn" href="'+FISE_DOCX[id]+'" download>⬇ Descarcă fișa (.docx)</a>'; $("dBody").prepend(a); } }
+const FISE_DOCX={t1:"fise/Fisa_1_Excel_Bugetul_lunii.docx",t2:"fise/Fisa_2_Fisiere_FINAL_v7_copie.docx"};
+function deschideFisa(id,tab){ fisaTema=id; fisaTab=tab||"ex"; deseneazaFisa();
+  addDocx(); if(!dlg.open) dlg.showModal(); }
+$("dClose").addEventListener("click",()=>dlg.close());
+$("tEx").addEventListener("click",()=>{fisaTab="ex";deseneazaFisa();addDocx();});
+$("tBa").addEventListener("click",()=>{fisaTab="ba";deseneazaFisa();addDocx();});
+if(!("closedBy" in HTMLDialogElement.prototype)){          // rezervă pentru Safari: clic pe fundal închide
+  dlg.addEventListener("click",e=>{ if(e.target!==dlg) return; const r=dlg.getBoundingClientRect();
+    if(!(r.top<=e.clientY&&e.clientY<=r.bottom&&r.left<=e.clientX&&e.clientX<=r.right)) dlg.close(); });
+}
+
+/* =================== Ecran de sală =================== */
+let E=null;   // {t, st} – tema deschisă și starea ei
+const CE = id => "panou-curs-ecran-"+id;
+const nouSt = () => ({status:"idle",acumulat:0,pornit:0,pas:0,startPas:[0]});
+const salvE = () => { try{ localStorage.setItem(CE(E.t.id),JSON.stringify(E.st)); }catch(e){} };
+const scurs = () => E.st.acumulat+(E.st.status==="run"?Date.now()-E.st.pornit:0);
+const totMs = () => E.t.durataMin*60000;
+const fmt = ms => { const s=Math.floor(Math.abs(ms)/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),r=s%60; return (h>0?pad(h)+":":"")+pad(m)+":"+pad(r); };
+const cache={}; const setT=(el,v)=>{ if(cache[el.id]!==v){ el.textContent=v; cache[el.id]=v; } };
+const setH=(el,v)=>{ if(cache[el.id]!==v){ el.innerHTML=v; cache[el.id]=v; } };
+
+function deschideEcran(id){
+  const t=ECRAN.find(x=>x.id===id); if(!t) return;
+  let st=nouSt(); try{ const s=JSON.parse(localStorage.getItem(CE(id))||"null"); if(s) st=Object.assign(st,s); }catch(e){}
+  E={t,st}; for(const k in cache) delete cache[k];
+  $("panou").hidden=true; $("ecran").hidden=false; window.scrollTo(0,0);
+  $("eTitlu").textContent=t.titlu; $("eSub").textContent=t.sub; $("eDur").textContent="Durată: "+t.durataMin+" min";
+  $("lPasi").innerHTML=t.pasi.map((p,i)=>`<li><span class="nr">${i+1}</span><span>${p.t}</span><span class="mn">${p.min} min</span></li>`).join("");
+  deseneazaE();
+}
+function inchideEcran(){
+  if(document.fullscreenElement){ try{ document.exitFullscreen(); }catch(e){} }
+  if(E&&E.st.status==="run"){ E.st.acumulat+=Date.now()-E.st.pornit; E.st.pornit=0; E.st.status="pause"; salvE(); }   // nu lăsăm cronometrul să curgă în fundal
+  E=null; $("ecran").hidden=true; $("panou").hidden=false;
+}
+function deseneazaE(){
+  if(!E) return;
+  const t=E.t, st=E.st, sc=scurs(), ra=totMs()-sc;
+  const c=$("cnt"); setT(c,(ra<0?"+":"")+fmt(ra));
+  c.classList.toggle("putin",ra>0&&ra<=600000); c.classList.toggle("depasit",ra<=0&&st.status!=="idle");
+  const pct=Math.min(100,Math.max(0,sc/totMs()*100)); $("bar").style.width=pct+"%"; $("bar").parentElement.setAttribute("aria-valuenow",Math.round(pct));
+  setT($("eFin"), st.status==="run" ? "Se termină la "+pad(new Date(Date.now()+Math.max(0,ra)).getHours())+":"+pad(new Date(Date.now()+Math.max(0,ra)).getMinutes()) : (st.status==="pause"?"În pauză":""));
+  const i=Math.min(st.pas,t.pasi.length-1), p=t.pasi[i];
+  setT($("pasE"),`Pasul ${i+1} din ${t.pasi.length}`); setT($("pasT"),p.t); setH($("pasD"),p.d);
+  const inPas=sc-(st.startPas[i]||0), peste=inPas-p.min*60000, pt=$("pasTm");
+  setT(pt, st.status==="idle" ? "Recomandat: "+p.min+" min" : "În acest pas: "+fmt(inPas)+" · recomandat "+p.min+" min"+(peste>0?" · peste timp cu "+fmt(peste):""));
+  pt.classList.toggle("peste",peste>0&&st.status!=="idle");
+  document.querySelectorAll("#lPasi li").forEach((li,k)=>{ li.classList.toggle("activ",k===i); li.classList.toggle("gata",k<i); if(k===i) li.setAttribute("aria-current","step"); else li.removeAttribute("aria-current"); });
+  let msg=""; if(st.status!=="idle"){ if(ra<=0) msg="⏰ Timpul a expirat. Trimitem ce avem; retușurile continuă în pauză. "+(t.predare||""); else if(ra<=600000&&t.predare) msg="⏳ Ultimele 10 minute. "+t.predare; }
+  $("av").textContent=msg; $("av").classList.toggle("on",!!msg);
+  const gl=st.status!=="idle"&&ra<=300000&&t.glume&&t.glume.length;
+  if(gl) setT($("gl"),"💡 "+t.glume[Math.floor(sc/60000)%t.glume.length]); $("gl").classList.toggle("on",!!gl);
+  $("bGo").textContent = st.status==="run"?"⏸ Pauză":(st.status==="pause"?"▶ Continuă":"▶ Start");
+  $("bPrev").disabled=st.pas<=0; $("bNext").disabled=st.pas>=t.pasi.length-1;
+}
+function startPauza(){ const s=E.st; if(s.status==="run"){ s.acumulat+=Date.now()-s.pornit; s.status="pause"; } else { s.pornit=Date.now(); s.status="run"; } salvE(); deseneazaE(); }
+function pas(dl){ const n=E.st.pas+dl; if(n<0||n>=E.t.pasi.length) return; if(dl>0) E.st.startPas[n]=scurs(); E.st.pas=n; salvE(); deseneazaE(); }
+let armat=null;
+function reset(){
+  const b=$("bRes");
+  if(E.st.status==="idle"){ E.st=nouSt(); salvE(); deseneazaE(); return; }
+  if(armat){ clearTimeout(armat); armat=null; b.textContent="Resetare"; E.st=nouSt(); salvE(); deseneazaE(); return; }
+  b.textContent="Sigur? Apasă încă o dată"; armat=setTimeout(()=>{armat=null;b.textContent="Resetare";},3000);
+}
+function ecranComplet(){ try{ if(document.fullscreenElement) document.exitFullscreen(); else $("ecran").requestFullscreen().catch(()=>{}); }catch(e){} }
+
+$("eBack").addEventListener("click",inchideEcran);
+$("eFisa").addEventListener("click",()=>E&&deschideFisa(E.t.id,"ex"));
+$("eFull").addEventListener("click",ecranComplet);
+$("bGo").addEventListener("click",e=>{startPauza();e.currentTarget.blur();});
+$("bPrev").addEventListener("click",e=>{pas(-1);e.currentTarget.blur();});
+$("bNext").addEventListener("click",e=>{pas(1);e.currentTarget.blur();});
+$("bRes").addEventListener("click",e=>{reset();e.currentTarget.blur();});
+document.addEventListener("keydown",e=>{
+  if(!E||dlg.open||e.ctrlKey||e.metaKey||e.altKey||/^(SELECT|INPUT|TEXTAREA|BUTTON)$/.test(e.target.tagName)) return;
+  switch(e.key){
+    case " ": e.preventDefault(); startPauza(); break;
+    case "ArrowRight": case "PageDown": e.preventDefault(); pas(1); break;
+    case "ArrowLeft": case "PageUp": e.preventDefault(); pas(-1); break;
+    case "e": case "E": deschideFisa(E.t.id,"ex"); break;
+    case "f": case "F": ecranComplet(); break;
+  }
+});
+
+/* =================== Pornire =================== */
+try{ const a=localStorage.getItem(CH+"-aspect"); if(a) document.documentElement.dataset.theme=a; }catch(e){}
+incarcaSel(); deseneazaTot(); tick();
+setInterval(()=>{ tick(); deseneazaE(); },250);
+</script>
+
+</body></html>

@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>De la mașina de scris la Copilot</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  /* Aceeași paletă ca Ceasul de Pauză și panoul de curs. Pagină cu un singur aspect (întunecat): se partajează pe Zoom. */
+  :root{
+    --bg:#0f1720; --bg-2:#0b1119; --surface:#16202b; --line:#233241;
+    --text:#eaf0f5; --dim:#87a0b3; --accent:#8ecb9d; --warm:#e7ad6b;
+    --hd:"Manrope",ui-sans-serif,system-ui,"Segoe UI",sans-serif;
+    --bd:"IBM Plex Sans",ui-sans-serif,system-ui,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  html{color-scheme:dark}
+  body{background:radial-gradient(1200px 700px at 78% 42%,#15222f 0%,var(--bg) 60%,var(--bg-2) 100%);
+       color:var(--text);font:400 18px/1.5 var(--bd);overflow:hidden}
+  body.idle{cursor:none}
+  [hidden]{display:none!important}
+  :focus-visible{outline:2px solid var(--warm);outline-offset:3px}
+
+  .app{position:relative;height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto;
+       padding:clamp(16px,2.4vw,32px) clamp(20px,4vw,64px)}
+
+  /* ---- sus: titlu mic + ceas real ---- */
+  .bar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+  .brand{font:800 clamp(12px,1.1vw,15px)/1 var(--hd);letter-spacing:.16em;text-transform:uppercase;color:var(--warm)}
+  .brand small{display:block;margin-top:8px;font:500 clamp(12px,1vw,14px)/1.3 var(--bd);letter-spacing:.02em;text-transform:none;color:var(--dim)}
+  .clock{text-align:right}
+  .clock .t{font:800 clamp(34px,5.2vw,76px)/1 var(--hd);font-variant-numeric:tabular-nums;letter-spacing:.01em}
+  .clock .r{margin-top:6px;font:600 clamp(13px,1.3vw,20px)/1.3 var(--hd);color:var(--warm);font-variant-numeric:tabular-nums}
+  .clock .r.gata{color:var(--accent)}
+
+  /* ---- scena ---- */
+  .stage{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);align-items:center;gap:clamp(16px,4vw,72px);min-height:0}
+  .scene{transition:opacity .9s ease, transform .9s ease}
+  .scene.out{opacity:0;transform:translateY(8px)}
+  .year{font:800 clamp(64px,13vw,210px)/.95 var(--hd);letter-spacing:-.02em;color:var(--text);font-variant-numeric:tabular-nums;
+        white-space:nowrap}
+  .year.long{font-size:clamp(48px,9.4vw,150px)}
+  .title{font:800 clamp(26px,3.6vw,56px)/1.1 var(--hd);margin:clamp(6px,1.4vh,16px) 0 clamp(8px,1.6vh,20px);color:var(--warm);text-wrap:balance}
+  .text{font:400 clamp(17px,1.9vw,30px)/1.45 var(--bd);max-width:36ch;color:var(--text);text-wrap:pretty}
+  .fact{margin-top:clamp(10px,2vh,24px);font:500 clamp(14px,1.4vw,22px)/1.4 var(--bd);color:var(--dim);max-width:44ch;display:flex;gap:10px}
+  .fact b{color:var(--accent);font-weight:600;white-space:nowrap}
+  .glyph{justify-self:center;width:min(100%,46vh,460px);aspect-ratio:1;color:var(--warm)}
+  .glyph svg{width:100%;height:100%;display:block;overflow:visible}
+  .glyph .a{fill:var(--warm);stroke:none}
+  .glyph .g{stroke:var(--accent)}
+  .glyph .f{fill:var(--accent);stroke:none}
+  .glyph .halo{fill:none;stroke:var(--line);stroke-width:2}
+  .scene.in .glyph svg{animation:plutește 9s ease-in-out infinite alternate}
+  @keyframes plutește{from{transform:translateY(-5px)}to{transform:translateY(6px)}}
+
+  /* ---- jos: axa timpului + comenzi ---- */
+  .foot{display:grid;gap:10px;padding-top:8px}
+  .eras{display:flex;gap:6px}
+  .era{min-width:0}
+  .era .nm{font:600 clamp(11px,.95vw,14px)/1.2 var(--hd);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);
+           white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px}
+  .era.on .nm{color:var(--text)}
+  .ticks{display:flex;gap:3px}
+  .tick{flex:1;height:8px;border-radius:4px;background:var(--line);position:relative;overflow:hidden;border:0;padding:0;cursor:pointer}
+  .tick.done{background:#3a5a49}
+  .tick.now{background:var(--warm)}
+  .tick i{position:absolute;inset:0;background:var(--accent);transform-origin:left;transform:scaleX(0)}
+  .row2{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:34px}
+  .nota{color:var(--dim);font:500 clamp(13px,1.15vw,17px)/1.3 var(--bd)}
+  .ctl{display:flex;gap:8px;align-items:center;transition:opacity .4s}
+  body.idle .ctl{opacity:0}
+  .btn{min-height:34px;padding:0 13px;border-radius:999px;border:1px solid #2c3d4e;background:transparent;color:var(--text);
+       font:600 13px var(--bd);cursor:pointer}
+  .btn:hover{border-color:var(--dim)}
+  .btn[aria-pressed=true]{background:rgba(231,173,107,.16);border-color:transparent;color:var(--warm)}
+  .vol{width:84px;accent-color:var(--warm)}
+
+  @media (max-width:820px){
+    body{overflow:auto}
+    .app{height:auto;min-height:100%}
+    .stage{grid-template-columns:1fr}
+    .glyph{width:min(60vw,280px)}
+  }
+  @media (prefers-reduced-motion:reduce){.scene{transition:none}.scene.in .glyph svg{animation:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div class="brand">De la mașina de scris la Copilot<small id="sus">Lucrați la test și la sarcinile de pe calculator. Pe ecran: povestea programelor de birou.</small></div>
+    <div class="clock"><div class="t" id="ora">--:--</div><div class="r" id="rest" hidden></div></div>
+  </header>
+
+  <main class="stage" aria-live="off">
+    <div class="scene in" id="scena">
+      <div class="year" id="an"></div>
+      <div class="title" id="titlu"></div>
+      <div class="text" id="text"></div>
+      <div class="fact" id="fact"></div>
+    </div>
+    <div class="glyph" id="glyph" aria-hidden="true"></div>
+  </main>
+
+  <footer class="foot">
+    <div class="eras" id="ere"></div>
+    <div class="row2">
+      <div class="nota" id="nota">Testul din chat rămâne deschis. Lucrați în ritmul vostru.</div>
+      <div class="ctl" id="ctl">
+        <button class="btn" id="bPrev" type="button" aria-label="Scena anterioară">←</button>
+        <button class="btn" id="bPlay" type="button" aria-pressed="false">Pauză</button>
+        <button class="btn" id="bNext" type="button" aria-label="Scena următoare">→</button>
+        <button class="btn" id="bSound" type="button" aria-pressed="false">Sunet</button>
+        <input class="vol" id="vol" type="range" min="0" max="100" value="45" aria-label="Volum" hidden>
+        <button class="btn" id="bFull" type="button">Ecran complet</button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+/* ======================= DATE: scenele montajului (Ora 8) =======================
+   Fiecare scenă: an, titlu, 1-2 fraze simple, un „ordin de mărime” opțional, pictograma.
+   Faptele verificate pe web (20.09.2026): Wikipedia + Computer History Museum + Decretul 98/1983 (cdep.ro). */
+var SCENE = [
+ {an:"1806", titlu:"Hârtia indigo", ic:"indigo",
+  text:"Primul brevet pentru hârtia carbon, cea numită la noi „indigo”, e din 1806, al lui Ralph Wedgwood. Scrii pe prima foaie, iar dedesubt apare o copie.",
+  fact:["Copia","se face în același timp cu originalul"]},
+ {an:"1868–1873", titlu:"Mașina de scris", ic:"masina",
+  text:"Christopher Sholes și colegii lui patentează în 1868 o „Type-Writer”. Din 1873, firma Remington începe s-o fabrice.",
+  fact:["Tastatura","aceeași ordine a literelor ca a voastră: QWERTY"]},
+ {an:"1961", titlu:"IBM Selectric", ic:"selectric",
+  text:"În loc de tije cu litere, o bilă care se rotește și se înclină, apoi lovește hârtia. Schimbi bila și schimbi tipul de literă.",
+  fact:["Ideea","mai multe fonturi pe aceeași mașină"]},
+ {an:"1971", titlu:"Prima dischetă", ic:"floppy8",
+  text:"IBM lansează discul flexibil, de 8 inci. S-a născut ca să încarce instrucțiuni în calculatoare mari.",
+  fact:["Capacitate","80 KB, câteva zeci de pagini de text"]},
+ {an:"Anii ’70", titlu:"Copiază și lipește", ic:"copie",
+  text:"La Xerox PARC, locul despre care am vorbit în Ora 1, Larry Tesler și Tim Mott pun în editorul Gypsy tăiatul, copiatul și lipitul textului.",
+  fact:["Azi","le știți ca Ctrl+X, Ctrl+C, Ctrl+V"]},
+ {an:"1979", titlu:"WordStar", ic:"wordstar",
+  text:"Devine programul de scris al primilor ani ai calculatorului personal. Comenzile se dau din tastatură, cu Ctrl și litere.",
+  fact:["Vânzări","5.000 de exemplare în primele 8 luni"]},
+ {an:"1979", titlu:"VisiCalc", ic:"tabel",
+  text:"Dan Bricklin a văzut un profesor refăcând un tabel de mână, pe tablă, la fiecare schimbare de cifră. A făcut un program care recalculează singur.",
+  fact:["Efect","oamenii cumpărau Apple II doar pentru el"]},
+ {an:"1981", titlu:"Folderul", ic:"dosar2",
+  text:"Xerox Star arată pentru prima dată biroul pe ecran: dosare, documente, pictograme. Așa a rămas ideea până azi.",
+  fact:["Preț","16.595 de dolari"]},
+ {an:"1983", titlu:"Mașina de scris, la miliție", ic:"decret",
+  text:"În România, Decretul 98 din 1983 cerea autorizație de la miliție pentru mașina de scris a unei persoane, plus o fișă cu literele ei.",
+  fact:["Azi","o tastatură nu cere nicio autorizație"]},
+ {an:"1983", titlu:"Word", ic:"word",
+  text:"Microsoft lansează, în octombrie 1983, Multi-Tool Word, pentru MS-DOS. Ce vedeți azi în Word a pornit de aici.",
+  fact:["Preț","395 de dolari"]},
+ {an:"1985", titlu:"Excel", ic:"grafic",
+  text:"Excel 1.0 apare în septembrie 1985, pentru Macintosh. Versiunea pentru Windows vine în 1987.",
+  fact:["Rivalul","Lotus 1-2-3, dominant până în anii ’90"]},
+ {an:"1987", titlu:"Dischetă de 1,44 MB", ic:"floppy35",
+  text:"O dischetă mică, în carcasă tare. Varianta de 1,44 MB devine standard odată cu IBM PS/2. Așa ajungea un fișier de la un calculator la altul.",
+  fact:["Drumul fișierului","din mână în mână, cu dischete"]},
+ {an:"1990", titlu:"Office", ic:"office",
+  text:"Word, Excel și PowerPoint, vândute împreună într-un singur pachet. Pe Windows, Office apare în octombrie 1990.",
+  fact:["Pachet","trei programe, o singură cutie"]},
+ {an:"1997–2007", titlu:"Agrafa care întreabă", ic:"agrafa",
+  text:"Clippy apare în Office 97 și întreabă din colț: „Se pare că scrieți o scrisoare”. E oprit implicit în 2002 și dispare din Office 2007.",
+  fact:["Strănepoții","asistenții din Office de azi"]},
+ {an:"1998", titlu:"Calculator fără dischetă", ic:"monitor",
+  text:"iMac-ul de la Apple apare în 1998 fără unitate de dischetă. Până în 2007, doar 2 din 100 de calculatoare vândute în magazine mai aveau una.",
+  fact:["Înlocuitor","portul USB"]},
+ {an:"2000", titlu:"Stick-ul USB", ic:"usb",
+  text:"La sfârșitul lui 2000 apar primele stick-uri USB. Unul de 8 MB ținea cât aproape 6 dischete.",
+  fact:["Azi","64 GB = peste 40.000 de dischete"]},
+ {an:"2006", titlu:"Documente în browser", ic:"docsb",
+  text:"Google cumpără Writely în martie 2006 și lansează în octombrie un editor de text care rulează direct în browser și se poate partaja.",
+  fact:["Ideea","documentul stă pe server, nu pe calculatorul tău"]},
+ {an:"2007", titlu:"De la .doc la .docx", ic:"docx",
+  text:"Office 2007 schimbă formatul fișierelor: din .doc devine .docx. De aceea un fișier vechi se deschide uneori în „Mod de compatibilitate”.",
+  fact:["Ce știm deja","extensia spune ce fel de fișier e"]},
+ {an:"2011", titlu:"Office 365", ic:"nor2",
+  text:"Pe 28 iunie 2011 pornește Office 365, pe abonament: programele pot rula și în browser, iar fișierele stau în cloud.",
+  fact:["Din 2020","se numește Microsoft 365"]},
+ {an:"2023", titlu:"Copilot", ic:"copilot",
+  text:"În martie 2023, Microsoft anunță Copilot: un asistent AI în Word, Excel, PowerPoint și Outlook, doar în abonamentele Microsoft 365 care îl includ, nu și în Office 2013 sau 2016. Poate scrie un text, rezuma un e-mail, sugera o formulă.",
+  fact:["Regula","el propune, noi verificăm"]},
+ {an:"Azi", titlu:"De la mașina de scris la Copilot", ic:"final2",
+  text:"De peste 150 de ani vrem același lucru: să scriem și să socotim mai repede, fără să refacem totul de la capăt. Joi, la Ora 9: cum ne scriem unii altora.",
+  fact:["Urmează","Joi, Ora 9: comunicarea digitală"]}
+];
+/* segmentele axei timpului (indici de scenă, inclusiv) */
+var ERE = [["Hârtie și metal",0,2],["Calculatorul intră în birou",3,9],["Word și Excel domină",10,14],["Stick, browser, cloud",15,18],["Asistentul",19,20]];
+
+/* ======================= PICTOGRAME (SVG simplu, fără fișiere externe) ======================= */
+var S = 'fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"';
+function svg(inner){ return '<svg viewBox="0 0 240 240" '+S+'><circle class="halo" cx="120" cy="120" r="112"/>'+inner+'</svg>'; }
+function boabe(y, xs){ return xs.map(function(x){ return '<circle class="a" cx="'+x+'" cy="'+y+'" r="9"/>'; }).join(''); }
+var IC = {
+ indigo: svg('<rect x="70" y="50" width="96" height="124" rx="8"/><rect x="84" y="66" width="96" height="124" rx="8" class="g"/><rect class="f" fill-opacity=".18" x="98" y="82" width="70" height="96" rx="4"/><line x1="82" y1="82" x2="150" y2="82"/><line x1="82" y1="104" x2="140" y2="104"/><line x1="82" y1="126" x2="150" y2="126"/>'),
+ masina: svg('<rect x="70" y="46" width="100" height="62" rx="4"/><line class="g" x1="82" y1="66" x2="150" y2="66"/><line class="g" x1="82" y1="82" x2="136" y2="82"/><line x1="50" y1="112" x2="190" y2="112" stroke-width="9"/><path d="M52 192v-48a12 12 0 0 1 12-12h112a12 12 0 0 1 12 12v48z"/>'+
+   [0,1,2,3,4,5].map(function(i){return '<circle class="a" cx="'+(80+i*16)+'" cy="154" r="5.5"/>';}).join('')+
+   [0,1,2,3,4].map(function(i){return '<circle class="a" cx="'+(88+i*16)+'" cy="174" r="5.5"/>';}).join('')),
+ selectric: svg('<circle cx="120" cy="86" r="42"/>'+
+   [0,1,2,3].map(function(r){return [0,1,2,3,4].map(function(c){return '<circle class="a" cx="'+(96+c*12)+'" cy="'+(66+r*13)+'" r="3.2"/>';}).join('');}).join('')+
+   '<line class="g" x1="120" y1="128" x2="120" y2="146"/><circle class="f" cx="120" cy="150" r="4"/>'+
+   '<rect x="58" y="154" width="124" height="44" rx="6"/><line class="g" x1="74" y1="171" x2="150" y2="171"/><line class="g" x1="74" y1="185" x2="122" y2="185"/>'),
+ floppy8: svg('<rect x="48" y="48" width="144" height="144" rx="8"/><circle class="g" cx="120" cy="126" r="42"/><circle class="a" cx="120" cy="126" r="10"/><rect x="104" y="48" width="32" height="16" rx="8"/><rect class="g" x="112" y="72" width="16" height="22" rx="8"/>'),
+ copie: svg('<rect x="52" y="56" width="88" height="116" rx="8"/><line x1="68" y1="84" x2="120" y2="84"/><line x1="68" y1="106" x2="92" y2="106"/><rect class="g" style="fill:var(--bg)" x="100" y="80" width="88" height="116" rx="8"/><line x1="116" y1="112" x2="172" y2="112"/><line x1="116" y1="134" x2="172" y2="134"/><line x1="116" y1="156" x2="152" y2="156"/>'),
+ wordstar: svg('<rect x="48" y="52" width="144" height="136" rx="8"/><text x="120" y="100" text-anchor="middle" fill="currentColor" stroke="none" font-size="32" font-family="IBM Plex Sans,monospace" font-weight="600">^KS</text><line x1="68" y1="128" x2="172" y2="128"/><line x1="68" y1="150" x2="150" y2="150"/><rect class="a" x="154" y="140" width="14" height="22"/>'),
+ tabel: svg('<rect x="46" y="58" width="148" height="124" rx="8"/><line x1="83" y1="58" x2="83" y2="182"/><line x1="120" y1="58" x2="120" y2="182"/><line x1="157" y1="58" x2="157" y2="182"/><line x1="46" y1="89" x2="194" y2="89"/><line x1="46" y1="120" x2="194" y2="120"/><line x1="46" y1="151" x2="194" y2="151"/><rect class="f" fill-opacity=".35" x="83" y="120" width="37" height="31"/>'),
+ dosar2: svg('<path d="M46 76a10 10 0 0 1 10-10h40l16 18h72a10 10 0 0 1 10 10v82a10 10 0 0 1-10 10H56a10 10 0 0 1-10-10z"/><line class="g" x1="72" y1="122" x2="168" y2="122"/><line class="g" x1="72" y1="144" x2="150" y2="144"/><line class="g" x1="72" y1="166" x2="160" y2="166"/>'),
+ decret: svg('<rect x="58" y="44" width="112" height="152" rx="8"/><line x1="74" y1="74" x2="154" y2="74"/><line x1="74" y1="96" x2="150" y2="96"/><line x1="74" y1="118" x2="130" y2="118"/><circle class="g" style="fill:var(--bg)" cx="148" cy="158" r="30"/><path class="g" d="M134 158l10 10 18-22"/>'),
+ word: svg('<rect x="56" y="44" width="128" height="152" rx="10"/><path class="g" stroke-width="8" d="M84 82l18 58 18-42 18 42 18-58"/><line x1="76" y1="168" x2="164" y2="168"/>'),
+ grafic: svg('<line x1="54" y1="186" x2="190" y2="186"/><line x1="54" y1="186" x2="54" y2="52"/><rect class="a" x="72" y="128" width="26" height="58" rx="3"/><rect class="f" x="108" y="90" width="26" height="96" rx="3"/><rect class="a" x="144" y="60" width="26" height="126" rx="3"/>'),
+ floppy35: svg('<path d="M58 52h94l30 30v104a8 8 0 0 1-8 8H58a8 8 0 0 1-8-8V60a8 8 0 0 1 8-8z"/><rect class="g" x="84" y="52" width="60" height="44"/><rect class="f" x="124" y="60" width="12" height="28"/><rect x="76" y="120" width="88" height="64" rx="4"/><line x1="90" y1="142" x2="150" y2="142"/><line x1="90" y1="160" x2="130" y2="160"/>'),
+ office: svg('<rect x="50" y="56" width="66" height="74" rx="8"/><line x1="64" y1="80" x2="102" y2="80"/><line x1="64" y1="98" x2="98" y2="98"/><line x1="64" y1="116" x2="88" y2="116"/><rect class="g" x="126" y="56" width="66" height="74" rx="8"/><line class="g" x1="126" y1="93" x2="192" y2="93"/><line class="g" x1="159" y1="56" x2="159" y2="130"/><rect x="82" y="142" width="76" height="52" rx="8"/><rect class="a" x="96" y="170" width="12" height="14"/><rect class="a" x="114" y="160" width="12" height="24"/><rect class="a" x="132" y="152" width="12" height="32"/>'),
+ agrafa: svg('<path d="M92 186V88a26 26 0 0 1 52 0v74a14 14 0 0 1-28 0V100"/><rect x="140" y="44" width="62" height="44" rx="12"/><path d="M152 88l-10 16 26-16"/><text x="171" y="76" text-anchor="middle" fill="currentColor" stroke="none" font-size="30" font-family="Manrope,sans-serif" font-weight="800">?</text>'),
+ monitor: svg('<rect x="52" y="48" width="136" height="104" rx="14"/><path d="M96 192h48M120 152v40"/><rect class="g" x="98" y="76" width="44" height="44" rx="5"/><rect class="g" x="108" y="76" width="24" height="16"/><line style="stroke:var(--warm)" stroke-width="7" x1="90" y1="132" x2="150" y2="66"/>'),
+ usb: svg('<rect x="52" y="94" width="98" height="52" rx="10"/><circle class="a" cx="72" cy="120" r="6"/><line class="g" x1="92" y1="110" x2="132" y2="110"/><line class="g" x1="92" y1="128" x2="122" y2="128"/><rect x="150" y="104" width="40" height="32"/><rect class="f" x="160" y="111" width="8" height="6"/><rect class="f" x="174" y="111" width="8" height="6"/><rect class="f" x="160" y="123" width="8" height="6"/><rect class="f" x="174" y="123" width="8" height="6"/>'),
+ docsb: svg('<rect x="44" y="52" width="152" height="136" rx="10"/><line x1="44" y1="80" x2="196" y2="80"/><circle class="a" cx="60" cy="66" r="4"/><circle class="f" cx="74" cy="66" r="4"/><line x1="64" y1="106" x2="170" y2="106"/><line x1="64" y1="128" x2="150" y2="128"/><line x1="64" y1="150" x2="166" y2="150"/><rect class="a" x="154" y="120" width="4" height="16"/><rect class="f" x="112" y="142" width="4" height="16"/>'),
+ docx: svg('<path d="M64 46h72l40 40v108a8 8 0 0 1-8 8H64a8 8 0 0 1-8-8V54a8 8 0 0 1 8-8z"/><path class="g" d="M136 46v40h40"/><text x="116" y="152" text-anchor="middle" fill="currentColor" stroke="none" font-size="30" font-family="Manrope,sans-serif" font-weight="800">.docx</text>'),
+ nor2: svg('<path d="M76 170a34 34 0 0 1-2-68 48 48 0 0 1 92-8 38 38 0 0 1 4 76z"/><rect class="a" x="96" y="122" width="14" height="14" rx="3"/><rect class="f" x="118" y="122" width="14" height="14" rx="3"/><rect class="a" x="140" y="122" width="14" height="14" rx="3"/>'),
+ copilot: svg('<path class="a" d="M100 58l9 30 30 9-30 9-9 30-9-30-30-9 30-9z"/><path class="f" d="M162 118l6 18 18 6-18 6-6 18-6-18-18-6 18-6z"/><rect x="62" y="174" width="116" height="36" rx="14"/><line class="g" x1="80" y1="186" x2="150" y2="186"/><line class="g" x1="80" y1="198" x2="126" y2="198"/>'),
+ final2: svg('<path d="M76 116a30 30 0 0 1-2-60 44 44 0 0 1 84-6 34 34 0 0 1 4 66z"/>'+
+   [0,1,2,3,4,5].map(function(i){return '<rect class="a" x="'+(56+i*25)+'" y="138" width="20" height="16" rx="4"/>';}).join('')+
+   [0,1,2,3,4].map(function(i){return '<rect class="f" x="'+(68+i*25)+'" y="160" width="20" height="16" rx="4"/>';}).join('')+
+   '<rect class="a" x="86" y="182" width="68" height="16" rx="4"/>')
+};
+
+/* ======================= STARE ======================= */
+var params = new URLSearchParams(location.search);
+var SEC = Math.max(5, parseInt(params.get('sec'),10) || 128);      /* secunde pe scenă (implicit 128 -> 21 scene ≈ 45 min, o singură trecere) */
+var END = params.get('end') || '20:45';                            /* ora la care se termină lucrul individual */
+if (params.get('nota')) document.getElementById('nota').textContent = params.get('nota');
+var idx = 0, pauza = false, elapsed = 0, ultimul = Date.now(), schimba = false;
+
+function el(id){ return document.getElementById(id); }
+function z2(n){ return (n<10?'0':'')+n; }
+
+/* ora Bucureștiului; ?acum=2026-09-22T20:10 o simulează (repetiții) */
+function acum(){
+  var s = params.get('acum');
+  if (s){ var m = s.match(/T(\d{2}):(\d{2})/); if (m) return {h:+m[1], m:+m[2], s:0}; }
+  try {
+    var p = {}; new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Bucharest',hourCycle:'h23',hour:'2-digit',minute:'2-digit',second:'2-digit'})
+      .formatToParts(new Date()).forEach(function(x){p[x.type]=x.value;});
+    return {h:+p.hour, m:+p.minute, s:+p.second};
+  } catch(e){ var d=new Date(); return {h:d.getHours(), m:d.getMinutes(), s:d.getSeconds()}; }
+}
+
+/* ---- axa timpului ---- */
+function construiesteAxa(){
+  var ere = el('ere'); ere.innerHTML='';
+  ERE.forEach(function(e,i){
+    var n = e[2]-e[1]+1, d = document.createElement('div'); d.className='era'; d.style.flex = n+' 1 0'; d.id='era'+i;
+    d.innerHTML = '<div class="nm">'+e[0]+'</div><div class="ticks"></div>';
+    var t = d.querySelector('.ticks');
+    for (var k=e[1]; k<=e[2]; k++){ var b=document.createElement('button'); b.type='button'; b.className='tick'; b.id='tk'+k; b.title=SCENE[k].an+' — '+SCENE[k].titlu; b.setAttribute('aria-label',SCENE[k].an+' '+SCENE[k].titlu);
+      b.innerHTML='<i></i>'; (function(kk){ b.onclick=function(){ mergiLa(kk); }; })(k); t.appendChild(b); }
+    ere.appendChild(d);
+  });
+}
+function coloreazaAxa(){
+  SCENE.forEach(function(_,k){ var t=el('tk'+k); t.className='tick'+(k<idx?' done':(k===idx?' now':'')); });
+  ERE.forEach(function(e,i){ el('era'+i).className='era'+(idx>=e[1]&&idx<=e[2]?' on':''); });
+}
+
+/* ---- afișarea unei scene (cu fade) ---- */
+/* micșorează anul până încape în coloană (independent de fontul disponibil pe calculator) */
+function fitAn(){
+  var y = el('an'), box = el('scena'); y.style.fontSize = '';
+  var sz = parseFloat(getComputedStyle(y).fontSize), g = 0;
+  while (y.scrollWidth > box.clientWidth + 1 && sz > 36 && g++ < 40){ sz *= .94; y.style.fontSize = sz + 'px'; }
+}
+window.addEventListener('resize', fitAn);
+function arata(i, imediat){
+  var sc = SCENE[i], box = el('scena');
+  function pune(){
+    el('an').textContent = sc.an; el('an').className = 'year';
+    el('titlu').textContent = sc.titlu; el('text').textContent = sc.text;
+    el('fact').innerHTML = '<b>'+sc.fact[0]+':</b><span>'+sc.fact[1]+'</span>';
+    el('glyph').innerHTML = IC[sc.ic];
+    box.classList.remove('out'); box.classList.add('in');
+    coloreazaAxa(); fitAn();
+  }
+  if (imediat){ pune(); return; }
+  box.classList.add('out'); box.classList.remove('in'); schimba = true;
+  setTimeout(function(){ pune(); schimba = false; if (sonorOn) clopotel(); }, 650);
+}
+function mergiLa(i){ idx = (i+SCENE.length)%SCENE.length; elapsed = 0; arata(idx); }
+
+/* ---- ceasul de sus + timpul rămas până la sfârșitul lucrului ---- */
+function tickCeas(){
+  var a = acum(); el('ora').textContent = z2(a.h)+':'+z2(a.m);
+  var p = END.split(':'), tinta = (+p[0])*3600 + (+p[1])*60, rest = tinta - (a.h*3600+a.m*60+a.s), r = el('rest');
+  if (rest > 0 && rest <= 5400){ r.hidden=false; r.className='r'; r.textContent='Lucrul se încheie la '+END+' · rămân '+z2(Math.floor(rest/60))+':'+z2(rest%60); }
+  else if (rest <= 0 && rest > -300){ r.hidden=false; r.className='r gata'; r.textContent='Timpul de lucru s-a încheiat · pauză'; }
+  else r.hidden = true;
+}
+
+/* ---- avansul automat ---- */
+function tick(){
+  var acum_ = Date.now(), dt = (acum_-ultimul)/1000; ultimul = acum_;
+  if (!pauza && !schimba){
+    elapsed += dt;
+    var f = Math.min(1, elapsed/SEC), t = el('tk'+idx); if (t) t.firstChild.style.transform = 'scaleX('+f+')';
+    if (elapsed >= SEC){ if (t) t.firstChild.style.transform='scaleX(0)'; mergiLa(idx+1); }
+  }
+  tickCeas();
+}
+
+/* ---- comenzi ---- */
+el('bPrev').onclick = function(){ mergiLa(idx-1); };
+el('bNext').onclick = function(){ mergiLa(idx+1); };
+el('bPlay').onclick = function(){ pauza = !pauza; this.textContent = pauza ? 'Continuă' : 'Pauză'; this.setAttribute('aria-pressed', pauza); };
+el('bFull').onclick = function(){ try{ if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); }catch(e){} };
+document.addEventListener('keydown', function(e){
+  if (e.target && e.target.tagName==='INPUT') return;
+  if (e.key==='ArrowRight'||e.key==='PageDown') mergiLa(idx+1);
+  else if (e.key==='ArrowLeft'||e.key==='PageUp') mergiLa(idx-1);
+  else if (e.key===' '){ e.preventDefault(); el('bPlay').click(); }
+  else if (e.key==='f'||e.key==='F') el('bFull').click();
+  else if (e.key==='s'||e.key==='S') el('bSound').click();
+});
+/* cursorul și comenzile dispar după 3 secunde fără mișcare (ecran curat pe Zoom) */
+var idleT; function nuIdle(){ document.body.classList.remove('idle'); clearTimeout(idleT); idleT=setTimeout(function(){document.body.classList.add('idle');},3000); }
+['mousemove','keydown','touchstart'].forEach(function(ev){ document.addEventListener(ev, nuIdle, {passive:true}); }); nuIdle();
+
+/* ======================= SUNET OPȚIONAL (generat în pagină, fără fișiere) =======================
+   Ambient lent: acorduri La minor–Fa–Do–Sol + note rare din pentatonica La minor, cu ecou lung.
+   Implicit oprit. Diferit de melodiile cronometrelor. Pe Zoom: Share Screen + „Share sound”. */
+var ac=null, master=null, sonorOn=false, plucks=null, chordT=null, chordI=0, pad=[], echoIn=null;
+var ACORDURI = [[110.00,164.81,220.00,261.63],[87.31,130.81,174.61,220.00],[130.81,196.00,261.63,329.63],[98.00,146.83,196.00,246.94]];
+var PENTA = [440.00,523.25,587.33,659.25,783.99,880.00];
+function graf(){
+  ac = new (window.AudioContext||window.webkitAudioContext)();
+  master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination);
+  var lp = ac.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=900; lp.connect(master);
+  echoIn = ac.createGain(); echoIn.gain.value = 1;
+  var dl = ac.createDelay(2); dl.delayTime.value = .7; var fb = ac.createGain(); fb.gain.value = .42;
+  var flt = ac.createBiquadFilter(); flt.type='lowpass'; flt.frequency.value=1600;
+  echoIn.connect(dl); dl.connect(flt); flt.connect(fb); fb.connect(dl); flt.connect(master); echoIn.connect(master);
+  for (var v=0; v<4; v++){                             /* 4 voci de „pad”, fiecare cu doi oscilatori ușor dezacordați */
+    var g = ac.createGain(); g.gain.value = .045; g.connect(lp);
+    var o1 = ac.createOscillator(), o2 = ac.createOscillator(); o1.type='triangle'; o2.type='sine'; o2.detune.value = 7 + v*2;
+    o1.frequency.value = o2.frequency.value = ACORDURI[0][v];
+    o1.connect(g); o2.connect(g); o1.start(); o2.start(); pad.push([o1,o2]);
+  }
+}
+function clopotel(){   /* notă lungă, moale, din pentatonică */
+  if (!ac) return; var f = PENTA[Math.floor(Math.random()*PENTA.length)], t = ac.currentTime;
+  var o = ac.createOscillator(), g = ac.createGain(); o.type='sine'; o.frequency.value = f;
+  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(.07,t+.03); g.gain.exponentialRampToValueAtTime(.0001,t+3.2);
+  o.connect(g); g.connect(echoIn); o.start(t); o.stop(t+3.4);
+}
+function programeazaNote(){ if(!sonorOn) return; clopotel(); plucks = setTimeout(programeazaNote, 3500 + Math.random()*4500); }
+function schimbaAcord(){
+  if(!sonorOn) return; chordI = (chordI+1)%ACORDURI.length;
+  pad.forEach(function(p,v){ p.forEach(function(o){ o.frequency.setTargetAtTime(ACORDURI[chordI][v], ac.currentTime, 2.5); }); });
+  chordT = setTimeout(schimbaAcord, 16000);
+}
+function volum(){ return (parseInt(el('vol').value,10)/100)*0.9; }
+el('bSound').onclick = function(){
+  sonorOn = !sonorOn; this.setAttribute('aria-pressed', sonorOn); el('vol').hidden = !sonorOn;
+  if (sonorOn){ if(!ac) graf(); ac.resume(); master.gain.cancelScheduledValues(ac.currentTime); master.gain.setTargetAtTime(volum(), ac.currentTime, 1.5);
+    programeazaNote(); chordT = setTimeout(schimbaAcord, 16000); }
+  else { clearTimeout(plucks); clearTimeout(chordT); master.gain.setTargetAtTime(0, ac.currentTime, .6); setTimeout(function(){ if(!sonorOn) ac.suspend(); }, 2500); }
+};
+el('vol').oninput = function(){ if (ac && sonorOn) master.gain.setTargetAtTime(volum(), ac.currentTime, .2); };
+
+/* ======================= PORNIRE ======================= */
+construiesteAxa(); arata(0, true); tickCeas();
+setInterval(tick, 250);
+</script>
+</body>
+</html>

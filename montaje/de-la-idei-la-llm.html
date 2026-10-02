@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>De la idei la LLM</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  /* Ora 31 — „De la idei la LLM”: laborator interactiv. Pagină întunecată, ca montajele cursului; se partajează pe Zoom, dar merge și pe telefon.
+     Tot conținutul este local (fără cereri către servere). Probabilitățile și răspunsurile sunt scrise de mână, pentru demonstrație. */
+  :root{
+    --bg:#0f1720; --bg-2:#0b1119; --surface:#16202b; --surface-2:#1b2836; --line:#2a3a4b;
+    --text:#eaf0f5; --dim:#9bb2c3; --c:#e0a458;
+    --hd:"Manrope",ui-sans-serif,system-ui,"Segoe UI",sans-serif;
+    --bd:"IBM Plex Sans",ui-sans-serif,system-ui,"Segoe UI",sans-serif;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;min-height:100vh;background:radial-gradient(1100px 650px at 80% -10%,#182838 0%,var(--bg) 55%,var(--bg-2) 100%);
+       color:var(--text);font:400 clamp(16px,1.25vw,19px)/1.55 var(--bd)}
+  :focus-visible{outline:3px solid var(--c);outline-offset:3px;border-radius:6px}
+  button{font:inherit;color:inherit}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+  .app{max-width:1180px;margin:0 auto;padding:clamp(14px,2.4vw,32px) clamp(16px,3vw,40px) 56px}
+  header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;margin-bottom:18px}
+  .brand{font:800 clamp(12px,1vw,14px)/1 var(--hd);letter-spacing:.16em;text-transform:uppercase;color:var(--c)}
+  h1{font:800 clamp(28px,4.4vw,52px)/1.05 var(--hd);margin:10px 0 0;letter-spacing:-.01em}
+  .hint{color:var(--dim);font-size:clamp(13px,1vw,15px);max-width:34ch}
+  .hint kbd{font:600 12px var(--hd);background:var(--surface);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px}
+
+  /* ---- file ---- */
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+  .tab{display:inline-flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--line);color:var(--dim);
+       padding:10px 16px;border-radius:999px;font:700 clamp(14px,1.05vw,16px)/1.1 var(--hd);cursor:pointer;
+       transition:background .2s,color .2s,border-color .2s}
+  .tab:hover{border-color:var(--dim);color:var(--text)}
+  .tab .n{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--bg);font-size:12px;color:var(--text)}
+  .tab[aria-selected="true"]{background:var(--c);border-color:var(--c);color:#0f1720}
+  .tab[aria-selected="true"] .n{background:#0f1720;color:var(--c)}
+
+  [role="tabpanel"][hidden]{display:none}
+  .kick{font:700 12px/1 var(--hd);letter-spacing:.14em;text-transform:uppercase;color:var(--c);margin:0 0 8px}
+  h2{font:800 clamp(24px,3vw,38px)/1.12 var(--hd);margin:0 0 8px;text-wrap:balance}
+  .lead{color:var(--dim);max-width:62ch;margin:0 0 20px;text-wrap:pretty}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(16px,2.2vw,28px)}
+  .grid2{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:16px}
+  .note{font-size:.86em;color:var(--dim);margin:12px 0 0}
+  .note b{color:var(--c);font-weight:600}
+  .btn{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font:600 15px/1.1 var(--hd);cursor:pointer;
+       transition:border-color .2s,background .2s}
+  .btn:hover{border-color:var(--c)}
+  .btn.main{background:var(--c);border-color:var(--c);color:#0f1720}
+  .btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+
+  /* ---- 1. cronologie ---- */
+  .hype{width:100%;height:auto;display:block;margin-bottom:6px}
+  .hype .band{fill:#7b3f3f;opacity:.16}
+  .hype .bl{fill:var(--dim);font:600 11px var(--hd);letter-spacing:.04em}
+  .hype .ax{stroke:var(--line);stroke-width:1}
+  .hype .yr{fill:var(--dim);font:500 11px var(--bd)}
+  .hype path.curve{fill:none;stroke:var(--c);stroke-width:3;stroke-linecap:round}
+  .hype .dot{fill:var(--bg);stroke:var(--c);stroke-width:3;cursor:pointer;transition:r .2s}
+  .hype .dot.on{fill:var(--c)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
+  .chip{background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:8px 13px;cursor:pointer;font:700 14px/1 var(--hd);color:var(--dim)}
+  .chip:hover{color:var(--text);border-color:var(--dim)}
+  .chip[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#0f1720}
+  .detail .when{font:800 clamp(40px,7vw,84px)/1 var(--hd);letter-spacing:-.02em;color:var(--c);margin:0 0 6px}
+  .detail h3{font:800 clamp(20px,2.4vw,30px)/1.15 var(--hd);margin:0 0 10px}
+  .detail p{margin:0 0 10px;max-width:60ch}
+  .detail .fact{color:var(--dim);border-left:3px solid var(--c);padding-left:12px}
+
+  /* ---- 2. următorul cuvânt ---- */
+  .sent{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:56px;margin-bottom:6px}
+  .tok{background:color-mix(in srgb,var(--c) 22%,var(--bg));border:1px solid color-mix(in srgb,var(--c) 55%,var(--bg));border-radius:9px;padding:6px 12px;
+       font:700 clamp(18px,2vw,26px)/1.1 var(--hd)}
+  .tok.new{animation:pop .35s ease-out}
+  .cursor{display:inline-block;width:12px;height:28px;background:var(--c);border-radius:2px;animation:blink 1s steps(2) infinite}
+  @keyframes pop{from{transform:scale(.8);opacity:0}to{transform:none;opacity:1}}
+  @keyframes blink{50%{opacity:0}}
+  .bars{display:grid;gap:8px}
+  .barrow{display:grid;grid-template-columns:minmax(74px,26%) minmax(0,1fr) 54px;align-items:center;gap:10px;background:transparent;border:1px solid transparent;
+          border-radius:10px;padding:6px 8px;cursor:pointer;text-align:left}
+  .barrow:hover{border-color:var(--line);background:var(--surface-2)}
+  .barrow .lab{font:700 clamp(15px,1.4vw,19px)/1.1 var(--hd);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .barrow .trk{height:16px;background:var(--bg);border-radius:8px;overflow:hidden}
+  .barrow .fill{display:block;height:100%;background:var(--c);border-radius:8px;transition:width .45s ease}
+  .barrow .pct{font:700 15px var(--hd);text-align:right;font-variant-numeric:tabular-nums}
+  .tmp{margin:16px 0 0;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--bg);min-width:0}
+  .tmp-top{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px}
+  .tmp-top label{font:800 15px var(--hd)}
+  .tnum{font:800 20px var(--hd);color:var(--c);font-variant-numeric:tabular-nums}
+  .tpill{font:600 13px var(--bd);padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--dim)}
+  input[type=range]{display:block;width:100%;height:28px;margin:10px 0 2px;accent-color:var(--c);cursor:pointer}
+  .tmp-ends{position:relative;display:flex;justify-content:space-between;gap:8px;font:600 12px var(--bd);color:var(--dim);height:16px}
+  .tmp-ends span:nth-child(2){position:absolute;left:44.4%;transform:translateX(-50%)}
+  .texp{margin:10px 0 0;font-size:15px;line-height:1.5}
+  .what{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+  .what summary{cursor:pointer;font:700 14px var(--hd);color:var(--c)}
+  .what p{margin:8px 0 0;font-size:14px;line-height:1.55}
+  .tval{font:600 14px var(--bd);color:var(--dim);min-width:0}
+  .runs{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:6px}
+  .runs li{background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:8px 12px;font-weight:500}
+  .runs li b{color:var(--c);font-family:var(--hd);margin-right:8px}
+  .starts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center}
+  .starts span{color:var(--dim);font-size:.9em}
+
+  /* ---- 3. tokeni ---- */
+  textarea{width:100%;min-height:104px;resize:vertical;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px 14px;
+           font:500 clamp(16px,1.4vw,20px)/1.45 var(--bd)}
+  textarea:focus-visible{border-color:var(--c)}
+  .toks{display:flex;flex-wrap:wrap;gap:5px;margin-top:16px}
+  .tk{border-radius:7px;padding:4px 8px;font:600 clamp(15px,1.4vw,19px)/1.2 var(--hd);border:1px solid transparent;white-space:pre}
+  .tk.t0{background:#3b5a7a}.tk.t1{background:#5a4a7a}.tk.t2{background:#3f6b5a}.tk.t3{background:#7a5a3b}.tk.t4{background:#6b3f5a}.tk.t5{background:#4a6b3f}
+  .tk.out{background:transparent;border-color:var(--line);color:#5f7488;text-decoration:line-through}
+  .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}
+  .stat{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+  .stat b{display:block;font:800 clamp(22px,2.6vw,32px)/1.1 var(--hd);font-variant-numeric:tabular-nums}
+  .stat span{color:var(--dim);font-size:.85em}
+  .meter{height:18px;background:var(--bg);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:14px}
+  .meter i{display:block;height:100%;width:0;background:var(--c);transition:width .35s ease,background .35s}
+  .meter i.full{background:#e0736a}
+  .mlab{display:flex;justify-content:space-between;gap:10px;margin-top:6px;color:var(--dim);font-size:.88em}
+
+  /* ---- 4. prompt ---- */
+  .scen{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .toggles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .tg{text-align:left;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:11px 13px;cursor:pointer;display:grid;gap:4px}
+  .tg .nm{font:800 14px var(--hd);letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .tg .nm i{width:16px;height:16px;border-radius:5px;border:2px solid var(--dim);display:inline-block;flex:0 0 16px}
+  .tg .tx{font-size:.88em;color:var(--dim)}
+  .tg[aria-pressed="true"]{border-color:var(--c);background:color-mix(in srgb,var(--c) 12%,var(--bg))}
+  .tg[aria-pressed="true"] .nm i{background:var(--c);border-color:var(--c)}
+  .tg[aria-pressed="true"] .tx{color:var(--text)}
+  .box{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;white-space:pre-line}
+  .box.prompt{font-weight:500;border-left:4px solid var(--c)}
+  .box.resp{min-height:200px}
+  .lvl{display:flex;gap:5px;margin:12px 0 8px}
+  .lvl i{flex:1;height:8px;border-radius:4px;background:var(--line)}
+  .lvl i.on{background:var(--c)}
+  .lvlname{font:800 15px var(--hd);color:var(--c);margin:0 0 4px}
+  .tagline{display:inline-block;font:700 11px/1 var(--hd);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);border-radius:6px;padding:4px 7px;margin-bottom:8px}
+
+  /* ---- 5. Skynet / Clippy ---- */
+  .stmts{display:grid;gap:10px}
+  .st{text-align:left;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;display:grid;gap:6px}
+  .st .q{font:800 clamp(16px,1.5vw,20px)/1.25 var(--hd)}
+  .st .a{display:none;color:var(--text)}
+  .st[aria-expanded="true"]{border-color:var(--c)}
+  .st[aria-expanded="true"] .a{display:block}
+  .st .a b{color:var(--c)}
+  .track{position:relative;height:16px;border-radius:9px;background:linear-gradient(90deg,#e0736a,#e0a458 50%,#8ecb9d);margin:26px 6px 8px}
+  .needle{position:absolute;top:-8px;width:8px;height:32px;margin-left:-4px;background:var(--text);border-radius:4px;box-shadow:0 0 0 3px var(--bg);transition:left .6s cubic-bezier(.3,1.2,.4,1)}
+  .ends{display:flex;justify-content:space-between;gap:12px;font:800 clamp(13px,1.2vw,16px)/1.2 var(--hd)}
+  .ends span:last-child{text-align:right}
+  .verdict{margin-top:14px;font:800 clamp(20px,2.4vw,30px)/1.15 var(--hd);min-height:2.4em;color:var(--c)}
+  .robots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+  .rb{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+  .rb svg{width:84px;height:84px;display:block;margin-bottom:8px}
+  .rb h3{font:800 17px/1.2 var(--hd);margin:0 0 6px}
+  .rb p{margin:0;color:var(--dim);font-size:.92em}
+  .ideas{margin:16px 0 0;padding:0;list-style:none;counter-reset:i;display:grid;gap:10px}
+  .ideas li{counter-increment:i;display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;align-items:start;font-weight:500}
+  .ideas li::before{content:counter(i);display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--c);color:#0f1720;font:800 16px var(--hd)}
+  .clip{display:flex;gap:14px;align-items:center;margin-top:16px}
+  .clip svg{flex:0 0 46px;width:46px;height:46px}
+  .clip p{margin:0;color:var(--dim);font-size:.92em}
+
+  footer{margin-top:32px;color:var(--dim);font-size:.82em;text-align:center}
+
+  @media (max-width:820px){
+    .grid2{grid-template-columns:minmax(0,1fr)}
+    .robots{grid-template-columns:minmax(0,1fr)}
+    .rb{display:grid;grid-template-columns:72px minmax(0,1fr);gap:0 14px;align-items:start}
+    .rb svg{width:64px;height:64px;grid-row:1 / span 2}
+    .toggles{grid-template-columns:minmax(0,1fr)}
+    .hint{display:none}
+    .tab{padding:9px 12px}
+    .tab .t{display:none}
+    .tab[aria-selected="true"] .t{display:inline}
+  }
+  @media (max-width:480px){
+    .stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+    .stat{padding:8px}
+    .tmp{padding:12px}
+    .tmp-ends{font-size:11px}
+    .barrow{grid-template-columns:minmax(64px,30%) minmax(0,1fr) 46px;gap:8px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="top">
+    <div>
+      <div class="brand">Ora 31 · Competențe digitale</div>
+      <h1>De la idei la LLM</h1>
+    </div>
+    <p class="hint">Taste: <kbd>1</kbd>–<kbd>5</kbd> schimbă modulul, <kbd>←</kbd> <kbd>→</kbd> merg între file. Pe telefon: apăsați filele.</p>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Modulele orei" id="tabs">
+    <button class="tab" role="tab" id="tab1" aria-controls="p1" aria-selected="true" data-i="0"><span class="n">1</span><span class="t">Cronologie</span></button>
+    <button class="tab" role="tab" id="tab2" aria-controls="p2" aria-selected="false" tabindex="-1" data-i="1"><span class="n">2</span><span class="t">Următorul cuvânt</span></button>
+    <button class="tab" role="tab" id="tab3" aria-controls="p3" aria-selected="false" tabindex="-1" data-i="2"><span class="n">3</span><span class="t">Tokeni</span></button>
+    <button class="tab" role="tab" id="tab4" aria-controls="p4" aria-selected="false" tabindex="-1" data-i="3"><span class="n">4</span><span class="t">Laborator de prompt</span></button>
+    <button class="tab" role="tab" id="tab5" aria-controls="p5" aria-selected="false" tabindex="-1" data-i="4"><span class="n">5</span><span class="t">Skynet sau Clippy?</span></button>
+  </div>
+
+  <!-- 1. CRONOLOGIE -->
+  <section role="tabpanel" id="p1" aria-labelledby="tab1" tabindex="-1">
+    <p class="kick">1 · Mini-istoria AI</p>
+    <h2>De la întrebarea lui Turing la ChatGPT</h2>
+    <p class="lead">Apăsați un punct sau un an. Curba arată, orientativ, cât entuziasm și câți bani au mers spre domeniu; zonele roșii sunt „iernile” inteligenței artificiale.</p>
+    <div class="card">
+      <svg class="hype" id="hype" viewBox="0 0 1000 230" role="img" aria-label="Curbă orientativă a interesului pentru inteligența artificială, între 1945 și 2026, cu două perioade de iarnă, în anii șaptezeci și nouăzeci"></svg>
+      <div class="chips" id="chips" role="group" aria-label="Momente din istorie"></div>
+      <div class="detail" id="detail" aria-live="polite"></div>
+      <p class="note"><b>Ilustrativ:</b> forma curbei arată tendința, nu date măsurate.</p>
+    </div>
+  </section>
+
+  <!-- 2. URMĂTORUL CUVÂNT -->
+  <section role="tabpanel" id="p2" aria-labelledby="tab2" tabindex="-1" hidden>
+    <p class="kick">2 · Cum „gândește” un LLM</p>
+    <h2>Un LLM ghicește următoarea bucată de text</h2>
+    <p class="lead">Nu caută un răspuns gata scris: îl construiește bucată cu bucată. Alegeți voi bucata următoare (apăsând o bară) sau lăsați modelul să aleagă după probabilități.</p>
+    <div class="grid2">
+      <div class="card">
+        <div class="starts" id="starts"><span>Începutul propoziției:</span></div>
+        <div class="sent" id="sent" aria-live="polite"></div>
+        <div class="bars" id="bars"></div>
+        <div class="tmp">
+          <div class="tmp-top">
+            <label for="temp">Temperatura</label>
+            <b class="tnum" id="tnum"></b>
+            <span class="tpill" id="tname"></span>
+          </div>
+          <input type="range" id="temp" min="20" max="200" value="100" step="5" aria-describedby="texp">
+          <div class="tmp-ends" aria-hidden="true"><span>0,2 · prudent</span><span>1,0 · normal</span><span>2,0 · creativ</span></div>
+          <p class="texp" id="texp" aria-live="polite"></p>
+          <details class="what">
+            <summary>Ce este temperatura?</summary>
+            <p>Temperatura este un reglaj care stabilește <b>cât de îndrăzneț alege modelul</b> următoarea bucată de text. La fiecare pas, modelul are o listă de variante, fiecare cu o probabilitate (barele de mai sus).</p>
+            <p><b>Temperatură mică</b> (spre 0,2): modelul alege aproape mereu varianta cea mai probabilă. Răspunsurile sunt previzibile și se repetă de la o rulare la alta, potrivit pentru rezumate, extragere de date, cod.</p>
+            <p><b>Temperatură mare</b> (spre 2,0): barele se egalizează, iar variantele rare primesc șanse reale. Răspunsurile sunt mai variate și mai surprinzătoare, dar cresc și ciudățeniile sau greșelile, potrivit pentru idei, titluri, brainstorming.</p>
+            <p class="note">Analogie: de la un contabil vrem același rezultat de fiecare dată (temperatură mică); la o ședință de idei vrem variante diverse (temperatură mare). Încercați: mutați cursorul și urmăriți cum se schimbă procentele. În aplicațiile obișnuite de chat nu vedeți acest buton; apare în setările avansate și în API.</p>
+          </details>
+        </div>
+        <div class="btnrow">
+          <button class="btn main" id="btnStep" type="button">Alege singur (după probabilități)</button>
+          <button class="btn" id="btnFinish" type="button">Termină propoziția</button>
+          <button class="btn" id="btnReset" type="button">De la capăt</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="font:800 20px/1.2 var(--hd);margin:0 0 8px">Același început, răspunsuri diferite</h3>
+        <p style="margin:0 0 10px;color:var(--dim)">Din același început, modelul poate ajunge în locuri diferite. De aceea, două întrebări identice nu dau mereu același răspuns.</p>
+        <button class="btn" id="btnRuns" type="button">Rulează de 3 ori</button>
+        <ul class="runs" id="runs" aria-live="polite"></ul>
+        <p class="note"><b>Ilustrativ:</b> probabilitățile sunt scrise de mână, pentru demonstrație. Un model real are zeci de mii de variante la fiecare pas și învață aceste valori din cantități uriașe de text.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. TOKENI -->
+  <section role="tabpanel" id="p3" aria-labelledby="tab3" tabindex="-1" hidden>
+    <p class="kick">3 · Moneda sistemului</p>
+    <h2>Tokenii: bucățile în care e tăiat textul</h2>
+    <p class="lead">Scrieți orice text. Vedeți cum se taie în bucăți și cât din „fereastra de context” ocupă. Când fereastra se umple, ce depășește nu mai este văzut de model.</p>
+    <div class="grid2">
+      <div class="card">
+        <label for="txt" class="sr">Textul de tăiat în tokeni</label>
+        <textarea id="txt" spellcheck="false"></textarea>
+        <div class="btnrow">
+          <button class="btn" type="button" data-pre="scurt">Text scurt</button>
+          <button class="btn" type="button" data-pre="lung">Text lung</button>
+          <button class="btn" type="button" data-pre="cuvant">Un cuvânt lung</button>
+        </div>
+        <div class="toks" id="toks" aria-live="polite"></div>
+      </div>
+      <div class="card">
+        <div class="stats">
+          <div class="stat"><b id="sCh">0</b><span>caractere</span></div>
+          <div class="stat"><b id="sWd">0</b><span>cuvinte</span></div>
+          <div class="stat"><b id="sTk">0</b><span>tokeni (de jucărie)</span></div>
+        </div>
+        <div class="meter" role="progressbar" aria-label="Fereastra de context de jucărie" aria-valuemin="0" aria-valuemax="40" aria-valuenow="0" id="meterWrap"><i id="meter"></i></div>
+        <div class="mlab"><span id="mTxt"></span><span>fereastră de context de jucărie: 40 de tokeni</span></div>
+        <p style="margin:16px 0 0">Tot ce încape într-o conversație, întrebarea voastră plus răspunsul, are o limită, măsurată în tokeni. Serviciile plătite taxează tot după tokeni. În alte limbi decât engleza, aceeași idee cere de obicei mai mulți tokeni.</p>
+        <p class="note"><b>Ilustrativ:</b> aici cuvintele lungi se taie în bucăți egale de câte 4 litere, cel mult. Un tokenizer real are alt vocabular, iar fereastra reală este de mii de tokeni.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. LABORATOR DE PROMPT -->
+  <section role="tabpanel" id="p4" aria-labelledby="tab4" tabindex="-1" hidden>
+    <p class="kick">4 · Promptul</p>
+    <h2>Un asistent foarte literal</h2>
+    <p class="lead">Ca Data din Star Trek, un LLM face exact ce i-ați cerut, nu ce ați vrut să spuneți. Porniți pe rând cele patru ingrediente și priviți cum se schimbă răspunsul.</p>
+    <div class="scen" id="scen" role="group" aria-label="Alegeți situația"></div>
+    <div class="grid2">
+      <div class="card">
+        <div class="toggles" id="toggles"></div>
+        <div class="btnrow">
+          <button class="btn" type="button" id="btnWeak">Prompt slab</button>
+          <button class="btn main" type="button" id="btnGood">Prompt bun</button>
+          <button class="btn" type="button" id="btnCopy">Copiază promptul</button>
+          <span id="copied" class="tval" aria-live="polite"></span>
+        </div>
+        <p class="tagline" style="margin-top:16px">Promptul trimis</p>
+        <div class="box prompt" id="prompt"></div>
+      </div>
+      <div class="card">
+        <span class="tagline">Răspuns de exemplu</span>
+        <div class="lvl" id="lvl" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <p class="lvlname" id="lvlname"></p>
+        <div class="box resp" id="resp" aria-live="polite"></div>
+        <p class="note" id="lvlnote"></p>
+        <p class="note"><b>Ilustrativ:</b> răspunsurile sunt scrise de mână pentru demonstrație, nu generate de un model real. Un asistent real ar formula altfel, dar diferența dintre un prompt slab și unul bun este aceeași.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. SKYNET SAU CLIPPY -->
+  <section role="tabpanel" id="p5" aria-labelledby="tab5" tabindex="-1" hidden>
+    <p class="kick">5 · Concluzia orei</p>
+    <h2>Skynet sau Clippy?</h2>
+    <p class="lead">Apăsați fiecare întrebare și priviți încotro se mută acul.</p>
+    <div class="grid2">
+      <div class="card">
+        <div class="stmts" id="stmts"></div>
+        <div class="track" aria-hidden="true"><span class="needle" id="needle" style="left:50%"></span></div>
+        <div class="ends"><span style="color:#e0736a">Skynet</span><span style="color:#8ecb9d">Stagiar foarte citit</span></div>
+        <div class="verdict" id="verdict" aria-live="polite"></div>
+        <div class="btnrow"><button class="btn" type="button" id="btnStmtReset">De la capăt</button></div>
+      </div>
+      <div class="card">
+        <h3 style="font:800 20px/1.2 var(--hd);margin:0 0 8px">Trei idei de luat cu voi</h3>
+        <ol class="ideas">
+          <li>AI-ul e un stagiar foarte citit: îl instruiești bine și îl verifici.</li>
+          <li>La tot ce contează: verifici, îți protejezi datele, rămâi în buclă.</li>
+          <li>Curiozitatea e cea mai bună unealtă: încerci, greșești, ajustezi.</li>
+        </ol>
+        <div class="clip">
+          <svg viewBox="0 0 48 48" fill="none" stroke="#e0a458" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 30V13a7 7 0 0 1 14 0v22a4.5 4.5 0 0 1-9 0V17"/></svg>
+          <p>Clippy a apărut în Office 97, a fost oprit implicit în Office XP și scos în Office 2007, pentru că întrerupea utilizatorii cu sfaturi nepotrivite. Copilot de azi e un urmaș mult mai capabil, dar care tot cere supraveghere.</p>
+        </div>
+      </div>
+    </div>
+    <div class="robots">
+      <div class="rb">
+        <svg viewBox="0 0 84 84" aria-hidden="true"><rect x="16" y="22" width="52" height="46" rx="10" fill="#2a3a4b"/><line x1="42" y1="22" x2="42" y2="10" stroke="#9bb2c3" stroke-width="3"/><circle cx="42" cy="8" r="4" fill="#e0736a"/><circle cx="30" cy="44" r="6" fill="#0f1720"/><circle cx="54" cy="44" r="6" fill="#e0736a"/><rect x="30" y="56" width="24" height="4" rx="2" fill="#0f1720"/></svg>
+        <h3>Terminator: frica</h3>
+        <p>Frica de un AI cu voință proprie. Azi, asistenții nu au voință, iar riscurile reale sunt mai banale: greșeli, date scurse, înșelătorii, exact cele din Modulul 4.</p>
+      </div>
+      <div class="rb">
+        <svg viewBox="0 0 84 84" aria-hidden="true"><g stroke="#9bb2c3" stroke-width="2"><line x1="42" y1="42" x2="14" y2="16"/><line x1="42" y1="42" x2="70" y2="16"/><line x1="42" y1="42" x2="10" y2="46"/><line x1="42" y1="42" x2="74" y2="46"/><line x1="42" y1="42" x2="20" y2="72"/><line x1="42" y1="42" x2="64" y2="72"/></g><circle cx="42" cy="42" r="10" fill="#e0a458"/><g fill="#2a3a4b" stroke="#9bb2c3" stroke-width="2"><circle cx="14" cy="16" r="6"/><circle cx="70" cy="16" r="6"/><circle cx="10" cy="46" r="6"/><circle cx="74" cy="46" r="6"/><circle cx="20" cy="72" r="6"/><circle cx="64" cy="72" r="6"/></g></svg>
+        <h3>Droizii din Star Wars: punctul unic</h3>
+        <p>Comandați de la o singură navă: când nava a fost distrusă, s-au oprit toți odată. Un sistem fără supraveghere umană e fragil, deci vrem oameni în buclă.</p>
+      </div>
+      <div class="rb">
+        <svg viewBox="0 0 84 84" aria-hidden="true"><path d="M8 72c0-16 8-26 18-26s18 10 18 26z" fill="#2a3a4b"/><circle cx="26" cy="32" r="12" fill="#2a3a4b"/><rect x="48" y="24" width="28" height="28" rx="8" fill="#3f6b5a"/><circle cx="57" cy="36" r="3.5" fill="#0f1720"/><circle cx="68" cy="36" r="3.5" fill="#0f1720"/><rect x="56" y="44" width="14" height="3" rx="1.5" fill="#0f1720"/><path d="M40 60h28" stroke="#8ecb9d" stroke-width="3" stroke-linecap="round"/></svg>
+        <h3>Data: colaborarea</h3>
+        <p>Un AI care colaborează. În „The Measure of a Man” (1989), o instanță hotărăște dacă are drepturi și decide că are dreptul să aleagă. Întrebarea rămâne: cine răspunde pentru ce face un AI? Omul care îl folosește.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>Ora 31 · Competențe digitale · pictogramele sunt originale, iar exemplele din pagină sunt scrise de mână, pentru demonstrație</footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- file (tabs) ---------- */
+  var COLORS = ['#e0a458', '#6fc3c9', '#a99bf0', '#8ecb9d', '#ee8f7e'];
+  var tabs = $$('.tab'), panels = $$('[role="tabpanel"]');
+  function selectTab(i, focus) {
+    tabs.forEach(function (t, k) {
+      var on = k === i;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      panels[k].hidden = !on;
+    });
+    document.documentElement.style.setProperty('--c', COLORS[i]);
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, '', '#' + (i + 1)); } catch (e) {}
+  }
+  tabs.forEach(function (t, k) {
+    t.addEventListener('click', function () { selectTab(k, false); });
+    t.addEventListener('keydown', function (e) {
+      var n = tabs.length, k2 = null;
+      if (e.key === 'ArrowRight') k2 = (k + 1) % n;
+      else if (e.key === 'ArrowLeft') k2 = (k - 1 + n) % n;
+      else if (e.key === 'Home') k2 = 0;
+      else if (e.key === 'End') k2 = n - 1;
+      if (k2 !== null) { e.preventDefault(); selectTab(k2, true); }
+    });
+  });
+  document.addEventListener('keydown', function (e) {
+    var tag = (e.target && e.target.tagName) || '';
+    if (/INPUT|TEXTAREA|SELECT/.test(tag) || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key >= '1' && e.key <= '5') selectTab(+e.key - 1, false);
+  });
+
+  /* ---------- 1. cronologie ---------- */
+  var PTS = [[1945, .05], [1950, .22], [1956, .55], [1965, .72], [1975, .14], [1985, .4], [1990, .2], [1997, .42], [2003, .2], [2012, .5], [2017, .66], [2022, .92], [2026, 1]];
+  var EV = [
+    { id: 'turing', pt: 1, chip: '1950', when: '1950', h: 'Alan Turing: pot mașinile să gândească?',
+      p: 'Matematicianul Alan Turing pune întrebarea și propune un test, numit de atunci testul Turing.',
+      f: 'Dacă nu poți deosebi răspunsurile unei mașini de ale unui om, poate mașina „gândește”?' },
+    { id: 'dart', pt: 2, chip: '1956', when: '1956', h: 'Dartmouth: apare numele „inteligență artificială”',
+      p: 'La o conferință la Dartmouth, John McCarthy folosește pentru prima dată numele „inteligență artificială”.',
+      f: 'Numele a apărut la șase ani după întrebarea lui Turing.' },
+    { id: 'ierni', pt: 4, chip: 'Anii ’70 și ’90', when: 'Anii ’70 și ’90', h: '„Iernile” inteligenței artificiale',
+      p: 'Entuziasm, apoi dezamăgiri: în anii șaptezeci și, din nou, în anii nouăzeci, promisiunile depășesc ce poate tehnologia, banii se retrag.',
+      f: 'Perioadele astea se numesc „iernile inteligenței artificiale”. Domeniul a supraviețuit și a revenit.' },
+    { id: 'deep', pt: 7, chip: '1997', when: '1997', h: 'Deep Blue bate campionul mondial la șah',
+      p: 'În mai 1997, calculatorul Deep Blue îl învinge, într-un meci, pe campionul mondial Garry Kasparov.',
+      f: 'Scorul meciului: 3½–2½. Un calculator, foarte bun la un singur lucru.' },
+    { id: 'alex', pt: 9, chip: '2012', when: '2012', h: 'AlexNet și învățarea profundă',
+      p: 'O rețea neuronală numită AlexNet câștigă concursul de recunoaștere a imaginilor, iar tot domeniul se mută pe „învățarea profundă”.',
+      f: 'Începe perioada în care rețelele neuronale devin standardul.' },
+    { id: 'trans', pt: 10, chip: '2017', when: '2017', h: '„Attention Is All You Need” și Transformer',
+      p: 'În iunie 2017, opt cercetători de la Google publică lucrarea „Attention Is All You Need”, cu un titlu care face aluzie la un cântec al Beatles-ilor. Ea introduce arhitectura „Transformer”, pe care sunt construite toate modelele de azi.',
+      f: 'Numele a fost ales pentru că „suna bine”. Da, ca în desene: echipa se numea „Team Transformer”.' },
+    { id: 'chat', pt: 11, chip: '30.11.2022', when: '30 noiembrie 2022', h: 'Apare ChatGPT',
+      p: 'OpenAI lansează ChatGPT: un milion de utilizatori în cinci zile, o sută de milioane în două luni.',
+      f: 'Pentru prima dată, oricine poate discuta cu un asistent, fără să știe programare.' },
+    { id: 'azi', pt: 12, chip: 'Azi', when: 'Azi', h: 'Aceeași tehnologie, mai mulți furnizori',
+      p: 'Asistenții sunt în Word, Excel, Outlook și Teams, în telefon și în browser. ChatGPT, Claude, Copilot, DeepSeek, Gemini, Mistral, Llama, Qwen, Grok: clasamentul se schimbă de la o lună la alta.',
+      f: 'Nu memorați versiunile, apar noi în fiecare lună. Rețineți ideea: aceeași tehnologie, mai mulți furnizori.' }
+  ];
+  var W = 1000, X0 = 40, X1 = 960, Y0 = 200, YH = 150, YR0 = 1945, YR1 = 2030;
+  function px(y) { return X0 + (y - YR0) / (YR1 - YR0) * (X1 - X0); }
+  function py(l) { return Y0 - l * YH; }
+  function curvePath() {
+    var p = PTS.map(function (a) { return [px(a[0]), py(a[1])]; }), d = 'M' + p[0][0] + ' ' + p[0][1];
+    for (var i = 0; i < p.length - 1; i++) {
+      var p0 = p[i - 1] || p[i], p1 = p[i], p2 = p[i + 1], p3 = p[i + 2] || p2;
+      var c1x = p1[0] + (p2[0] - p0[0]) / 6, c1y = p1[1] + (p2[1] - p0[1]) / 6, c2x = p2[0] - (p3[0] - p1[0]) / 6, c2y = p2[1] - (p3[1] - p1[1]) / 6;
+      d += ' C' + c1x.toFixed(1) + ' ' + c1y.toFixed(1) + ',' + c2x.toFixed(1) + ' ' + c2y.toFixed(1) + ',' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1);
+    }
+    return d;
+  }
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(n, a, parent) { var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); if (parent) parent.appendChild(e); return e; }
+  var hype = $('#hype'), dots = [];
+  (function drawHype() {
+    [[1970, 1980, 'iarna anilor ’70'], [1990, 2000, 'iarna anilor ’90']].forEach(function (b) {
+      el('rect', { 'class': 'band', x: px(b[0]), y: 20, width: px(b[1]) - px(b[0]), height: Y0 - 20 }, hype);
+      var t = el('text', { 'class': 'bl', x: px(b[0]) + 6, y: 36 }, hype); t.textContent = b[2];
+    });
+    el('line', { 'class': 'ax', x1: X0, y1: Y0 + 8, x2: X1, y2: Y0 + 8 }, hype);
+    [1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020].forEach(function (y) {
+      var t = el('text', { 'class': 'yr', x: px(y), y: Y0 + 26, 'text-anchor': 'middle' }, hype); t.textContent = y;
+    });
+    el('path', { 'class': 'curve', d: curvePath() }, hype);
+    EV.forEach(function (ev, k) {
+      var a = PTS[ev.pt], c = el('circle', { 'class': 'dot', cx: px(a[0]), cy: py(a[1]), r: 9, 'data-k': k }, hype);
+      c.addEventListener('click', function () { showEv(k); });
+      dots.push(c);
+    });
+  })();
+  var chipsBox = $('#chips'), chipBtns = [];
+  EV.forEach(function (ev, k) {
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = ev.chip; b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', function () { showEv(k); }); chipsBox.appendChild(b); chipBtns.push(b);
+  });
+  function showEv(k) {
+    var ev = EV[k];
+    chipBtns.forEach(function (b, i) { b.setAttribute('aria-pressed', i === k ? 'true' : 'false'); });
+    dots.forEach(function (d, i) { d.setAttribute('class', 'dot' + (i === k ? ' on' : '')); d.setAttribute('r', i === k ? 13 : 9); });
+    $('#detail').innerHTML = '<p class="when"></p><h3></h3><p class="p"></p><p class="fact"></p>';
+    $('#detail .when').textContent = ev.when; $('#detail h3').textContent = ev.h; $('#detail .p').textContent = ev.p; $('#detail .fact').textContent = ev.f;
+  }
+  showEv(0);
+
+  /* ---------- 2. următorul cuvânt (model de jucărie, tabel scris de mână) ---------- */
+  var BI = {
+    'Trenul': [['pleacă', 45], ['întârzie', 30], ['sosește', 15], ['este', 10]],
+    'Ședința': [['începe', 45], ['durează', 30], ['se', 25]],
+    'pleacă': [['din', 50], ['la', 30], ['spre', 20]],
+    'întârzie': [['cu', 60], ['din', 25], ['azi', 15]],
+    'sosește': [['la', 45], ['în', 30], ['din', 25]],
+    'este': [['gata', 40], ['plin', 35], ['întârziat', 25]],
+    'începe': [['la', 45], ['mâine', 30], ['acum', 25]],
+    'durează': [['o', 50], ['zece', 30], ['douăzeci', 20]],
+    'se': [['amână', 60], ['termină', 40]],
+    'amână': [['cu', 35], ['până', 35], ['azi', 30]],
+    'termină': [['devreme', 50], ['târziu', 50]],
+    'din': [['gară', 50], ['Iași', 30], ['București', 20]],
+    'spre': [['Iași', 45], ['București', 35], ['Cluj', 20]],
+    'la': [['ora', 60], ['Iași', 25], ['timp', 15]],
+    'în': [['gară', 60], ['stație', 40]],
+    'cu': [['zece', 45], ['douăzeci', 35], ['o', 20]],
+    'zece': [['minute', 85], ['ore', 15]],
+    'douăzeci': [['de', 100]],
+    'de': [['minute', 80], ['ore', 20]],
+    'o': [['oră', 70], ['întârziere', 30]],
+    'oră': [['.', 70], ['și', 30]],
+    'și': [['jumătate', 100]],
+    'jumătate': [['.', 100]],
+    'ora': [['opt', 40], ['zece', 35], ['nouă', 25]],
+    'opt': [['.', 75], ['dimineața', 25]],
+    'nouă': [['.', 75], ['dimineața', 25]],
+    'dimineața': [['.', 100]],
+    'gară': [['.', 70], ['Iași', 30]],
+    'Iași': [['.', 80], ['azi', 20]],
+    'București': [['.', 75], ['azi', 25]],
+    'Cluj': [['.', 80], ['azi', 20]],
+    'stație': [['.', 100]],
+    'timp': [['.', 100]],
+    'minute': [['.', 65], ['azi', 35]],
+    'ore': [['.', 60], ['azi', 40]],
+    'gata': [['.', 100]],
+    'plin': [['.', 60], ['azi', 40]],
+    'întârziat': [['.', 60], ['azi', 40]],
+    'întârziere': [['.', 100]],
+    'azi': [['.', 60], ['dimineață', 20], ['seară', 20]],
+    'dimineață': [['.', 100]],
+    'seară': [['.', 100]],
+    'devreme': [['.', 70], ['azi', 30]],
+    'târziu': [['.', 70], ['azi', 30]],
+    'mâine': [['.', 80], ['la', 20]],
+    'acum': [['.', 100]],
+    'până': [['mâine', 60], ['luni', 40]],
+    'luni': [['.', 100]]
+  };
+  var STARTS = ['Trenul', 'Ședința'];
+  var seq = [], startTok = STARTS[0];
+  var tempEl = $('#temp');
+  function temp() { return +tempEl.value / 100; }
+  function dist(last) {
+    var o = BI[last]; if (!o) return null;
+    var t = temp(), ws = o.map(function (a) { return Math.pow(a[1], 1 / t); }), s = ws.reduce(function (a, b) { return a + b; }, 0);
+    return o.map(function (a, i) { return { tok: a[0], p: ws[i] / s }; }).sort(function (a, b) { return b.p - a.p; });
+  }
+  function pick(d) { var r = Math.random(), acc = 0; for (var i = 0; i < d.length; i++) { acc += d[i].p; if (r <= acc) return d[i].tok; } return d[d.length - 1].tok; }
+  function tempName() { var t = temp(); return t < 0.6 ? 'prudent' : t <= 1.3 ? 'echilibrat' : 'creativ'; }
+  function tempExplain(d) {
+    var t = temp(), top = d ? Math.round(d[0].p * 100) : null;
+    var base = t < 0.6 ? 'Cursor spre stânga: modelul joacă la sigur. ' : t <= 1.3 ? 'Setare obișnuită: probabilitățile rămân cele învățate. ' : 'Cursor spre dreapta: modelul riscă mai mult. ';
+    return base + (top === null ? 'Propoziția s-a terminat; apăsați „De la capăt” ca să încercați altă temperatură.' : 'Cea mai probabilă variantă („' + d[0].tok.replace('.', 'punct') + '”) are acum ' + top + '%.');
+  }
+  function joined(a) { return a.join(' ').replace(' .', '.'); }
+  function renderNext(anim) {
+    var sent = $('#sent'); sent.innerHTML = '';
+    seq.forEach(function (t, i) {
+      var s = document.createElement('span'); s.className = 'tok' + (anim && i === seq.length - 1 && !reduce ? ' new' : ''); s.textContent = t; sent.appendChild(s);
+    });
+    var last = seq[seq.length - 1], done = last === '.';
+    if (!done) { var c = document.createElement('span'); c.className = 'cursor'; c.setAttribute('aria-hidden', 'true'); sent.appendChild(c); }
+    var bars = $('#bars'); bars.innerHTML = '';
+    $('#tnum').textContent = temp().toFixed(2).replace('.', ',');
+    $('#tname').textContent = tempName();
+    if (done) {
+      var m = document.createElement('p'); m.className = 'note'; m.textContent = 'Propoziția s-a terminat: „' + joined(seq) + '”. Apăsați „De la capăt” sau alegeți alt început.'; bars.appendChild(m);
+    } else {
+      dist(last).forEach(function (d) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'barrow';
+        b.innerHTML = '<span class="lab"></span><span class="trk"><span class="fill"></span></span><span class="pct"></span>';
+        $('.lab', b).textContent = d.tok === '.' ? '. (final)' : d.tok;
+        $('.fill', b).style.width = (d.p * 100).toFixed(1) + '%';
+        $('.pct', b).textContent = Math.round(d.p * 100) + '%';
+        b.setAttribute('aria-label', 'Alege „' + d.tok + '”, ' + Math.round(d.p * 100) + ' la sută');
+        b.addEventListener('click', function () { seq.push(d.tok); renderNext(true); });
+        bars.appendChild(b);
+      });
+    }
+    $('#texp').textContent = tempExplain(done ? null : dist(last));
+    $('#btnStep').disabled = done; $('#btnFinish').disabled = done;
+    $('#btnStep').style.opacity = $('#btnFinish').style.opacity = done ? .45 : 1;
+  }
+  function complete(from) { var a = from.slice(), guard = 0; while (a[a.length - 1] !== '.' && guard++ < 12) { var d = dist(a[a.length - 1]); if (!d) break; a.push(pick(d)); } return a; }
+  function resetNext() { seq = [startTok]; $('#runs').innerHTML = ''; renderNext(false); }
+  (function buildStarts() {
+    var box = $('#starts');
+    STARTS.forEach(function (s) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = s; b.setAttribute('aria-pressed', s === startTok ? 'true' : 'false');
+      b.addEventListener('click', function () { startTok = s; $$('.chip', box).forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); resetNext(); });
+      box.appendChild(b);
+    });
+  })();
+  $('#btnStep').addEventListener('click', function () { var d = dist(seq[seq.length - 1]); if (d) { seq.push(pick(d)); renderNext(true); } });
+  $('#btnFinish').addEventListener('click', function () { seq = complete(seq); renderNext(false); });
+  $('#btnReset').addEventListener('click', resetNext);
+  tempEl.addEventListener('input', function () { renderNext(false); });
+  $('#btnRuns').addEventListener('click', function () {
+    var ul = $('#runs'); ul.innerHTML = '';
+    for (var i = 1; i <= 3; i++) { var li = document.createElement('li'); var b = document.createElement('b'); b.textContent = i + '.'; li.appendChild(b); li.appendChild(document.createTextNode(joined(complete(seq)))); ul.appendChild(li); }
+  });
+  resetNext();
+
+  /* ---------- 3. tokeni (tokenizer de jucărie) ---------- */
+  var CAP = 40, PRE = {
+    scurt: 'Trenul de Iași întârzie cu douăzeci de minute.',
+    lung: 'Bună ziua, colegi! Trenul de Iași are o întârziere de aproximativ douăzeci de minute. Vă rugăm să reprogramați, dacă este nevoie, întâlnirile de la sosire. Vom transmite un mesaj imediat ce aflăm ora exactă. Mulțumim pentru înțelegere!',
+    cuvant: 'dezoxiribonucleic'
+  };
+  function toyTokens(text) {
+    var out = [], re = /[\p{L}\p{N}]+|[^\s\p{L}\p{N}]/gu, m;
+    while ((m = re.exec(text)) !== null) {
+      var w = m[0];
+      if (/^[\p{L}\p{N}]+$/u.test(w) && w.length > 4) {
+        /* bucăți cât mai egale, de cel mult 4 litere: primele „rest” bucăți primesc o literă în plus */
+        var n = Math.ceil(w.length / 4), base = Math.floor(w.length / n), rest = w.length % n, pos = 0, k, len;
+        for (k = 0; k < n; k++) { len = base + (k < rest ? 1 : 0); out.push(w.slice(pos, pos + len)); pos += len; }
+      } else out.push(w);
+    }
+    return out;
+  }
+  function renderToks() {
+    var text = $('#txt').value, toks = toyTokens(text), box = $('#toks'); box.innerHTML = '';
+    toks.forEach(function (t, i) { var s = document.createElement('span'); s.className = 'tk t' + (i % 6) + (i >= CAP ? ' out' : ''); s.textContent = t; box.appendChild(s); });
+    var words = (text.match(/[\p{L}\p{N}]+/gu) || []).length;
+    $('#sCh').textContent = text.length; $('#sWd').textContent = words; $('#sTk').textContent = toks.length;
+    var used = Math.min(toks.length, CAP), full = toks.length > CAP;
+    $('#meter').style.width = (used / CAP * 100) + '%'; $('#meter').className = full ? 'full' : '';
+    $('#meterWrap').setAttribute('aria-valuenow', used);
+    $('#mTxt').textContent = full ? (toks.length - CAP) + ' tokeni în plus: modelul nu-i mai vede' : used + ' din ' + CAP + ' tokeni folosiți';
+  }
+  $('#txt').value = PRE.scurt;
+  $('#txt').addEventListener('input', renderToks);
+  $$('[data-pre]').forEach(function (b) { b.addEventListener('click', function () { $('#txt').value = PRE[b.getAttribute('data-pre')]; renderToks(); }); });
+  renderToks();
+
+  /* ---------- 4. laborator de prompt ---------- */
+  var SC = [
+    { name: 'Anunț despre întârziere',
+      vague: 'Scrie ceva despre întârzieri.',
+      rol: { l: 'Rol', t: 'Ești referent la o companie de transport feroviar.' },
+      ctx: { l: 'Context', t: 'Scrie pentru colegi, despre întârzierea unui tren de Iași.' },
+      sar: { l: 'Sarcină', t: 'Scrie un anunț despre întârzierea unui tren.' },
+      fmt: { l: 'Format', t: 'Cinci rânduri, ton politicos, fără date personale.' },
+      resp: [
+        'Întârzierile sunt o problemă frecventă în transporturi. Ele pot avea multe cauze, precum vremea, defecțiunile tehnice sau aglomerația liniilor. În general, întârzierile afectează programul călătorilor și pot duce la frustrare. Este important ca operatorii să comunice transparent și să caute soluții pentru a reduce impactul. Există și studii despre modul în care întârzierile influențează încrederea publicului în serviciile de transport...',
+        'Stimați călători, vă informăm că trenul de Iași are o întârziere din motive tehnice. Ne cerem scuze pentru neplăcerile create și vă mulțumim pentru înțelegere. Vă rugăm să urmăriți anunțurile din stație și să vă adresați personalului nostru pentru orice informație suplimentară. Compania noastră depune eforturi permanente pentru îmbunătățirea serviciilor...',
+        'Bună ziua, colegi! Vă informăm că trenul de Iași are o întârziere de aproximativ douăzeci de minute. Vă rugăm să reprogramați, dacă este nevoie, întâlnirile de la sosire. Vom reveni cu un mesaj imediat ce aflăm ora exactă. Vă mulțumim pentru înțelegere și pentru colaborare.',
+        'Bună ziua, colegi,\nTrenul de Iași are o întârziere de aproximativ 20 de minute.\nVă rugăm să reprogramați, dacă e nevoie, întâlnirile de la sosire.\nVă anunțăm imediat ce aflăm ora exactă.\nMulțumim pentru înțelegere!'
+      ] },
+    { name: 'E-mail: ședință amânată',
+      vague: 'Scrie ceva despre o ședință.',
+      rol: { l: 'Rol', t: 'Ești asistent administrativ într-o echipă de birou.' },
+      ctx: { l: 'Context', t: 'Ședința de luni, ora 10, se amână cu o zi, pentru că sala e ocupată. Colegii sunt din departamente diferite.' },
+      sar: { l: 'Sarcină', t: 'Scrie un e-mail care anunță amânarea și cere confirmarea prezenței.' },
+      fmt: { l: 'Format', t: 'Subiect și formulă de salut, cel mult șase rânduri, ton politicos.' },
+      resp: [
+        'Ședințele sunt un instrument important de lucru în orice organizație. Ele permit schimbul de informații, luarea deciziilor și coordonarea echipei. Pentru ca o ședință să fie eficientă, este recomandat să aibă o agendă clară, o durată limitată și participanți pregătiți. De asemenea, este util ca la final să se stabilească responsabilitățile și termenele...',
+        'Bună ziua, Ședința de luni se amână. Sala nu este disponibilă, iar noi data o vom stabili ulterior, în funcție de disponibilitate. Vă rugăm să ne scuzați pentru situația creată și să țineți legătura cu noi pentru orice nelămurire. Vă mulțumim pentru flexibilitate și pentru înțelegere. Cu stimă...',
+        'Bună ziua, colegi! Ședința de luni, de la ora 10, se amână cu o zi, deoarece sala este ocupată. Noua dată este marți, la aceeași oră. Vă rugăm să ne confirmați dacă puteți participa. Vă mulțumim pentru înțelegere și vă dorim o zi bună.',
+        'Subiect: Ședința de luni se amână pe marți, ora 10\n\nBună ziua, colegi,\nSala de luni este ocupată, așa că ședința se mută marți, la aceeași oră.\nVă rugăm să confirmați prezența până vineri.\nMulțumim!'
+      ] }
+  ];
+  var LV = [
+    ['Nivel 1: răspuns generic', 'Fără sarcină clară, modelul ghicește ce vreți: primiți un text general, care nu vă ajută.'],
+    ['Nivel 2: aproape, dar ghicește', 'Ceva lipsește, așa că modelul completează singur: publicul, tonul sau lungimea nu sunt cele dorite.'],
+    ['Nivel 3: bun, dar fără forma cerută', 'Conținutul e potrivit; forma încă nu e cea dorită. Adăugați ingredientul care lipsește.'],
+    ['Nivel 4: rol, context, sarcină, format', 'Diferența dintre acest răspuns și primul este toată lecția. Apoi ajustați: prima variantă e doar un început.']
+  ];
+  var sc = 0, on = { rol: false, ctx: false, sar: false, fmt: false }, KEYS = ['rol', 'ctx', 'sar', 'fmt'];
+  function buildScen() {
+    var box = $('#scen'); box.innerHTML = '';
+    SC.forEach(function (s, i) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = s.name; b.setAttribute('aria-pressed', i === sc ? 'true' : 'false');
+      b.addEventListener('click', function () { sc = i; buildScen(); renderPrompt(); }); box.appendChild(b);
+    });
+    var tg = $('#toggles'); tg.innerHTML = '';
+    KEYS.forEach(function (k) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'tg'; b.setAttribute('aria-pressed', on[k] ? 'true' : 'false');
+      b.innerHTML = '<span class="nm"><i></i><span></span></span><span class="tx"></span>';
+      $('.nm span', b).textContent = SC[sc][k].l; $('.tx', b).textContent = SC[sc][k].t;
+      b.addEventListener('click', function () { on[k] = !on[k]; b.setAttribute('aria-pressed', on[k] ? 'true' : 'false'); renderPrompt(); });
+      tg.appendChild(b);
+    });
+  }
+  function setAll(v) { KEYS.forEach(function (k) { on[k] = v; }); buildScen(); renderPrompt(); }
+  function currentPrompt() {
+    var s = SC[sc], parts = [];
+    if (on.rol) parts.push(s.rol.t);
+    if (on.ctx) parts.push(s.ctx.t);
+    parts.push(on.sar ? s.sar.t : s.vague);
+    if (on.fmt) parts.push(s.fmt.t);
+    return parts.join(' ');
+  }
+  function renderPrompt() {
+    var n = KEYS.filter(function (k) { return on[k]; }).length, level = n === 0 ? 0 : n <= 2 ? 1 : n === 3 ? 2 : 3;
+    $('#prompt').textContent = currentPrompt();
+    $('#resp').textContent = SC[sc].resp[level];
+    $$('#lvl i').forEach(function (i, k) { i.className = k <= level ? 'on' : ''; });
+    $('#lvlname').textContent = LV[level][0]; $('#lvlnote').textContent = LV[level][1];
+    $('#copied').textContent = '';
+  }
+  $('#btnWeak').addEventListener('click', function () { setAll(false); });
+  $('#btnGood').addEventListener('click', function () { setAll(true); });
+  $('#btnCopy').addEventListener('click', function () {
+    var t = currentPrompt(), msg = $('#copied');
+    function fallback() {
+      try { var ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta); msg.textContent = ok ? 'Copiat.' : 'Selectați textul și copiați manual.'; }
+      catch (e) { msg.textContent = 'Selectați textul și copiați manual.'; }
+    }
+    try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function () { msg.textContent = 'Copiat.'; }, fallback); else fallback(); }
+    catch (e) { fallback(); }
+  });
+  buildScen(); renderPrompt();
+
+  /* ---------- 5. Skynet sau Clippy ---------- */
+  var ST = [
+    ['Are voință proprie și vrea să ne conducă?', '<b>Nu.</b> Un asistent nu are voință și nu vrea nimic: execută cereri. Riscurile de azi sunt mai banale.'],
+    ['Poate greși cu mare aplomb?', '<b>Da.</b> Se numește halucinație. Cazul Mata v. Avianca (New York, 2023): hotărâri judecătorești inventate, amendă de 5.000 de dolari. Lecția: verificați tot ce contează.'],
+    ['Are nevoie de supraveghere?', '<b>Da.</b> Omul rămâne în buclă: verifică, își protejează datele și răspunde pentru ce face asistentul.'],
+    ['Poate da, ca Clippy, sfaturi nepotrivite?', '<b>Uneori, da.</b> Clippy a fost scos tocmai pentru asta. Copilot e urmașul lui, mult mai capabil, dar care tot cere supraveghere.']
+  ];
+  var POS = [50, 62, 74, 86, 96];
+  function buildStmts() {
+    var box = $('#stmts'); box.innerHTML = '';
+    ST.forEach(function (s, i) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'st'; b.setAttribute('aria-expanded', 'false');
+      b.innerHTML = '<span class="q"></span><span class="a"></span>'; $('.q', b).textContent = s[0]; $('.a', b).innerHTML = s[1];
+      b.addEventListener('click', function () { b.setAttribute('aria-expanded', 'true'); b.setAttribute('data-seen', '1'); updNeedle(); });
+      box.appendChild(b);
+    });
+    updNeedle();
+  }
+  function updNeedle() {
+    var seen = $$('.st[data-seen="1"]').length;
+    $('#needle').style.left = POS[seen] + '%';
+    $('#verdict').textContent = seen === ST.length ? 'Skynet, nu. Stagiar foarte citit, da.' : '';
+  }
+  $('#btnStmtReset').addEventListener('click', buildStmts);
+  buildStmts();
+
+  /* ---------- pornire: #1..#5 sau ?tab=N ---------- */
+  var start = 0, h = (location.hash || '').replace('#', ''), qm = /[?&]tab=(\d)/.exec(location.search || '');
+  if (/^[1-5]$/.test(h)) start = +h - 1; else if (qm && +qm[1] >= 1 && +qm[1] <= 5) start = +qm[1] - 1;
+  selectTab(start, false);
+})();
+
+</script>
+</body>
+</html>
