@@ -1,28 +1,17 @@
-<!doctype html><html><head><meta charset=utf8><meta name="robots" content="noindex,nofollow"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Panou curs Competențe digitale</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Practica cursului Competențe digitale: calendar pe subgrupă, fișe cu pași, exemple și bareme pentru fiecare temă.">
+<meta name="theme-color" content="#1F3A5F">
+<title>Practică · Competențe digitale · CFR Călători</title>
 <style>
+[hidden]{display:none!important}
+html{scroll-padding-top:72px}
 /* Layout: antet cu ceas → teorie (butoane mici) → practică (calendar Lu–Vi, pe subgrupă) → ziua aleasă.
    Paleta și fonturile continuă Panoul de curs local (verde = învățare, chihlimbar = acum / notă). */
-:root{
-  --bg:#0f1720; --bg2:#0b1119; --surface:#16202b; --line:#233241; --line2:#2c3d4e;
-  --text:#eaf0f5; --dim:#92a9ba; --accent:#8ecb9d; --warm:#e7ad6b; --sel:#1c2b39; --onaccent:#0f1720;
-  --hd:"Manrope",ui-sans-serif,system-ui,"Segoe UI",sans-serif;
-  --bd:"IBM Plex Sans",ui-sans-serif,system-ui,"Segoe UI",sans-serif;
-  color-scheme:dark;
-}
-@media (prefers-color-scheme: light){
-  :root:not([data-theme="dark"]){
-    --bg:#f3f5f8; --bg2:#e8ecf1; --surface:#ffffff; --line:#d5dce4; --line2:#bfc9d4;
-    --text:#14202b; --dim:#506476; --accent:#1c7a47; --warm:#935408; --sel:#fff3df; --onaccent:#ffffff;
-    color-scheme:light;
-  }
-}
-:root[data-theme="light"]{
-  --bg:#f3f5f8; --bg2:#e8ecf1; --surface:#ffffff; --line:#d5dce4; --line2:#bfc9d4;
-  --text:#14202b; --dim:#506476; --accent:#1c7a47; --warm:#935408; --sel:#fff3df; --onaccent:#ffffff;
-  color-scheme:light;
-}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 var(--bd);padding-inline:16px;padding-block:0 48px}
 a{color:inherit}
@@ -165,6 +154,8 @@ ol.pasi li.activ .nr::after{content:" ▶";color:var(--warm)}
 ol.stp,ul.chk{margin:6px 0 12px;padding-left:22px;display:grid;gap:8px;font-size:15px;line-height:1.5}
 ul.chk{list-style:none;padding-left:4px}
 ul.chk li::before{content:"☐ ";color:var(--warm)}
+.boxx{border:1px solid var(--line2);background:var(--bg2);border-radius:10px;padding:10px 14px;margin:8px 0 12px}
+.boxx p{margin:2px 0}
 #dBody h3{margin-top:18px}
 /* fișa (dialog) */
 dialog{width:min(980px,94vw);max-height:90vh;overflow:auto;border:1px solid var(--warm);border-radius:16px;padding:18px 22px;background:var(--surface);color:var(--text)}
@@ -182,10 +173,20 @@ td.dr{text-align:right;font-variant-numeric:tabular-nums}
 td.c{text-align:center}
 .nota{color:var(--dim);font-size:13.5px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
-</style>
 
+</style>
+<link rel="stylesheet" href="stil.css">
+</head>
+<body>
+<a class="skip-link" href="#zi">Sari la ziua aleasă</a>
+<div class="scrollbar" aria-hidden="true"></div>
+<nav class="topbar" aria-label="Secțiuni"><div class="topbar-inner">
+  <a class="brand" href="index.html">Competențe digitale · CFR</a>
+  <div class="tnav"><a href="index.html">Teorie</a><a href="practica.html" aria-current="page">Practică</a></div>
+</div></nav>
 <div class="wrap">
  <div id="panou">
+  <div class="bn" role="navigation" aria-label="Alege secțiunea"><a class="bt" href="index.html">Teorie<small>Recap pe zile, broșuri, slide-uri</small></a><a class="bp" href="practica.html" aria-current="page">Practică<small>Ești aici · teme, fișe, ce ai de făcut</small></a></div>
   <header class="top">
     <div>
       <p class="eyebrow">Panou de curs · 22 sept – 18 nov 2026</p>
@@ -194,12 +195,11 @@ td.c{text-align:center}
     <div class="clock">
       <div class="t" id="ora" aria-live="off">--:--:--</div>
       <div class="d" id="data"></div>
-      <div class="tools"><a class="btn" href="index.html">← Recap pe zile</a><button class="btn" id="bAsp" type="button" aria-label="Schimbă aspectul deschis sau închis">Aspect ◐</button></div>
     </div>
   </header>
 
 
-  <section class="ghid" aria-labelledby="hGhid">
+  <section class="ghid" aria-labelledby="hGhid" data-gloss>
     <h2 id="hGhid">Cum funcționează practica — pe scurt</h2>
     <p class="lead">După cele 8 zile de teorie urmează <b>practica</b>: lucrezi singur, pe calculator, la teme scurte, iar formatorul e online să te ajute. Mai jos ai tot ce trebuie, în 6 pași simpli.</p>
     <div class="gg">
@@ -244,7 +244,18 @@ td.c{text-align:center}
     <div class="cal" id="cal"></div>
   </section>
 
-  <main id="zi" aria-live="polite"></main>
+  <main id="zi" aria-live="polite" data-gloss-live></main>
+
+  <section class="sec" aria-labelledby="hHarta">
+    <h2 id="hHarta">Toate cele 21 de teme <button class="i" type="button" aria-label="Ce este harta temelor?" data-tip-t="Harta temelor" data-tip="Aici vezi toate temele cursului, în ordine. Apasă pe o temă și mergi direct în ziua în care o lucrăm (pentru subgrupa aleasă mai sus). Filtrele ascund temele care nu te interesează.">?</button></h2>
+    <div class="chips" id="hartaF" role="group" aria-label="Filtrează temele">
+      <button class="chip" type="button" data-f="toate" aria-pressed="true" data-tip="Toate cele 21 de teme.">Toate</button>
+      <button class="chip" type="button" data-f="note" aria-pressed="false" data-tip="Doar temele care primesc o notă (NOTA 1, 2 sau 3).">Se notează</button>
+      <button class="chip" type="button" data-f="ob" aria-pressed="false" data-tip="Temele cerute de organizatorul cursului: nediscriminare și competențe verzi.">Obligatorii</button>
+      <button class="chip" type="button" data-f="fisa" aria-pressed="false" data-tip="Temele pentru care fișa cu pași, exemplu și barem este deja gata.">Fișa e gata</button>
+    </div>
+    <div class="harta" id="harta"></div>
+  </section>
 
   <details class="arh">
     <summary>Cum numim și arhivăm temele predate</summary>
@@ -259,11 +270,10 @@ td.c{text-align:center}
     </div>
   </details>
 
-  <div class="foot">
+  <aside class="foot" aria-label="Legendă">
     <span><b>Legendă:</b> NOTA 1, 2, 3 = notele din Fișa de evaluare (e-mail și surse; nediscriminare; Excel). „Obligatoriu” = cerut de organizator (nediscriminare, competențe verzi).</span>
     <span>Zilele de practică sunt calculate: 4 ore pe zi, luni–vineri, fără sărbători legale în interval. Cele 21 de teme urmează blocurile din cuprins, în ordine; Modulul 1 este împărțit în Temele 1–5.</span>
-    <span>Zilele de teorie sunt luate din panoul local, generat la 30.09.2026.</span>
-  </div>
+  </aside>
  </div>
 
  <!-- ecran de sală: cronometru + pași, de partajat în Zoom -->
@@ -313,9 +323,15 @@ td.c{text-align:center}
     <button class="btn" type="button" id="tEx" aria-pressed="false">Exemplu</button>
     <button class="btn" type="button" id="tBa" aria-pressed="false">Barem</button>
   </div>
-  <div id="dBody"></div>
+  <div id="dBody" data-gloss-live></div>
 </dialog>
 
+<footer class="sitefoot wrap">
+  <span><b>Formator:</b> Bogdan PĂVĂLUC · curs de competențe cheie „Competențe digitale, inclusiv de siguranță pe internet și securitate cibernetică”.</span>
+  <span>Materialele și interfața au fost create cu ajutorul inteligenței artificiale și verificate de formator.</span>
+  <span>Acest site nu folosește cookie-uri și nu colectează date. Reține doar, în browserul tău, subgrupa și ziua pe care le-ai ales. Întrebări: <a href="mailto:bogdan@pandapc.ro">bogdan@pandapc.ro</a>.</span>
+</footer>
+<button class="totop" type="button" aria-label="Înapoi sus">↑</button>
 <script>
 "use strict";
 /* =================== DATE =================== */
@@ -416,6 +432,264 @@ const TEME = [
   notaBarem:"Tema nu se notează – baremul e orientativ, pentru autoevaluare."
  },
  {
+ "id": "t3",
+ "titlu": "Tema 3 – „Detectivul de surse”",
+ "sub": "Modulul 1 · Nota 1 (împreună cu Tema 4) · 17:00–19:00",
+ "durataMin": 120,
+ "predare": "Predare: e-mail la bogdan@pandapc.ro · subiect „Tema 3 – Surse – Nume Prenume” · fișier T03_Surse_Nume_Prenume.docx",
+ "glume": [
+  "Batman nu crede nimic fără dovezi. Facem și noi la fel, doar că fără mantie.",
+  "Mesajul-lanț promite: «trimite la 10 persoane». Detectivul de surse întreabă: «de unde știi?»"
+ ],
+ "pasi": [
+  {
+   "t": "Citim mesajul și ne întrebăm ce vrea de la noi",
+   "min": 10,
+   "d": "<b>Citește mesajul</b> din fila <b>Exemplu</b>. Întreabă-te: ce vrea mesajul de la mine? (Să-l trimit repede mai departe, fără să verific: un prim semnal de alarmă.)"
+  },
+  {
+   "t": "Căutăm: trei formulări diferite",
+   "min": 15,
+   "d": "Deschide browserul și caută <b>în trei feluri</b>: (1) cuvinte-cheie, de ex. <code>WhatsApp cu plată 1 decembrie</code>; (2) o expresie exactă <b>între ghilimele</b>, de ex. <code>\"WhatsApp devine cu plată\"</code>; (3) aceleași cuvinte + <code>fals</code> sau <code>adevărat sau fals</code>. <b>Nu te opri la primul rezultat.</b>"
+  },
+  {
+   "t": "Alegem 3 surse de tipuri diferite",
+   "min": 10,
+   "d": "Alege <b>3 surse care nu seamănă între ele</b>: de ex. o postare pe o rețea de socializare sau un blog, un articol dintr-un site de presă și o sursă oficială (site-ul aplicației sau al unei instituții). Poți alege și altele, dar să fie de tipuri diferite."
+  },
+  {
+   "t": "Documentul Word și tabelul de evaluare",
+   "min": 15,
+   "d": "Deschide <b>Word</b>, document nou, salvează-l imediat ca <code>T03_Surse_Nume_Prenume.docx</code>. Scrie titlul „Detectivul de surse – Nume Prenume”. Inserează un <b>tabel real</b> cu 6 coloane și 3 rânduri, plus antet: <i>Sursa (nume și link)</i> | <i>Cine a scris</i> | <i>Data</i> | <i>Citează surse?</i> | <i>Ton</i> | <i>Verdict</i>."
+  },
+  {
+   "t": "Completăm tabelul pentru fiecare sursă",
+   "min": 20,
+   "d": "Pentru fiecare sursă răspunde la întrebările detectivului: <b>cine a scris? când? de unde știe? cum sună (calm sau alarmist)?</b> La <i>Verdict</i> scrie: credibilă / necredibilă / nu pot spune. Fă asta în cuvintele tale, <b>nu copia texte întregi</b>."
+  },
+  {
+   "t": "Verificare încrucișată",
+   "min": 10,
+   "d": "Mai caută o <b>a doua confirmare</b> pentru ce ai aflat (alt site sau un site de verificare a știrilor false). Notează într-o propoziție: ce spun ele și dacă se potrivesc cu sursele din tabel."
+  },
+  {
+   "t": "Concluzia, în 3–4 propoziții",
+   "min": 15,
+   "d": "Sub tabel scrie <b>concluzia</b>: este mesajul adevărat? pe ce te bazezi? ce îi spui lui Radu să facă? Folosește propoziții complete, cu diacritice, ca să te înțeleagă un coleg care nu a studiat cursul."
+  },
+  {
+   "t": "Lista surselor și trimiterea",
+   "min": 15,
+   "d": "La final adaugă <b>lista celor 3 surse</b> (nume, link, data la care le-ai deschis). Salvează, apoi trimite e-mailul (vezi „Cum predai”)."
+  },
+  {
+   "t": "Discuție în grup",
+   "min": 10,
+   "d": "Câțiva cursanți citesc concluzia. Comparăm: au ajuns toți la același verdict? cu ce surse?"
+  }
+ ],
+ "exemplu": "<h3>Mesajul primit de Radu (inventat, în stilul celor care circulă în lanț)</h3>\n<div class=\"boxx\"><p>ATENȚIE!!! De la 1 decembrie WhatsApp devine cu plată! Cine nu trimite mesajul la 10 persoane în următoarele 24 de ore își pierde contul.</p><p>Trimite mai departe, e adevărat, mi-a spus un prieten care lucrează la firmă!</p></div>\n<h3>Cele 5 întrebări ale detectivului</h3>\n<ul><li><b>Cine</b> a scris? (nume, instituție sau «anonim»)</li><li><b>Când</b> a fost scris? (data apare sau lipsește)</li><li><b>De unde știe?</b> (citează surse sau doar «mi-a spus cineva»)</li><li><b>Cum sună?</b> (calm și precis sau alarmist, cu MAJUSCULE și semne de exclamare)</li><li><b>Mai spune și altcineva</b> același lucru, în surse independente?</li></ul>\n<h3>Model de completare (tipuri de surse, nu răspunsul tău)</h3>\n<table><thead><tr><th>Sursa</th><th>Cine a scris</th><th>Data</th><th>Citează surse?</th><th>Ton</th><th>Verdict</th></tr></thead><tbody><tr><td>Postare pe o pagină de Facebook</td><td>nu apare</td><td>lipsește</td><td>nu</td><td>alarmist, MAJUSCULE</td><td>necredibilă</td></tr><tr><td>Articol într-un site de presă</td><td>reporter, cu nume</td><td>apare</td><td>da, o instituție</td><td>calm</td><td>credibilă (de confirmat)</td></tr><tr><td>Secțiunea «Ajutor» a aplicației</td><td>compania</td><td>apare</td><td>trimite la reguli oficiale</td><td>calm</td><td>credibilă</td></tr></tbody></table>\n<p class=\"nota\">Rândurile de mai sus arată doar <b>cum se completează</b>. Sursele tale vor fi altele, găsite de tine. Verdictul final îl dai tu, după căutare.</p>",
+ "barem": [
+  [
+   "Planificarea conținutului",
+   "Tabel cu 3 surse, concluzie și listă de surse",
+   10
+  ],
+  [
+   "Calitatea informației",
+   "Surse de tipuri diferite; evaluare corectă (autor, dată, citări, ton)",
+   15
+  ],
+  [
+   "Creativitate și design",
+   "Document ordonat: titlu, tabel cu antet, spațiere",
+   10
+  ],
+  [
+   "Utilizarea instrumentelor digitale",
+   "Căutare cu cuvinte-cheie și ghilimele; tabel real în Word",
+   10
+  ],
+  [
+   "Respectarea drepturilor de autor",
+   "Cuvinte proprii; citatele între ghilimele; surse cu link",
+   10
+  ],
+  [
+   "Adaptarea la publicul țintă",
+   "Concluzie clară, pe înțelesul unui coleg care vrea să trimită mesajul",
+   15
+  ],
+  [
+   "Corectitudine lingvistică",
+   "Propoziții corecte, cu diacritice",
+   10
+  ],
+  [
+   "Finalizare și prezentare",
+   "T03_Surse_Nume_Prenume.docx; e-mail corect; în termen",
+   10
+  ]
+ ]
+},
+ {
+ "id": "t4",
+ "titlu": "Tema 4 – „E-mailul de la 07:58”",
+ "sub": "Modulul 1 · Nota 1 (împreună cu Tema 3) · 19:00–21:00",
+ "durataMin": 120,
+ "predare": "Predare: e-mail la bogdan@pandapc.ro · subiect „Tema 4 – Email – Nume Prenume” · fișier T04_Email_Nume_Prenume.docx",
+ "glume": [
+  "Un e-mail fără subiect e ca James Bond fără misiune: toți se întreabă de ce a apărut.",
+  "«Răspunde tuturor» e butonul-grenadă al biroului. Îl apăsăm doar cu motiv."
+ ],
+ "pasi": [
+  {
+   "t": "Citim e-mailul de la 07:58",
+   "min": 10,
+   "d": "Citește mesajul din fila <b>Exemplu</b>. Imaginează-ți că tu ai fișierul cerut și că trebuie să răspunzi."
+  },
+  {
+   "t": "Căutăm greșelile (minim 5)",
+   "min": 15,
+   "d": "Notează <b>cel puțin 5 lucruri care nu merg</b>: uită-te la subiect, ton, ce se cere exact, cui e adresat, cum e scris, cum se încheie."
+  },
+  {
+   "t": "Recapitulăm: cum arată un e-mail bun",
+   "min": 10,
+   "d": "Un e-mail bun are <b>6 părți</b>: subiect clar, salut, mesaj în 3 fraze (ce trimit, detalii, ce urmează), ton politicos, atașament cu nume clar, semnătură."
+  },
+  {
+   "t": "Documentul Word, partea 1: tabelul",
+   "min": 15,
+   "d": "Deschide <b>Word</b>, salvează ca <code>T04_Email_Nume_Prenume.docx</code>. Titlu „E-mailul de la 07:58 – Nume Prenume”. Inserează un <b>tabel real</b> cu 3 coloane: <i>Nr.</i> | <i>Ce nu e în regulă</i> | <i>Cum ar trebui</i>. Minim 5 rânduri."
+  },
+  {
+   "t": "Documentul Word, partea 2: răspunsul",
+   "min": 25,
+   "d": "Sub tabel scrie <b>răspunsul tău</b>: întâi <i>Subiectul propus pentru șef</i>, apoi mesajul (salut → ce trimiți → detalii → ce urmează → semnătură). 3–6 propoziții scurte."
+  },
+  {
+   "t": "Verificăm răspunsul",
+   "min": 10,
+   "d": "Verifică răspunsul cu cele <b>6 părți</b>. Citește-l cu voce tare: sună ca un om politicos, nu ca un mesaj de alarmă?"
+  },
+  {
+   "t": "Compunem e-mailul în căsuța de poștă",
+   "min": 20,
+   "d": "Deschide e-mailul (Gmail, Outlook etc.), mesaj nou. <b>La:</b> <code>bogdan@pandapc.ro</code>. <b>Subiect:</b> <code>Tema 4 – Email – Nume Prenume</code>. În corpul mesajului lipești <b>răspunsul tău</b> din Word (partea 2), nu scrii doar «vezi atașat»."
+  },
+  {
+   "t": "Atașamente și trimitere",
+   "min": 5,
+   "d": "Atașează <b>două fișiere</b>: <code>T04_Email_Nume_Prenume.docx</code> și <code>T01_Excel_Nume_Prenume.xlsx</code> (fișierul cerut de șef). Verifică să apară în mesaj, apoi trimite."
+  },
+  {
+   "t": "Discuție în grup",
+   "min": 10,
+   "d": "Câțiva cursanți citesc răspunsul lor. Comparăm: care e mai clar? ce a lipsit?"
+  }
+ ],
+ "exemplu": "<h3>E-mailul primit la 07:58</h3>\n<div class=\"boxx\"><p>De la: Mihai Ionescu (șef birou)</p><p>Către: Toți colegii din birou (37 de adrese)</p><p>Ora: 07:58</p><p>Subiect: (fără subiect)</p><p>&nbsp;</p><p>URGENT!!! cine are tabelul cu cheltuielile de la birou?? nu il gasesc nicaieri!!! trimiteti la toti ce aveti cat mai repede ca am sedinta. M.</p></div>\n<h3>Unde te uiți când cauți greșelile</h3>\n<ul><li><b>Subiectul:</b> există? spune despre ce e vorba?</li><li><b>Tonul:</b> MAJUSCULE, semne de exclamare multe.</li><li><b>Cererea:</b> e clar ce tabel și până când?</li><li><b>Destinatarii:</b> are rost ca toți cei 37 să primească răspunsul?</li><li><b>Scrierea:</b> diacritice, majuscule, punctuație.</li><li><b>Încheierea:</b> salut, semnătură, politețe.</li></ul>\n<h3>Schelet pentru răspunsul tău (completezi tu ce e între paranteze)</h3>\n<div class=\"boxx\"><p>Subiectul propus pentru șef: […]</p><p>Bună dimineața, […],</p><p>[Ce trimit: numele fișierului atașat.]</p><p>[Detalii: ce conține, cât de actual e.]</p><p>[Ce urmează: ce poate face șeful, la ce oră mă găsește.]</p><p>Cu stimă,</p><p>[Nume Prenume]</p></div>",
+ "barem": [
+  [
+   "Planificarea conținutului",
+   "Tabel cu minim 5 greșeli și răspuns complet",
+   10
+  ],
+  [
+   "Calitatea informației",
+   "Greșeli corect identificate; răspunsul spune ce trimiți și ce urmează",
+   15
+  ],
+  [
+   "Creativitate și design",
+   "Document ordonat; răspuns ușor de citit, paragrafe scurte",
+   10
+  ],
+  [
+   "Utilizarea instrumentelor digitale",
+   "E-mail trimis corect: destinatar, subiect, atașamente, fără «Răspunde tuturor»",
+   10
+  ],
+  [
+   "Respectarea drepturilor de autor",
+   "Lucrare proprie; fără date personale reale ale altora",
+   10
+  ],
+  [
+   "Adaptarea la publicul țintă",
+   "Ton politicos, potrivit pentru un șef; mesaj scurt și clar",
+   15
+  ],
+  [
+   "Corectitudine lingvistică",
+   "Fără greșeli, cu diacritice; fără MAJUSCULE sau exclamări în exces",
+   10
+  ],
+  [
+   "Finalizare și prezentare",
+   "T04_Email_Nume_Prenume.docx; subiect cerut; în termen",
+   10
+  ]
+ ]
+},
+ {
+ "id": "t5",
+ "titlu": "Tema 5 – Șeful final al Modulului 1: „AVERAGE”",
+ "sub": "Modulul 1 · nenotată · 17:00–18:00",
+ "durataMin": 60,
+ "predare": "Fără predare pe e-mail: arăți fișierul pe ecran sau spui cât ți-a ieșit media",
+ "glume": [
+  "Pe hârtie suntem toți economi. Media lunară ne spune adevărul.",
+  "Ultimul șef al nivelului: nu are arme, doar o formulă. Și o învingem."
+ ],
+ "pasi": [
+  {
+   "t": "Pornim de la fișierul din Tema 1",
+   "min": 5,
+   "d": "Deschide <code>T01_Excel_Nume_Prenume.xlsx</code> și fă <b>Salvare ca</b> <code>T05_Media_Nume_Prenume.xlsx</code>. Fișierul din Tema 1 rămâne neatins."
+  },
+  {
+   "t": "Antetul pe 3 luni",
+   "min": 10,
+   "d": "A1 = „Bugetul meu – 3 luni”. Rândul 3: <b>A3</b> Nr., <b>B3</b> Cheltuiala, <b>C3</b> Luna 1, <b>D3</b> Luna 2, <b>E3</b> Luna 3, <b>F3</b> Media lunară."
+  },
+  {
+   "t": "Sumele pentru Luna 2 și Luna 3",
+   "min": 10,
+   "d": "Completează <b>D4:E8</b> cu sume apropiate de Luna 1. Numere, nu text (de ex. mâncarea poate fi mai mare într-o lună de sărbători)."
+  },
+  {
+   "t": "Totalul fiecărei luni cu SUM",
+   "min": 8,
+   "d": "În <b>C9</b> ai deja <code>=SUM(C4:C8)</code>. Trage de colțul celulei spre dreapta, ca să apară și în <b>D9</b>, <b>E9</b>."
+  },
+  {
+   "t": "Media fiecărei cheltuieli cu AVERAGE",
+   "min": 10,
+   "d": "În <b>F4</b> scrie <code>=AVERAGE(C4:E4)</code>, apoi trage formula în jos până la <b>F8</b>. În <b>F9</b> scrie <code>=AVERAGE(C9:E9)</code> (media totalurilor)."
+  },
+  {
+   "t": "Testul: se schimbă media singură?",
+   "min": 5,
+   "d": "Schimbă o sumă din Luna 3. Dacă media și totalul s-au actualizat singure, ai făcut corect."
+  },
+  {
+   "t": "Formatare",
+   "min": 7,
+   "d": "Antet îngroșat și colorat, borduri, două zecimale, coloane destul de late (fără #####)."
+  },
+  {
+   "t": "Verificare și întrebări",
+   "min": 5,
+   "d": "Verifică lista din fișă. Cine are probleme cu formula ridică mâna sau scrie în chat. 💡 Bonus: <code>=MAX(F4:F8)</code> arată cea mai mare cheltuială medie."
+  }
+ ],
+ "exemplu": "<h3>Aspect orientativ</h3>\n<table><thead><tr><th>Nr.</th><th>Cheltuiala</th><th>Luna 1</th><th>Luna 2</th><th>Luna 3</th><th>Media lunară</th></tr></thead><tbody><tr><td class=\"dr\">1</td><td>Chirie</td><td class=\"dr\">1200,00</td><td class=\"dr\">1200,00</td><td class=\"dr\">1250,00</td><td class=\"dr\">1216,67</td></tr><tr><td class=\"dr\">2</td><td>Mâncare</td><td class=\"dr\">1500,00</td><td class=\"dr\">1450,00</td><td class=\"dr\">1600,00</td><td class=\"dr\">1516,67</td></tr><tr><td class=\"dr\">3</td><td>Transport</td><td class=\"dr\">300,00</td><td class=\"dr\">280,00</td><td class=\"dr\">320,00</td><td class=\"dr\">300,00</td></tr><tr><td class=\"dr\">4</td><td>Utilități</td><td class=\"dr\">450,00</td><td class=\"dr\">520,00</td><td class=\"dr\">400,00</td><td class=\"dr\">456,67</td></tr><tr><td class=\"dr\">5</td><td>Telefon</td><td class=\"dr\">60,00</td><td class=\"dr\">60,00</td><td class=\"dr\">60,00</td><td class=\"dr\">60,00</td></tr><tr><td></td><td>TOTAL</td><td class=\"dr\">3510,00</td><td class=\"dr\">3510,00</td><td class=\"dr\">3630,00</td><td class=\"dr\">3550,00</td></tr></tbody></table>\n<p class=\"nota\">Formule: <b>C9</b> <code>=SUM(C4:C8)</code> (și în D9, E9) · <b>F4</b> <code>=AVERAGE(C4:E4)</code> (în jos până la F8) · <b>F9</b> <code>=AVERAGE(C9:E9)</code>. Cifrele sunt doar un exemplu: fiecare folosește ale lui.</p>",
+ "barem": [],
+ "notaBarem": "Tema nu se notează."
+},
+ {
   id:"liber", titlu:"Cronometru liber", sub:"Pauză, discuții, orice interval",
   durataMin:15, predare:"",
   glume:["Pauza e parte din curs. Cafeaua nu se ia în calcul la punctaj."],
@@ -423,7 +697,7 @@ const TEME = [
   exemplu:"<p class='nota'>Pentru acest cronometru nu există fișă.</p>", barem:[]
  }
  ];
-const CURSANT = {t1:"<h3>Pe scurt</h3>\n<p>Construiești în <b>Excel</b> bugetul unei luni, cu <b>5 cheltuieli</b>. Excel face singur adunarea. Durată: <b>2 ore</b>. Tema <b>se notează</b> (NOTA 3).</p>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Deschide Excel</b> și un registru nou. <b>Salvează-l imediat</b> cu numele <code>T01_Excel_Nume_Prenume.xlsx</code> (cu numele tău, de ex. <code>T01_Excel_Popescu_Maria.xlsx</code>). Salvează des.</li>\n<li>În celula <b>A1</b> scrie titlul: <i>Bugetul meu – luna …</i> (completezi luna).</li>\n<li>Pe <b>rândul 3</b> scrie antetul: <b>A3</b> = Nr., <b>B3</b> = Cheltuiala, <b>C3</b> = Suma (lei).</li>\n<li>Pe <b>rândurile 4–8</b> scrie cele 5 cheltuieli: chirie, mâncare, transport, utilități, telefon. Pune <b>sume realiste</b> (ale tale sau ale unei familii imaginare), ca <b>numere</b>, nu ca text. Nu scrie date personale reale dacă nu vrei.</li>\n<li>Pe <b>rândul 9</b>: în <b>B9</b> scrie TOTAL, iar în <b>C9</b> scrie formula <code>=SUM(C4:C8)</code>. <b>Nu tasta totalul de mână!</b></li>\n<li><b>Verifică:</b> schimbă suma de la chirie. Dacă totalul s-a schimbat singur, ai făcut corect. Dacă nu, ai scris un număr în loc de formulă: refă pasul 5.</li>\n<li><b>Formatează:</b> antet îngroșat și colorat, bordură pe toate celulele, sume cu două zecimale și „lei”, coloana C destul de lată (să nu apară #####).</li>\n<li><b>Salvează</b> și <b>trimite</b> fișierul pe e-mail (vezi mai jos).</li>\n</ol>\n<h3>Cum predai</h3>\n<ol class=\"stp\">\n<li>Trimite un e-mail la <code>bogdan@pandapc.ro</code>.</li>\n<li>Subiect: <code>Tema 1 – Excel – Nume Prenume</code></li>\n<li>Atașează fișierul <code>T01_Excel_Nume_Prenume.xlsx</code> și scrie o propoziție de politețe (ex.: „Bună ziua, vă transmit Tema 1. Mulțumesc.”).</li>\n<li><b>Termen:</b> la sfârșitul orei de practică (19:00), în aceeași seară.</li>\n</ol>\n<p class=\"nota\">Poți lucra și în Google Sheets, dar fișierul trimis trebuie descărcat ca <b>.xlsx</b>.</p>\n<h3>Verifică înainte să trimiți</h3>\n<ul class=\"chk\"><li>Totalul e calculat cu <code>=SUM</code>, nu tastat.</li><li>Tabelul are titlu, antet și cele 5 cheltuieli.</li><li>Sumele au format de număr, iar coloana nu arată #####.</li><li>Diacriticele sunt corecte (Utilități, Mâncare).</li><li>Fișierul și subiectul e-mailului au numele cerut.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: adaugă un rând 6, „Neprevăzute”, și urmărește cum se schimbă totalul. Dacă rândul nou nu intră în formulă, extinde intervalul din SUM.</p>",t2:"<h3>Pe scurt</h3>\n<p>Colega ta Costina are pe desktop <b>12 fișiere cu nume haotice</b> și nu le mai găsește. Tu pui <b>ordine</b>: <b>nu ștergi nimic</b>, doar le dai nume noi și le pui în foldere. Apoi arăți rezultatul. Durată: <b>2 ore</b>. Tema <b>nu se notează</b> (e exercițiu); baremul e doar pentru autoevaluare.</p>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Citește lista celor 12 fișiere</b> (fila <b>Exemplu</b>, de sus din fereastră). Fiecare are un nume haotic și, alături, ce este de fapt.</li>\n<li><b>Dă fiecărui fișier un nume nou, clar.</b> Regula: <code>AAAA-LL_Subiect_vN</code> (an, lună, subiect scurt, versiune). Ex.: <code>2026-04_Buget_v1.xlsx</code>. <b>Fără</b> „final”, „copie”, „nou”, fără semne de exclamare și <b>fără spații</b> (folosești liniuță de subliniere _).</li>\n<li><b>Alege 4 foldere</b> pentru cele 12 fișiere, numerotate ca să stea în ordine, ex.: <code>01_Munca</code>, <code>02_Acte</code>, <code>03_Bani</code>, <code>04_Poze</code>. Poți alege alte nume.</li>\n<li><b>În Word</b> fă un <b>tabel</b> cu <b>4 coloane</b>: <i>Nr. | Nume vechi | Nume nou | Folder</i>, cu <b>12 rânduri</b>, și completează-l. (Trei rânduri-model sunt la fila Exemplu; celelalte 9 le faci tu.)</li>\n<li><b>Sub tabel</b> scrie <b>3–4 propoziții</b>: care sunt regulile tale de denumire și de ce ajută (de ex. sortare după dată, căutare mai rapidă).</li>\n<li>Dacă <b>două fișiere sunt aceeași lucrare</b> (cererea și copia ei), explică într-o propoziție <b>care se păstrează și de ce</b>. Nu ștergi, doar propui.</li>\n<li><b>Salvează documentul Word</b> ca <code>T02_Fisiere_Nume_Prenume.docx</code>.</li>\n<li><b>În OneDrive:</b> creează cele 4 foldere și încarcă documentul Word într-unul dintre ele (de ex. în <code>02_Acte</code>).</li>\n<li><b>Partajează</b> folderul sau fișierul: <b>Partajare → „Oricine are linkul poate vizualiza”</b> → copiază linkul și pune-l în chat-ul grupului. Dacă organizația ta blochează partajarea, fă o <b>captură de ecran</b> cu structura de foldere și arat-o pe Zoom.</li>\n</ol>\n<h3>Cum arăți rezultatul</h3>\n<p>La <b>sfârșitul orei</b> (21:00): <b>partajezi ecranul</b> pe Zoom sau pui <b>linkul OneDrive în chat</b>. Nu trimiți obligatoriu pe e-mail. Doar dacă formatorul îți cere documentul, îl trimiți la <code>bogdan@pandapc.ro</code>, cu subiectul <code>Tema 2 – Fișiere – Nume Prenume</code>.</p>\n<h3>Verifică înainte să arăți</h3>\n<ul class=\"chk\"><li>Toate cele 12 fișiere au nume nou, fără „final”, „copie”, „nou” și fără spații.</li><li>Toate numele urmează <b>aceeași regulă</b> (AAAA-LL_Subiect_vN).</li><li>Sunt <b>4 foldere</b> numerotate și fiecare fișier are un folder.</li><li>Tabelul din Word are <b>4 coloane și 12 rânduri</b>, plus 3–4 propoziții despre reguli.</li><li>Folderele sunt create în OneDrive; ai link sau captură de ecran pregătită.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: cum ai numi documentul dacă ar exista 7 versiuni ale lui? „FINAL_v7_copie” nu se acceptă.</p>"};
+const CURSANT = {t1:"<h3>Pe scurt</h3>\n<p>Construiești în <b>Excel</b> bugetul unei luni, cu <b>5 cheltuieli</b>. Excel face singur adunarea. Durată: <b>2 ore</b>. Tema <b>se notează</b> (NOTA 3).</p>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Deschide Excel</b> și un registru nou. <b>Salvează-l imediat</b> cu numele <code>T01_Excel_Nume_Prenume.xlsx</code> (cu numele tău, de ex. <code>T01_Excel_Popescu_Maria.xlsx</code>). Salvează des.</li>\n<li>În celula <b>A1</b> scrie titlul: <i>Bugetul meu – luna …</i> (completezi luna).</li>\n<li>Pe <b>rândul 3</b> scrie antetul: <b>A3</b> = Nr., <b>B3</b> = Cheltuiala, <b>C3</b> = Suma (lei).</li>\n<li>Pe <b>rândurile 4–8</b> scrie cele 5 cheltuieli: chirie, mâncare, transport, utilități, telefon. Pune <b>sume realiste</b> (ale tale sau ale unei familii imaginare), ca <b>numere</b>, nu ca text. Nu scrie date personale reale dacă nu vrei.</li>\n<li>Pe <b>rândul 9</b>: în <b>B9</b> scrie TOTAL, iar în <b>C9</b> scrie formula <code>=SUM(C4:C8)</code>. <b>Nu tasta totalul de mână!</b></li>\n<li><b>Verifică:</b> schimbă suma de la chirie. Dacă totalul s-a schimbat singur, ai făcut corect. Dacă nu, ai scris un număr în loc de formulă: refă pasul 5.</li>\n<li><b>Formatează:</b> antet îngroșat și colorat, bordură pe toate celulele, sume cu două zecimale și „lei”, coloana C destul de lată (să nu apară #####).</li>\n<li><b>Salvează</b> și <b>trimite</b> fișierul pe e-mail (vezi mai jos).</li>\n</ol>\n<h3>Cum predai</h3>\n<ol class=\"stp\">\n<li>Trimite un e-mail la <code>bogdan@pandapc.ro</code>.</li>\n<li>Subiect: <code>Tema 1 – Excel – Nume Prenume</code></li>\n<li>Atașează fișierul <code>T01_Excel_Nume_Prenume.xlsx</code> și scrie o propoziție de politețe (ex.: „Bună ziua, vă transmit Tema 1. Mulțumesc.”).</li>\n<li><b>Termen:</b> la sfârșitul orei de practică (19:00), în aceeași seară.</li>\n</ol>\n<p class=\"nota\">Poți lucra și în Google Sheets, dar fișierul trimis trebuie descărcat ca <b>.xlsx</b>.</p>\n<h3>Verifică înainte să trimiți</h3>\n<ul class=\"chk\"><li>Totalul e calculat cu <code>=SUM</code>, nu tastat.</li><li>Tabelul are titlu, antet și cele 5 cheltuieli.</li><li>Sumele au format de număr, iar coloana nu arată #####.</li><li>Diacriticele sunt corecte (Utilități, Mâncare).</li><li>Fișierul și subiectul e-mailului au numele cerut.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: adaugă un rând 6, „Neprevăzute”, și urmărește cum se schimbă totalul. Dacă rândul nou nu intră în formulă, extinde intervalul din SUM.</p>",t2:"<h3>Pe scurt</h3>\n<p>Colega ta Costina are pe desktop <b>12 fișiere cu nume haotice</b> și nu le mai găsește. Tu pui <b>ordine</b>: <b>nu ștergi nimic</b>, doar le dai nume noi și le pui în foldere. Apoi arăți rezultatul. Durată: <b>2 ore</b>. Tema <b>nu se notează</b> (e exercițiu); baremul e doar pentru autoevaluare.</p>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Citește lista celor 12 fișiere</b> (fila <b>Exemplu</b>, de sus din fereastră). Fiecare are un nume haotic și, alături, ce este de fapt.</li>\n<li><b>Dă fiecărui fișier un nume nou, clar.</b> Regula: <code>AAAA-LL_Subiect_vN</code> (an, lună, subiect scurt, versiune). Ex.: <code>2026-04_Buget_v1.xlsx</code>. <b>Fără</b> „final”, „copie”, „nou”, fără semne de exclamare și <b>fără spații</b> (folosești liniuță de subliniere _).</li>\n<li><b>Alege 4 foldere</b> pentru cele 12 fișiere, numerotate ca să stea în ordine, ex.: <code>01_Munca</code>, <code>02_Acte</code>, <code>03_Bani</code>, <code>04_Poze</code>. Poți alege alte nume.</li>\n<li><b>În Word</b> fă un <b>tabel</b> cu <b>4 coloane</b>: <i>Nr. | Nume vechi | Nume nou | Folder</i>, cu <b>12 rânduri</b>, și completează-l. (Trei rânduri-model sunt la fila Exemplu; celelalte 9 le faci tu.)</li>\n<li><b>Sub tabel</b> scrie <b>3–4 propoziții</b>: care sunt regulile tale de denumire și de ce ajută (de ex. sortare după dată, căutare mai rapidă).</li>\n<li>Dacă <b>două fișiere sunt aceeași lucrare</b> (cererea și copia ei), explică într-o propoziție <b>care se păstrează și de ce</b>. Nu ștergi, doar propui.</li>\n<li><b>Salvează documentul Word</b> ca <code>T02_Fisiere_Nume_Prenume.docx</code>.</li>\n<li><b>În OneDrive:</b> creează cele 4 foldere și încarcă documentul Word într-unul dintre ele (de ex. în <code>02_Acte</code>).</li>\n<li><b>Partajează</b> folderul sau fișierul: <b>Partajare → „Oricine are linkul poate vizualiza”</b> → copiază linkul și pune-l în chat-ul grupului. Dacă organizația ta blochează partajarea, fă o <b>captură de ecran</b> cu structura de foldere și arat-o pe Zoom.</li>\n</ol>\n<h3>Cum arăți rezultatul</h3>\n<p>La <b>sfârșitul orei</b> (21:00): <b>partajezi ecranul</b> pe Zoom sau pui <b>linkul OneDrive în chat</b>. Nu trimiți obligatoriu pe e-mail. Doar dacă formatorul îți cere documentul, îl trimiți la <code>bogdan@pandapc.ro</code>, cu subiectul <code>Tema 2 – Fișiere – Nume Prenume</code>.</p>\n<h3>Verifică înainte să arăți</h3>\n<ul class=\"chk\"><li>Toate cele 12 fișiere au nume nou, fără „final”, „copie”, „nou” și fără spații.</li><li>Toate numele urmează <b>aceeași regulă</b> (AAAA-LL_Subiect_vN).</li><li>Sunt <b>4 foldere</b> numerotate și fiecare fișier are un folder.</li><li>Tabelul din Word are <b>4 coloane și 12 rânduri</b>, plus 3–4 propoziții despre reguli.</li><li>Folderele sunt create în OneDrive; ai link sau captură de ecran pregătită.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: cum ai numi documentul dacă ar exista 7 versiuni ale lui? „FINAL_v7_copie” nu se acceptă.</p>",t3:"<h3>Pe scurt</h3>\n<p>Colegul tău Radu a primit pe telefon un <b>mesaj în lanț</b> și e pe cale să-l trimită mai departe. Tu ești <b>detectivul de surse</b>: cauți pe internet, <b>compari 3 surse</b> și îi spui dacă mesajul e adevărat și de unde știi. Rezultatul îl pui într-un document Word. Durată: <b>2 ore</b>. Tema <b>se notează</b> (Nota 1, împreună cu Tema 4).</p>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Citește mesajul</b> din fila <i>Exemplu</i>. Întreabă-te: ce vrea mesajul de la mine? Dacă îți cere să-l trimiți repede la mulți oameni, e deja un semnal de alarmă.</li>\n<li><b>Caută pe internet în trei feluri:</b> (1) cuvinte-cheie, ex. <code>WhatsApp cu plată 1 decembrie</code>; (2) expresie exactă între ghilimele, ex. <code>\"WhatsApp devine cu plată\"</code>; (3) aceleași cuvinte + <code>fals</code> sau <code>adevărat sau fals</code>. Nu te opri la primul rezultat.</li>\n<li><b>Alege 3 surse de tipuri diferite</b>: de exemplu o postare pe o rețea de socializare sau un blog, un articol dintr-un site de presă și o sursă oficială (site-ul aplicației sau al unei instituții).</li>\n<li><b>Deschide Word</b>, document nou, și salvează-l imediat ca <code>T03_Surse_Nume_Prenume.docx</code> (cu numele tău). Scrie titlul „Detectivul de surse – Nume Prenume”.</li>\n<li><b>Inserează un tabel real</b> (Inserare → Tabel) cu 6 coloane și 3 rânduri + antet: <i>Sursa (nume și link)</i> | <i>Cine a scris</i> | <i>Data</i> | <i>Citează surse?</i> | <i>Ton</i> | <i>Verdict</i>.</li>\n<li><b>Completează tabelul</b> pentru fiecare sursă. Întrebările detectivului: cine a scris? când? de unde știe? cum sună, calm sau alarmist? La <i>Verdict</i> scrie: credibilă / necredibilă / nu pot spune.</li>\n<li><b>Verificare încrucișată:</b> mai caută o a doua confirmare (alt site sau un site care verifică știri false) și notează într-o propoziție dacă se potrivește cu ce ai găsit.</li>\n<li><b>Scrie concluzia, 3–4 propoziții</b> sub tabel: este mesajul adevărat? pe ce te bazezi? ce îi spui lui Radu să facă?</li>\n<li><b>Adaugă lista surselor</b>: cele 3 linkuri, cu numele site-ului și data la care le-ai deschis. Salvează documentul și trimite-l (vezi mai jos).</li>\n</ol>\n<h3>Cum predai</h3>\n<ol class=\"stp\"><li>Trimite un e-mail la <code>bogdan@pandapc.ro</code>.</li><li>Subiect: <code>Tema 3 – Surse – Nume Prenume</code></li><li>Atașează <code>T03_Surse_Nume_Prenume.docx</code> și scrie o propoziție de politețe (ex.: „Bună ziua, vă transmit Tema 3. Mulțumesc.”).</li><li><b>Termen:</b> la sfârșitul orei de practică (19:00), în aceeași seară.</li></ol>\n<p class=\"nota\">Textele găsite pe internet <b>nu se copiază întregi</b>: le spui în cuvintele tale. Dacă citezi o frază, o pui între ghilimele și scrii de unde e.</p>\n<h3>Verifică înainte să trimiți</h3>\n<ul class=\"chk\"><li>Ai 3 surse de <b>tipuri diferite</b>, fiecare cu link.</li><li>Tabelul e un <b>tabel real</b> din Word, cu antet, nu text aliniat cu spații.</li><li>Fiecare sursă are completate: cine, când, citează surse, ton, verdict.</li><li>Concluzia are 3–4 propoziții complete, cu diacritice.</li><li>Textele sunt scrise în cuvintele tale, nu copiate.</li><li>Fișierul și subiectul e-mailului au numele cerut.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: verifică <b>data</b> primei apariții a mesajului. Circulă de ieri sau de ani de zile, cu alte nume și alte date schimbate?</p>",t4:"<h3>Pe scurt</h3>\n<p>La <b>07:58</b> primești de la șeful de birou un e-mail scris în grabă, cu multe greșeli. Tu <b>găsești ce nu e în regulă</b> și scrii un <b>răspuns politicos și complet</b>. Apoi îl trimiți ca pe un e-mail adevărat, cu atașamente. Durată: <b>2 ore</b>. Tema <b>se notează</b> (Nota 1, împreună cu Tema 3).</p>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Citește e-mailul de la 07:58</b> din fila <i>Exemplu</i>. Imaginează-ți că tu ai tabelul cu cheltuielile pe care îl caută șeful (cel din Tema 1).</li>\n<li><b>Caută greșelile:</b> notează cel puțin <b>5 lucruri care nu merg</b>. Indicii: subiectul, tonul, ce se cere exact, cui e trimis, cum e scris, cum se termină.</li>\n<li><b>Reține cele 6 părți ale unui e-mail bun:</b> (1) subiect clar, (2) salut, (3) mesajul în 3 fraze: ce trimit, detalii, ce urmează, (4) ton politicos, (5) atașament cu nume clar, (6) semnătură.</li>\n<li><b>Deschide Word</b> și salvează imediat ca <code>T04_Email_Nume_Prenume.docx</code>. Scrie titlul „E-mailul de la 07:58 – Nume Prenume”.</li>\n<li><b>Partea 1 – tabelul:</b> inserează un tabel real cu 3 coloane: <i>Nr.</i> | <i>Ce nu e în regulă</i> | <i>Cum ar trebui</i>. Minim 5 rânduri.</li>\n<li><b>Partea 2 – răspunsul:</b> scrie <i>Subiectul propus pentru șef</i> și apoi mesajul: salut, ce trimiți, detalii, ce urmează, semnătură. Fii scurt: 3–6 propoziții.</li>\n<li><b>Verifică răspunsul</b> cu cele 6 părți. Citește-l cu voce tare. Fără MAJUSCULE, fără mai multe semne de exclamare la rând.</li>\n<li><b>Deschide e-mailul</b> (Gmail, Outlook etc.) și fă un mesaj nou. <b>La:</b> <code>bogdan@pandapc.ro</code>. <b>Subiect:</b> <code>Tema 4 – Email – Nume Prenume</code>. În corpul mesajului lipește răspunsul tău din Word (partea 2).</li>\n<li><b>Atașează două fișiere:</b> <code>T04_Email_Nume_Prenume.docx</code> și <code>T01_Excel_Nume_Prenume.xlsx</code>. Verifică să apară în mesaj. Apoi trimite.</li>\n</ol>\n<h3>Cum predai</h3>\n<ol class=\"stp\"><li>E-mail la <code>bogdan@pandapc.ro</code>, subiect <code>Tema 4 – Email – Nume Prenume</code> (subiectul <b>acesta fix</b> e pentru arhivare; subiectul bun pentru șef îl scrii în Word).</li><li>Atașamente: <code>T04_Email_Nume_Prenume.docx</code> (obligatoriu) și <code>T01_Excel_Nume_Prenume.xlsx</code> (fișierul cerut de șef).</li><li>Dacă nu ai fișierul din Tema 1, atașează doar documentul Word și scrie în mesaj că tabelul îl trimiți separat.</li><li><b>Termen:</b> la sfârșitul orei de practică (21:00), în aceeași seară.</li></ol>\n<p class=\"nota\">Nu apăsa <b>Răspunde tuturor</b> decât dacă toți au nevoie de răspuns. În viața reală, răspunsul de aici ar merge <b>doar</b> către domnul Ionescu.</p>\n<h3>Verifică înainte să trimiți</h3>\n<ul class=\"chk\"><li>Ai găsit <b>cel puțin 5 greșeli</b> în e-mailul de la 07:58.</li><li>Răspunsul are cele <b>6 părți</b> (subiect, salut, mesaj, ton, atașament, semnătură).</li><li>Nu ai MAJUSCULE sau mai multe semne de exclamare la rând.</li><li>Mesajul are <b>corp scris</b>, nu doar «vezi atașat».</li><li>Atașamentele chiar apar în e-mail și au nume clare.</li><li>Fișierul Word și subiectul e-mailului au numele cerut.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: adaugă o <b>semnătură automată</b> în programul de e-mail (nume, funcție, telefon) și verifică cum apare într-un mesaj nou.</p>",t5:"<h3>Pe scurt</h3>\n<p>Continui bugetul din Tema 1: acum ai <b>3 luni</b>, iar Excel calculează singur <b>media lunară</b> a fiecărei cheltuieli, cu funcția <b>AVERAGE</b>. Durată: <b>1 oră</b>. Tema <b>nu se notează</b> și nu se trimite pe e-mail.</p>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Deschide fișierul din Tema 1</b> (<code>T01_Excel_Nume_Prenume.xlsx</code>) și fă <b>Salvare ca</b> <code>T05_Media_Nume_Prenume.xlsx</code>. Fișierul din Tema 1 rămâne neatins.</li>\n<li><b>Antetul:</b> în A1 scrie „Bugetul meu – 3 luni”. Pe rândul 3: <b>A3</b> Nr., <b>B3</b> Cheltuiala, <b>C3</b> Luna 1, <b>D3</b> Luna 2, <b>E3</b> Luna 3, <b>F3</b> Media lunară.</li>\n<li><b>Completează sumele</b> pentru Luna 2 și Luna 3 în <b>D4:E8</b>, apropiate de Luna 1. Trebuie să fie <b>numere</b>, nu text.</li>\n<li><b>Totalul pe lună:</b> în <b>C9</b> ai <code>=SUM(C4:C8)</code>. Trage de colțul din dreapta jos al celulei spre dreapta, ca formula să apară și în <b>D9</b> și <b>E9</b>.</li>\n<li><b>Media:</b> în <b>F4</b> scrie <code>=AVERAGE(C4:E4)</code>. Trage formula în jos până la <b>F8</b>. În <b>F9</b> scrie <code>=AVERAGE(C9:E9)</code>, media totalurilor.</li>\n<li><b>Testul:</b> schimbă o sumă din Luna 3. Dacă totalul și media s-au schimbat singure, e corect.</li>\n<li><b>Formatează:</b> antet îngroșat și colorat, borduri, două zecimale, coloane destul de late (să nu apară #####).</li>\n</ol>\n<h3>Cum închei</h3>\n<ol class=\"stp\"><li><b>Nu se trimite pe e-mail.</b> Când ai terminat, ridici mâna sau scrii în chat. Poți arăta fișierul pe ecran sau spune cât ți-a ieșit <b>media totalurilor</b>.</li></ol>\n<p class=\"nota\">Dacă Excelul tău e în altă limbă, numele funcțiilor poate fi tradus. Folosește butonul <b>Σ (Însumare automată)</b> de pe bara Excel: lângă el, săgeata deschide lista cu <b>Medie / Average</b>.</p>\n<h3>Verifică înainte să anunți că ai terminat</h3>\n<ul class=\"chk\"><li>Ai 3 luni (Luna 1, 2, 3) pentru fiecare dintre cele 5 cheltuieli.</li><li>Totalul fiecărei luni e calculat cu <code>=SUM</code>, nu tastat.</li><li>Media fiecărei cheltuieli e calculată cu <code>=AVERAGE</code>, nu tastată.</li><li>Dacă schimbi o sumă, totalul și media se schimbă singure.</li><li>Nicio coloană nu arată #####.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: în două celule libere scrie <code>=MAX(F4:F8)</code> și <code>=MIN(F4:F8)</code>. Care e cea mai mare și cea mai mică cheltuială medie?</p>"};
 const ECRAN = TEME.filter(t=>t.id!=="liber");
 
 const MODUL = {1:"Modulul 1 · Bazele digitale",2:"Modulul 2 · Comunicare și colaborare",3:"Modulul 3 · Crearea de conținut digital",4:"Modulul 4 · Siguranța pe internet",5:"Modulul 5 · Rezolvarea problemelor"};
@@ -432,9 +706,9 @@ const MODUL = {1:"Modulul 1 · Bazele digitale",2:"Modulul 2 · Comunicare și c
 const BLOC = [
  {m:1,nume:"Excel: Bugetul lunii",ore:2,recap:"Ora 7",nota:3,ecran:"t1",fis:"T01_Excel_Nume_Prenume.xlsx",sub:"Tema 1 – Excel – Nume Prenume"},
  {m:1,nume:"Misterul fișierelor „FINAL_v7_copie”",ore:2,recap:"Ora 7",ecran:"t2",fis:"T02_Fisiere_Nume_Prenume.docx",sub:"Tema 2 – Fișiere – Nume Prenume",opt:true},
- {m:1,nume:"Detectivul de surse",ore:2,recap:"Ora 5, 11",nota:1,fis:"T03_Surse_Nume_Prenume.docx",sub:"Tema 3 – Surse – Nume Prenume",dupa:"Nota 1 se dă după Temele 3 și 4"},
- {m:1,nume:"E-mailul de la 07:58",ore:2,recap:"Ora 9",nota:1,fis:"T04_Email_Nume_Prenume.docx",sub:"Tema 4 – Email – Nume Prenume"},
- {m:1,nume:"Șeful final al Modulului 1: AVERAGE",ore:1,recap:"Ora 7"},
+ {m:1,nume:"Detectivul de surse",ecran:"t3",ore:2,recap:"Ora 5, 11",nota:1,fis:"T03_Surse_Nume_Prenume.docx",sub:"Tema 3 – Surse – Nume Prenume",dupa:"Nota 1 se dă după Temele 3 și 4"},
+ {m:1,nume:"E-mailul de la 07:58",ecran:"t4",ore:2,recap:"Ora 9",nota:1,fis:"T04_Email_Nume_Prenume.docx",sub:"Tema 4 – Email – Nume Prenume"},
+ {m:1,nume:"Șeful final al Modulului 1: AVERAGE",ecran:"t5",ore:1,recap:"Ora 7"},
  {m:2,nume:"Comunicare digitală la locul de muncă",ore:4,recap:"Ora 13"},
  {m:2,nume:"Egalitate de șanse și nediscriminare în mediul digital",ore:4,recap:"Ora 15",nota:2,ob:true,fis:"T07_Nediscriminare_Nume_Prenume",sub:"Tema 7 – Nediscriminare – Nume Prenume"},
  {m:2,nume:"Accesibilitate digitală",ore:4,recap:"Ora 17"},
@@ -571,7 +845,7 @@ function randPractica(g,i){
 function deseneazaZi(){
   $("zi").innerHTML = sel.tip==="teorie" ? randTeorie(TEORIE[sel.i]) : randPractica(sel.sg,sel.i);
 }
-function deseneazaTot(){ deseneazaButoane(); deseneazaZi(); }
+function deseneazaTot(){ deseneazaButoane(); deseneazaZi(); if(window.deseneazaHarta) deseneazaHarta(); }
 
 /* clic pe butoane (delegare) */
 document.addEventListener("click",e=>{
@@ -593,18 +867,12 @@ function copiaza(txt,btn){
   try{ navigator.clipboard.writeText(txt).then(ok,rez); }catch(e){ rez(); }
 }
 
-/* ceas real + aspect */
+/* ceas real */
 function tick(){
   const d=new Date();
   $("ora").textContent=pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds());
   $("data").textContent=ZS[d.getDay()]+", "+d.getDate()+" "+LUNI[d.getMonth()]+" "+d.getFullYear();
 }
-$("bAsp").addEventListener("click",()=>{
-  const r=document.documentElement;
-  const acum=r.dataset.theme||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");
-  r.dataset.theme=acum==="dark"?"light":"dark";
-  try{ localStorage.setItem(CH+"-aspect",r.dataset.theme); }catch(e){}
-});
 
 /* =================== Fișa (dialog) =================== */
 const dlg=$("dFisa"); let fisaTema=null, fisaTab="ex";
@@ -623,7 +891,7 @@ function deseneazaFisa(){
   } else { $("dBody").innerHTML=`<div class="tw">${t.exemplu}</div>`; }
 }
 function addDocx(){ const id=fisaTema; if(FISE_DOCX[id]){ const a=document.createElement("p"); a.innerHTML='<a class="btn" href="'+FISE_DOCX[id]+'" download>⬇ Descarcă fișa (.docx)</a>'; $("dBody").prepend(a); } }
-const FISE_DOCX={t1:"fise/Fisa_1_Excel_Bugetul_lunii.docx",t2:"fise/Fisa_2_Fisiere_FINAL_v7_copie.docx"};
+const FISE_DOCX={t1:"fise/Fisa_1_Excel_Bugetul_lunii.docx",t2:"fise/Fisa_2_Fisiere_FINAL_v7_copie.docx",t3:"fise/Fisa_3_Detectivul_de_surse.docx",t4:"fise/Fisa_4_Emailul_de_la_0758.docx",t5:"fise/Fisa_5_AVERAGE_Modulul_1.docx"};
 function deschideFisa(id,tab){ fisaTema=id; fisaTab=tab||"ex"; deseneazaFisa();
   addDocx(); if(!dlg.open) dlg.showModal(); }
 $("dClose").addEventListener("click",()=>dlg.close());
@@ -709,10 +977,33 @@ document.addEventListener("keydown",e=>{
   }
 });
 
+
+/* =================== Harta temelor (toate cele 21, cu filtre) =================== */
+let filtruHarta="toate";
+function deseneazaHarta(){
+  const g = sel.tip==="practica" ? sel.sg : (sel.sgVazut||1);
+  const lista=BLOC.filter(b=> filtruHarta==="toate" || (filtruHarta==="note"&&b.nota) || (filtruHarta==="ob"&&b.ob) || (filtruHarta==="fisa"&&b.ecran));
+  $("harta").innerHTML = lista.map(b=>{
+    const z=Math.floor(ORE_PE_ZI.indexOf(b.id)/4), d=PRACTICA[g][z];
+    const bd=[]; if(b.nota) bd.push(`<span class="bdg nota">NOTA ${b.nota}</span>`); if(b.ob) bd.push(`<span class="bdg ob">OBLIGATORIU</span>`);
+    if(b.ecran) bd.push(`<span class="bdg">fișa e gata</span>`);
+    return `<button type="button" class="hartac" data-hz="${z}"><span class="hn">${b.cod} · Modulul ${b.m}</span><span class="ht">${b.nume}</span>`+
+      `<span class="hm">Ziua P${z+1} · ${fData(d)} · ${b.ore} ${b.ore===1?"oră":"ore"}</span>`+(bd.length?`<span class="badges">${bd.join("")}</span>`:"")+`</button>`;
+  }).join("") || '<p class="nota">Nicio temă la acest filtru.</p>';
+  document.querySelectorAll("#hartaF .chip").forEach(c=>c.setAttribute("aria-pressed", c.dataset.f===filtruHarta));
+}
+$("hartaF").addEventListener("click",e=>{ const c=e.target.closest(".chip"); if(!c) return; filtruHarta=c.dataset.f; deseneazaHarta(); });
+$("harta").addEventListener("click",e=>{
+  const c=e.target.closest(".hartac"); if(!c) return;
+  const g = sel.tip==="practica" ? sel.sg : (sel.sgVazut||1);
+  sel={tip:"practica",sg:g,i:+c.dataset.hz}; salveazaSel(); deseneazaTot();
+  $("zi").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"});
+});
+
 /* =================== Pornire =================== */
-try{ const a=localStorage.getItem(CH+"-aspect"); if(a) document.documentElement.dataset.theme=a; }catch(e){}
 incarcaSel(); deseneazaTot(); tick();
 setInterval(()=>{ tick(); deseneazaE(); },250);
 </script>
 
+<script src="ui.js" defer></script>
 </body></html>

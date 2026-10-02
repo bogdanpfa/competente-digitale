@@ -1,0 +1,273 @@
+/* =====================================================================
+   stil.css — „familia” vizuală a cursului (Teorie + Practică)
+   De ce un fișier comun: ambele pagini încarcă același stil, deci orice
+   ajustare de culoare, font sau efect se face într-un singur loc.
+   Se încarcă ULTIMUL în pagină, ca să aibă ultimul cuvânt asupra regulilor locale.
+   Fără resurse externe: fonturile sunt găzduite local (fără cereri către terți).
+   ===================================================================== */
+
+/* ---------- Fonturi proprii (variabile; latin + latin-ext = diacritice românești) ---------- */
+@font-face{font-family:"Lora Variable";font-style:normal;font-display:swap;font-weight:400 700;
+  src:url(fonturi/lora-latin-ext-wght-normal.woff2) format("woff2");
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Lora Variable";font-style:normal;font-display:swap;font-weight:400 700;
+  src:url(fonturi/lora-latin-wght-normal.woff2) format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Karla Variable";font-style:normal;font-display:swap;font-weight:200 800;
+  src:url(fonturi/karla-latin-ext-wght-normal.woff2) format("woff2");
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Karla Variable";font-style:normal;font-display:swap;font-weight:200 800;
+  src:url(fonturi/karla-latin-wght-normal.woff2) format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Karla Variable";font-style:italic;font-display:swap;font-weight:200 800;
+  src:url(fonturi/karla-latin-ext-wght-italic.woff2) format("woff2");
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Karla Variable";font-style:italic;font-display:swap;font-weight:200 800;
+  src:url(fonturi/karla-latin-wght-italic.woff2) format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+/* ---------- Tokeni (paleta „hârtie caldă”, prietenoasă cu ochii) ---------- */
+:root{
+  --paper:#F6F1E4; --paper-2:#EFE8D6; --card:#FFFDF7;
+  --ink:#2A2620;   --ink-dim:#5F5646;
+  --navy:#1F3A5F;  --navy-2:#15283f; --navy-3:#2B4F7E;
+  --amber:#C97A2B; --amber-ink:#8F4E0A; --amber-soft:#F1DEC0;
+  --teal:#2C7A72;  --teal-soft:#DCEAE6; --teal-light:#9fd8cf;
+  --line:#DED2B4;  --line-2:#C9BA95;
+  --ok-bg:#E4F0E0; --ok-line:#5B8A52; --ok-ink:#2F5228;
+  --hd:"Lora Variable","Lora",Georgia,"Times New Roman",serif;
+  --bd:"Karla Variable","Karla",-apple-system,"Segoe UI",system-ui,sans-serif;
+  --mono:var(--bd);
+  --r:16px;                                   /* rază standard a cardurilor */
+  --glass:color-mix(in srgb,var(--card) 64%,transparent);
+  --glass-line:color-mix(in srgb,#fff 70%,var(--line));
+  --shadow:0 1px 2px rgba(42,38,32,.06),0 8px 24px -8px rgba(42,38,32,.16);
+  --shadow-up:0 2px 4px rgba(42,38,32,.08),0 16px 32px -10px rgba(31,58,95,.28);
+
+  /* alias-uri pentru pagina Practică (a fost construită cu alte nume) */
+  --bg:var(--paper); --bg2:var(--paper-2); --surface:var(--card); --line2:var(--line-2);
+  --text:var(--ink); --dim:var(--ink-dim); --accent:var(--teal); --warm:var(--amber-ink);
+  --sel:var(--amber-soft); --onaccent:#fff;
+  color-scheme:light;
+}
+
+/* ---------- Bază ---------- */
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{font-family:var(--bd);font-size:16px;line-height:1.62;color:var(--ink);
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  background:var(--paper);position:relative;min-height:100dvh}
+/* „orbii” de lumină din fundal: dau sticlei ceva de estompat și fac pagina să respire */
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(60vmax 50vmax at 8% -8%,color-mix(in srgb,var(--amber) 20%,transparent),transparent 62%),
+    radial-gradient(55vmax 45vmax at 100% 4%,color-mix(in srgb,var(--teal) 17%,transparent),transparent 60%),
+    radial-gradient(70vmax 50vmax at 40% 112%,color-mix(in srgb,var(--navy) 12%,transparent),transparent 62%)}
+h1,h2,h3,h4{font-family:var(--hd);text-wrap:balance}
+p,li{text-wrap:pretty}
+a{color:var(--navy);text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{color:var(--navy-3)}
+::selection{background:var(--amber-soft);color:var(--ink)}
+code{font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;font-size:.9em;background:color-mix(in srgb,var(--navy) 7%,transparent);
+  border:1px solid var(--line);border-radius:6px;padding:1px 6px;overflow-wrap:anywhere;color:var(--navy-2)}
+:focus-visible{outline:3px solid var(--amber);outline-offset:3px;border-radius:6px}
+.skip-link{position:absolute;left:12px;top:-60px;z-index:100;background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;
+  text-decoration:none;font-weight:700;transition:top .15s}
+.skip-link:focus{top:10px}
+
+/* ---------- Suprafețe de sticlă (glassmorphism) ---------- */
+/* Rețeta: fundal semi-transparent + estompare + margine luminoasă + umbră moale.
+   Dacă browserul nu știe backdrop-filter, cardul rămâne opac: citibil în orice situație. */
+.glass,.block.recap,.zc-card,.sg-card,.q,.retinut,.ghid,.gc,.card,details.arh,.pb,.tb,.seg,.hartac,.row.acum,
+details.rez>summary,dialog{
+  background:var(--card);border-color:var(--line)}
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+  .glass,.block.recap,.zc-card,.sg-card,.q,.ghid,.gc,.card,details.arh,.pb,.tb,.seg,.hartac,
+  details.rez>summary,.pdfbtn:not(.soon){
+    background:var(--glass);
+    -webkit-backdrop-filter:blur(14px) saturate(1.25);backdrop-filter:blur(14px) saturate(1.25);
+    border:1px solid var(--glass-line);box-shadow:var(--shadow)}
+  dialog{background:color-mix(in srgb,var(--card) 90%,transparent);
+    -webkit-backdrop-filter:blur(22px) saturate(1.3);backdrop-filter:blur(22px) saturate(1.3)}
+}
+dialog{border:1px solid var(--glass-line);border-radius:20px;box-shadow:0 30px 80px -20px rgba(21,40,63,.5);color:var(--ink)}
+dialog::backdrop{background:rgba(21,40,63,.45);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.block.recap,.ghid{border-radius:var(--r)}
+.zc-card,.sg-card,.q,.gc{border-radius:14px}
+
+/* ---------- Hover și mișcare (subtile; dispar la „reduce motion”) ---------- */
+@media (prefers-reduced-motion:no-preference){
+  .zc-card,.sg-card,.gc,.pb,.tb,.pdfbtn,.pill,.btn,.hartac,.q,details.rez>summary,.bn a,.tnav a{
+    transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,background-color .18s ease}
+  .zc-card:hover,.sg-card:hover,.gc:hover,.hartac:hover{transform:translateY(-3px);box-shadow:var(--shadow-up);border-color:var(--amber)}
+  .pb:hover,.tb:hover,.pdfbtn:hover,.btn:hover,details.rez>summary:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
+  .pb:active,.tb:active,.pdfbtn:active,.btn:active{transform:translateY(0)}
+  main,.day-panel,#zi{animation:aparitie .45s ease both}
+  @keyframes aparitie{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @view-transition{navigation:auto}                    /* tranziție lină între Teorie și Practică */
+  ::view-transition-old(root){animation:.22s ease-in both iese}
+  ::view-transition-new(root){animation:.3s ease-out both intra}
+  @keyframes iese{to{opacity:0;transform:translateY(-6px)}}
+  @keyframes intra{from{opacity:0;transform:translateY(10px)}}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ---------- Bara de sus (aceeași pe ambele pagini) ---------- */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin-inline:-16px;padding-inline:16px;
+  background:color-mix(in srgb,var(--navy) 90%,transparent);
+  -webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
+  border-bottom:3px solid var(--amber);padding:9px 0;box-shadow:0 6px 20px -10px rgba(21,40,63,.6)}
+.topbar-inner{max-width:1040px;margin:0 auto;padding:0 16px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.brand{font:700 14px/1 var(--hd);color:var(--amber-soft);letter-spacing:.02em;white-space:nowrap;text-decoration:none}
+.pills{display:flex;flex-wrap:wrap;gap:6px;flex:1 1 auto}
+.pill{font:600 13px/1 var(--bd);color:#e3edf3;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.3);
+  border-radius:999px;padding:8px 13px;min-height:36px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.pill:hover{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.14)}
+.pill.active{background:var(--amber);border-color:var(--amber);color:#2a1a08;font-weight:700}
+.pill .dot{width:6px;height:6px;border-radius:50%;background:var(--teal-light);display:inline-block}
+.tnav{display:flex;gap:6px;margin-left:auto;flex:none}
+@media(max-width:1240px){.topbar:has(.pills) .brand{display:none}}
+.tnav a{font:700 13px/1 var(--bd);color:#e3edf3;text-decoration:none;padding:9px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.3);min-height:36px;display:inline-flex;align-items:center}
+.tnav a:hover{background:rgba(255,255,255,.14);color:#fff}
+.tnav a[aria-current="page"]{background:#fff;color:var(--navy-2);border-color:#fff}
+.topbar :focus-visible{outline-color:#fff}
+
+/* ---------- Butoanele mari TEORIE / PRACTICĂ ---------- */
+.bn{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:1040px;margin:18px auto 8px;padding:0}
+.bn a{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:92px;padding:14px 16px;
+  border-radius:20px;text-decoration:none;color:#fff;text-align:center;overflow:hidden;
+  font:700 clamp(22px,4.2vw,32px)/1.1 var(--hd);letter-spacing:.04em;text-transform:uppercase;
+  border:2px solid rgba(255,255,255,.35);box-shadow:var(--shadow-up)}
+.bn a::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.22),transparent 38%);pointer-events:none}
+.bn small{font:600 clamp(12.5px,2.2vw,15px)/1.3 var(--bd);letter-spacing:0;text-transform:none;opacity:.96}
+.bn .bt{background:linear-gradient(135deg,var(--navy-3),var(--navy-2))}
+.bn .bp{background:linear-gradient(135deg,#A85D0C,#7E4207)}
+.bn a:hover{transform:translateY(-3px);color:#fff;filter:brightness(1.08)}
+.bn a[aria-current="page"]{box-shadow:0 0 0 4px var(--paper),0 0 0 7px var(--navy),var(--shadow-up);cursor:default}
+.bn .bp[aria-current="page"]{box-shadow:0 0 0 4px var(--paper),0 0 0 7px #8F4E0A,var(--shadow-up)}
+.bn :focus-visible{outline:4px solid var(--amber);outline-offset:4px}
+@media(max-width:560px){.bn{gap:8px}.bn a{min-height:78px;border-radius:16px}}
+
+/* ---------- „Hero”-ul comun (titlul zilei / titlul panoului) ---------- */
+.day-hero,header.top{position:relative;margin:18px 0 8px;padding:28px clamp(18px,3vw,34px);border-radius:24px;border:1px solid rgba(255,255,255,.18);
+  background:radial-gradient(90% 140% at 100% 0,rgba(201,122,43,.30),transparent 55%),linear-gradient(135deg,var(--navy-3),var(--navy-2) 70%);
+  color:#fff;box-shadow:var(--shadow-up);overflow:hidden}
+.day-hero::after,header.top::after{content:"";position:absolute;right:-60px;bottom:-80px;width:240px;height:240px;border-radius:50%;
+  background:radial-gradient(circle,rgba(159,216,207,.22),transparent 70%);pointer-events:none}
+.day-hero h1,header.top h1{color:#fff;font:700 clamp(26px,4.6vw,40px)/1.15 var(--hd);margin:0 0 4px}
+.day-hero .eyebrow,header.top .eyebrow{color:var(--teal-light);font:700 12px/1 var(--bd);letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px}
+.day-hero .day-sub{color:#d9e5ee}
+.day-hero .day-desc{color:#eef3f7}
+.day-hero.placeholder{border-bottom:0}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;border-bottom:0}
+header.top .clock .t{color:#fff}header.top .clock .d{color:#d9e5ee}
+.day-hero .pdfbtn{color:var(--navy-2)}
+.day-hero .pdfbtn:not(.soon){background:rgba(255,255,255,.94);border-color:transparent}
+.day-hero .pdfbtn:hover{border-color:var(--amber)}
+.day-hero :focus-visible{outline-color:#fff}
+
+/* ---------- Butoane și etichete ---------- */
+.pdfbtn{min-height:44px;border-radius:12px;font-size:14px}
+.pdfbtn .tag{background:var(--amber-ink)}
+.pdfbtn.soon{cursor:help;border:1px dashed rgba(255,255,255,.7);background:rgba(255,255,255,.1);color:#eef3f7;box-shadow:none}
+.pdfbtn.soon .tag{background:rgba(255,255,255,.25)}
+.btn{min-height:40px;border-radius:999px;font-weight:700}
+.btn.sol{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.warm{background:var(--amber-soft);color:var(--amber-ink);border-color:var(--line-2)}
+.btn.green{background:var(--teal-soft);color:#1d5650}
+.btn:hover{border-color:var(--amber)}
+.bdg.nota,.pb .azi,.tag,.gc h3 .nr{color:#fff}
+.th{color:#fff}.th.ex{color:#fff}
+.tb[aria-pressed=true],.pb[aria-pressed=true]{background:var(--amber-soft);border-color:var(--amber)}
+.seg button[aria-pressed=true]{background:var(--teal);color:#fff}
+.row.acum{background:color-mix(in srgb,var(--amber) 14%,var(--card))}
+
+/* ---------- Titluri de secțiune: bară colorată + ritm clar ---------- */
+.block h2,.sec>h2{position:relative}
+.kicker,.tl-year,.status-pill{color:var(--amber-ink)}
+.lead{font-size:16px}
+.retinut{border-radius:0 14px 14px 0}
+.retinut h5,.retinut .h5{color:#1d5650;margin:0 0 6px;font:700 12px/1 var(--bd);letter-spacing:.08em;text-transform:uppercase}
+
+/* ---------- Tooltip-uri (JS propriu, accesibil: hover, focus, atingere, Esc) ---------- */
+#tip{position:fixed;z-index:200;max-width:min(320px,calc(100vw - 24px));padding:10px 13px 11px;border-radius:12px;
+  background:var(--navy-2);color:#fff;font:500 13.5px/1.45 var(--bd);box-shadow:0 14px 34px -8px rgba(21,40,63,.6);
+  border:1px solid rgba(255,255,255,.18);pointer-events:auto;opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .14s,transform .14s,visibility .14s}
+#tip.on{opacity:1;visibility:visible;transform:none}
+#tip b{display:block;font:700 12px/1.2 var(--bd);letter-spacing:.08em;text-transform:uppercase;color:var(--teal-light);margin-bottom:3px}
+#tip::after{content:"";position:absolute;left:var(--ax,50%);width:10px;height:10px;background:var(--navy-2);transform:translateX(-50%) rotate(45deg);
+  border:1px solid rgba(255,255,255,.18)}
+#tip[data-pos="sus"]::after{bottom:-6px;border-top:0;border-left:0}
+#tip[data-pos="jos"]::after{top:-6px;border-bottom:0;border-right:0}
+/* termeni explicați în text: subliniere punctată + cursor de ajutor */
+.gl{border-bottom:2px dotted var(--teal);cursor:help;text-decoration:none;background:linear-gradient(transparent 60%,color-mix(in srgb,var(--teal) 12%,transparent) 60%)}
+.gl:hover,.gl:focus-visible{background:color-mix(in srgb,var(--teal) 18%,transparent)}
+/* butonul „?” (explicație la un titlu sau buton) */
+.i{display:inline-grid;place-items:center;width:22px;height:22px;margin-left:8px;padding:0;border-radius:50%;vertical-align:middle;
+  border:1.5px solid var(--navy-3);background:transparent;color:var(--navy);font:700 13px/1 var(--bd);cursor:help}
+.i:hover,.i:focus-visible{background:var(--navy);color:#fff}
+.hero-i,.day-hero .i,header.top .i{border-color:rgba(255,255,255,.7);color:#fff}
+.day-hero .i:hover,header.top .i:hover{background:#fff;color:var(--navy-2)}
+
+/* ---------- Progres la derulare + „sus” ---------- */
+.scrollbar{position:fixed;left:0;top:0;height:4px;width:100%;z-index:60;transform-origin:0 50%;transform:scaleX(var(--p,0));
+  background:linear-gradient(90deg,var(--amber),var(--teal));pointer-events:none}
+.totop{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:50;width:48px;height:48px;border-radius:50%;
+  border:1px solid var(--glass-line);background:color-mix(in srgb,var(--navy) 88%,transparent);color:#fff;font-size:20px;cursor:pointer;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:var(--shadow-up);opacity:0;visibility:hidden;transform:translateY(10px);
+  transition:opacity .2s,transform .2s,visibility .2s}
+.totop.on{opacity:1;visibility:visible;transform:none}
+
+/* ---------- Navigare ziua precedentă / următoare (Teorie) ---------- */
+.daynav{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin:26px 0 6px}
+.daynav button{font:700 14px var(--bd);min-height:46px;padding:0 20px;border-radius:999px;border:1px solid var(--line-2);background:var(--card);color:var(--navy-2);cursor:pointer}
+.daynav button:hover{border-color:var(--amber)}
+
+/* ---------- Subsol ---------- */
+.sitefoot{max-width:1040px;margin:34px auto 0;padding:20px 22px;border-radius:var(--r);border:1px solid var(--glass-line);background:var(--glass);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--ink-dim);font-size:13.5px;display:grid;gap:4px}
+.sitefoot b{color:var(--ink)}
+.foot{color:var(--ink-dim)}
+
+/* ---------- Harta temelor (Practică) ---------- */
+.hartac{border-radius:14px;padding:14px 15px;text-align:left;cursor:pointer;display:grid;gap:6px;align-content:start;font:inherit;color:inherit;min-width:0}
+.harta{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:10px;margin-top:12px}
+.hartac .hn{font:700 12px var(--bd);letter-spacing:.08em;color:var(--amber-ink);text-transform:uppercase}
+.hartac .ht{font:700 16px/1.25 var(--hd);color:var(--navy-2)}
+.hartac .hm{font-size:12.5px;color:var(--ink-dim)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.chip{border:1px solid var(--line-2);background:var(--card);color:var(--navy-2);border-radius:999px;padding:7px 14px;min-height:36px;font:700 13px var(--bd);cursor:pointer}
+.chip[aria-pressed=true]{background:var(--navy);border-color:var(--navy);color:#fff}
+.chip:hover{border-color:var(--amber)}
+
+/* ---------- Ecranul formatorului: rămâne închis la culoare (se proiectează în sală/Zoom) ---------- */
+#ecran{--bg:#0f1720;--bg2:#0b1119;--surface:#16202b;--line:#233241;--line2:#2c3d4e;--text:#eaf0f5;--dim:#a3b8c8;--accent:#8ecb9d;--warm:#e7ad6b;
+  --sel:#1c2b39;--onaccent:#0f1720;--card:#16202b;color-scheme:dark;background:var(--bg);color:var(--text);
+  border-radius:24px;padding:20px clamp(14px,2.4vw,28px) 24px;margin-top:16px;box-shadow:var(--shadow-up)}
+#ecran .btn{color:var(--text);border-color:var(--line2)}
+#ecran .btn.sol{background:var(--accent);border-color:var(--accent);color:var(--onaccent)}
+#ecran .card{background:var(--surface);-webkit-backdrop-filter:none;backdrop-filter:none;border:1px solid var(--line);box-shadow:none}
+#ecran .card:hover,#ecran .btn:hover{transform:none;box-shadow:none}
+#ecran .tag,#ecran .bdg.nota{color:#0f1720}
+#ecran :focus-visible{outline-color:var(--warm)}
+#ecran code{background:#0b1119;color:#eaf0f5;border-color:#2c3d4e}
+#ecran:fullscreen{overflow:auto;border-radius:0}
+
+/* ---------- Telefon și tabletă ---------- */
+@media(max-width:640px){
+  body{font-size:15.5px}
+  .brand{display:none}
+  .topbar:not(:has(.pills)) .brand{display:inline}      /* pe Practică (fără pastile) numele rămâne vizibil */
+  .topbar:has(.pills) .tnav{display:none}               /* pe Teorie, butoanele mari de sub bară țin loc de navigare */
+  .pills{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:2px 0}   /* zilele: un singur rând, se derulează lateral */
+  .pills::-webkit-scrollbar{display:none}
+  .day-hero,header.top{border-radius:18px;padding:22px 16px}
+  .totop{right:12px}
+}
+@media print{
+  .bn,.topbar,.tnav,.totop,.scrollbar,#tip,.daynav,.sitefoot{display:none!important}
+  body,body::before{background:#fff!important}
+  .glass,.block.recap,.zc-card,.q{box-shadow:none!important;backdrop-filter:none!important;background:#fff!important}
+  .day-hero,header.top{background:#fff!important;color:#000!important;border:1px solid #999!important;box-shadow:none!important}
+  .day-hero h1,header.top h1,.day-hero .day-sub,.day-hero .day-desc,.day-hero .eyebrow{color:#000!important}
+}
