@@ -46,7 +46,7 @@ h1{font:800 clamp(21px,3vw,28px)/1.18 var(--hd);margin:0;text-wrap:balance}
 
 /* teorie: butoane mici, într-un rând */
 .theory{display:flex;flex-wrap:wrap;gap:6px}
-.tb{display:inline-flex;align-items:baseline;gap:6px;min-height:32px;padding:5px 11px;border-radius:9px;border:1px solid var(--line);background:var(--surface);cursor:pointer;white-space:nowrap}
+.tb{text-decoration:none;color:inherit;display:inline-flex;align-items:baseline;gap:6px;min-height:32px;padding:5px 11px;border-radius:9px;border:1px solid var(--line);background:var(--surface);cursor:pointer;white-space:nowrap}
 .tb b{font:800 13px var(--hd)}
 .tb span{color:var(--dim);font-size:12.5px;font-variant-numeric:tabular-nums}
 .tb:hover{border-color:var(--line2)}
@@ -182,7 +182,6 @@ td.c{text-align:center}
 <div class="scrollbar" aria-hidden="true"></div>
 <nav class="topbar" aria-label="Secțiuni"><div class="topbar-inner">
   <a class="brand" href="index.html">Competențe digitale · CFR</a>
-  <div class="tnav"><a href="index.html">Teorie</a><a href="practica.html" aria-current="page">Practică</a></div>
 </div></nav>
 <div class="wrap">
  <div id="panou">
@@ -231,7 +230,7 @@ td.c{text-align:center}
   </section>
 
   <section class="sec" aria-labelledby="hTeo">
-    <h2 id="hTeo">Teorie <span class="rng">8 zile · Zoom · 22 sept – 1 oct</span></h2>
+    <h2 id="hTeo">Teorie <span class="rng">8 zile · Zoom · 22 sept – 1 oct · apasă pe o zi ca să-i vezi recapitularea</span></h2>
     <div class="theory" id="teorie"></div>
   </section>
 
@@ -767,17 +766,15 @@ let sel = {tip:"practica", sg:1, i:0};
 function salveazaSel(){ try{ localStorage.setItem(CH, JSON.stringify(sel)); }catch(e){} }
 function incarcaSel(){
   const a=azi();
-  const t=TEORIE.findIndex(z=>z.iso===a);
-  if(t>=0){ sel={tip:"teorie",i:t}; return; }
   for(const g of [1,2]){ const i=PRACTICA[g].indexOf(a); if(i>=0){ sel={tip:"practica",sg:g,i}; return; } }
-  try{ const s=JSON.parse(localStorage.getItem(CH)||"null"); if(s&&(s.tip==="teorie"||s.tip==="practica")) sel=s; }catch(e){}
+  try{ const s=JSON.parse(localStorage.getItem(CH)||"null"); if(s&&s.tip==="practica"&&PRACTICA[s.sg]&&s.i>=0&&s.i<PRACTICA[s.sg].length) sel=s; }catch(e){}
 }
 
 /* =================== Desenare panou =================== */
 function deseneazaButoane(){
   const a=azi();
   $("teorie").innerHTML = TEORIE.map((z,i)=>
-    `<button type="button" class="tb" data-t="${i}" aria-pressed="${sel.tip==="teorie"&&sel.i===i}" title="${z.sapt}, ${z.data} · ${z.orele}"><b>Z${z.n}</b><span>${z.scurt}</span></button>`).join("");
+    `<a class="tb" href="index.html#ziua-${z.n}" title="Deschide Ziua ${z.n} din Teorie · ${z.sapt}, ${z.data} · ${z.orele}" aria-label="Teorie, ziua ${z.n}, ${z.data}: deschide recapitularea"><b>Z${z.n}</b><span>${z.scurt}</span></a>`).join("");
   $("sg1").setAttribute("aria-pressed", sel.sg===1||sel.tip==="teorie"&&false);
   const g = sel.tip==="practica" ? sel.sg : (sel.sgVazut||1);
   $("sg1").setAttribute("aria-pressed", g===1); $("sg2").setAttribute("aria-pressed", g===2);
@@ -847,11 +844,17 @@ function deseneazaZi(){
 }
 function deseneazaTot(){ deseneazaButoane(); deseneazaZi(); if(window.deseneazaHarta) deseneazaHarta(); }
 
+/* deruleaza pagina la începutul zilei alese (antetul zilei + prima lecție) */
+function mergiLaZi(){
+  const el=$("zi"); if(!el) return;
+  el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"});
+  const h=el.querySelector("h3"); if(h){ h.setAttribute("tabindex","-1"); h.focus({preventScroll:true}); }   // pentru cititoare de ecran
+}
 /* clic pe butoane (delegare) */
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-t],[data-p],[data-ec],[data-fisa],[data-cp]"); if(!t) return;
   if(t.dataset.t!==undefined){ sel={tip:"teorie",i:+t.dataset.t,sgVazut:sel.sg||sel.sgVazut||1}; salveazaSel(); deseneazaTot(); }
-  else if(t.dataset.p!==undefined){ const g=$("sg2").getAttribute("aria-pressed")==="true"?2:1; sel={tip:"practica",sg:g,i:+t.dataset.p}; salveazaSel(); deseneazaTot(); }
+  else if(t.dataset.p!==undefined){ const g=$("sg2").getAttribute("aria-pressed")==="true"?2:1; sel={tip:"practica",sg:g,i:+t.dataset.p}; salveazaSel(); deseneazaTot(); mergiLaZi(); }
   else if(t.dataset.ec) deschideEcran(t.dataset.ec);
   else if(t.dataset.fisa) deschideFisa(t.dataset.fisa,"do");
   else if(t.dataset.cp) copiaza(t.dataset.cp,t);
@@ -996,8 +999,7 @@ $("hartaF").addEventListener("click",e=>{ const c=e.target.closest(".chip"); if(
 $("harta").addEventListener("click",e=>{
   const c=e.target.closest(".hartac"); if(!c) return;
   const g = sel.tip==="practica" ? sel.sg : (sel.sgVazut||1);
-  sel={tip:"practica",sg:g,i:+c.dataset.hz}; salveazaSel(); deseneazaTot();
-  $("zi").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"});
+  sel={tip:"practica",sg:g,i:+c.dataset.hz}; salveazaSel(); deseneazaTot(); mergiLaZi();
 });
 
 /* =================== Pornire =================== */
