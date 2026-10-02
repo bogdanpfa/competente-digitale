@@ -161,6 +161,11 @@ ol.pasi li.gata .nr::after{content:" ✓";color:var(--accent)}
 ol.pasi li.activ .nr::after{content:" ▶";color:var(--warm)}
 .ctrl{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
 
+/* fișa: pași pentru cursant */
+ol.stp,ul.chk{margin:6px 0 12px;padding-left:22px;display:grid;gap:8px;font-size:15px;line-height:1.5}
+ul.chk{list-style:none;padding-left:4px}
+ul.chk li::before{content:"☐ ";color:var(--warm)}
+#dBody h3{margin-top:18px}
 /* fișa (dialog) */
 dialog{width:min(980px,94vw);max-height:90vh;overflow:auto;border:1px solid var(--warm);border-radius:16px;padding:18px 22px;background:var(--surface);color:var(--text)}
 dialog::backdrop{background:rgba(0,0,0,.6)}
@@ -205,8 +210,8 @@ td.c{text-align:center}
       <div class="gc"><h3><span class="nr">2</span>Cum găsești ce ai de făcut</h3>
         <ol><li>Mai jos, la <b>Practică</b>, alege <b>subgrupa ta</b>.</li><li>Apasă pe <b>ziua</b> din calendar (P1, P2 … P17). Ziua de azi are semnul <b>„azi”</b>, iar zilele trecute au <b>✓</b>.</li><li>Vezi <b>ce temă lucrăm și în ce interval</b>, de ex. 17:00–19:00.</li></ol></div>
       <div class="gc"><h3><span class="nr">3</span>Fișa temei (instrucțiunile)</h3>
-        <p>La fiecare temă apasă <b>📄 Fișa</b>. Se deschide o fereastră cu două părți:</p>
-        <ul><li><b>Exemplu</b> — cum arată, aproximativ, rezultatul final.</li><li><b>Barem</b> — cum se punctează lucrarea (maximum 100 de puncte).</li></ul>
+        <p>La fiecare temă apasă <b>📄 Fișa</b>. Se deschide o fereastră cu trei părți:</p>
+        <ul><li><b>Ce ai de făcut</b> — pașii temei, unul câte unul, plus cum predai.</li><li><b>Exemplu</b> — cum arată, aproximativ, rezultatul final.</li><li><b>Barem</b> — cum se punctează lucrarea (maximum 100 de puncte).</li></ul>
         <p>Poți <b>descărca fișa</b> (.docx) cu butonul din fereastră. Fișele se adaugă pe măsură ce ajungem la fiecare temă.</p></div>
       <div class="gc"><h3><span class="nr">4</span>Cum predai o temă</h3>
         <ol><li><b>Salvează fișierul</b> cu numele cerut, de ex. <code class="ex">T01_Excel_Popescu_Maria.xlsx</code></li><li><b>Trimite un e-mail</b> la <code>bogdan@pandapc.ro</code>, cu fișierul atașat.</li><li>La <b>Subiect</b> scrii exact textul din pagină (e un buton <b>Copiază</b>), de ex. <code class="ex">Tema 1 – Excel – Nume Prenume</code></li></ol>
@@ -220,7 +225,7 @@ td.c{text-align:center}
         <p style="margin-top:8px">Restul temelor <b>nu se notează</b>: sunt exerciții ca să exersezi. <b>OBLIGATORIU</b> înseamnă că tema e cerută de organizatorul cursului. Din cele 100 de puncte ale unei lucrări, 10 sunt <b>din oficiu</b> (pentru prezență și participare).</p></div>
       <div class="gc"><h3><span class="nr">6</span>Ai o problemă sau o întrebare?</h3>
         <p>În timpul orelor scrie în <b>chat</b> sau ridică mâna pe Zoom. În afara orelor scrie la <code>bogdan@pandapc.ro</code>.</p>
-        <p><b>Nu te speria dacă nu termini:</b> poți preda și o variantă incompletă, dar trimite-o până la finalul orei.</p></div>
+        </div>
     </div>
     <p class="ask"><b>Butonul „▶ Ecran cu cronometru (pentru formator)”</b> îl folosește formatorul: arată timpul rămas și pașii temei, iar el îl partajează pe Zoom. Tu nu trebuie să-l deschizi.</p>
   </section>
@@ -304,7 +309,8 @@ td.c{text-align:center}
   <button class="btn dx" id="dClose" type="button">Închide</button>
   <h2 id="dFT">Fișa</h2>
   <div class="tabs" role="group" aria-label="Părți din fișă">
-    <button class="btn" type="button" id="tEx" aria-pressed="true">Exemplu</button>
+    <button class="btn" type="button" id="tDo" aria-pressed="true">Ce ai de făcut</button>
+    <button class="btn" type="button" id="tEx" aria-pressed="false">Exemplu</button>
     <button class="btn" type="button" id="tBa" aria-pressed="false">Barem</button>
   </div>
   <div id="dBody"></div>
@@ -417,6 +423,7 @@ const TEME = [
   exemplu:"<p class='nota'>Pentru acest cronometru nu există fișă.</p>", barem:[]
  }
  ];
+const CURSANT = {t1:"<h3>Pe scurt</h3>\n<p>Construiești în <b>Excel</b> bugetul unei luni, cu <b>5 cheltuieli</b>. Excel face singur adunarea. Durată: <b>2 ore</b>. Tema <b>se notează</b> (NOTA 3).</p>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Deschide Excel</b> și un registru nou. <b>Salvează-l imediat</b> cu numele <code>T01_Excel_Nume_Prenume.xlsx</code> (cu numele tău, de ex. <code>T01_Excel_Popescu_Maria.xlsx</code>). Salvează des.</li>\n<li>În celula <b>A1</b> scrie titlul: <i>Bugetul meu – luna …</i> (completezi luna).</li>\n<li>Pe <b>rândul 3</b> scrie antetul: <b>A3</b> = Nr., <b>B3</b> = Cheltuiala, <b>C3</b> = Suma (lei).</li>\n<li>Pe <b>rândurile 4–8</b> scrie cele 5 cheltuieli: chirie, mâncare, transport, utilități, telefon. Pune <b>sume realiste</b> (ale tale sau ale unei familii imaginare), ca <b>numere</b>, nu ca text. Nu scrie date personale reale dacă nu vrei.</li>\n<li>Pe <b>rândul 9</b>: în <b>B9</b> scrie TOTAL, iar în <b>C9</b> scrie formula <code>=SUM(C4:C8)</code>. <b>Nu tasta totalul de mână!</b></li>\n<li><b>Verifică:</b> schimbă suma de la chirie. Dacă totalul s-a schimbat singur, ai făcut corect. Dacă nu, ai scris un număr în loc de formulă: refă pasul 5.</li>\n<li><b>Formatează:</b> antet îngroșat și colorat, bordură pe toate celulele, sume cu două zecimale și „lei”, coloana C destul de lată (să nu apară #####).</li>\n<li><b>Salvează</b> și <b>trimite</b> fișierul pe e-mail (vezi mai jos).</li>\n</ol>\n<h3>Cum predai</h3>\n<ol class=\"stp\">\n<li>Trimite un e-mail la <code>bogdan@pandapc.ro</code>.</li>\n<li>Subiect: <code>Tema 1 – Excel – Nume Prenume</code></li>\n<li>Atașează fișierul <code>T01_Excel_Nume_Prenume.xlsx</code> și scrie o propoziție de politețe (ex.: „Bună ziua, vă transmit Tema 1. Mulțumesc.”).</li>\n<li><b>Termen:</b> la sfârșitul orei de practică (19:00), în aceeași seară.</li>\n</ol>\n<p class=\"nota\">Poți lucra și în Google Sheets, dar fișierul trimis trebuie descărcat ca <b>.xlsx</b>.</p>\n<h3>Verifică înainte să trimiți</h3>\n<ul class=\"chk\"><li>Totalul e calculat cu <code>=SUM</code>, nu tastat.</li><li>Tabelul are titlu, antet și cele 5 cheltuieli.</li><li>Sumele au format de număr, iar coloana nu arată #####.</li><li>Diacriticele sunt corecte (Utilități, Mâncare).</li><li>Fișierul și subiectul e-mailului au numele cerut.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: adaugă un rând 6, „Neprevăzute”, și urmărește cum se schimbă totalul. Dacă rândul nou nu intră în formulă, extinde intervalul din SUM.</p>",t2:"<h3>Pe scurt</h3>\n<p>Colega ta Costina are pe desktop <b>12 fișiere cu nume haotice</b> și nu le mai găsește. Tu pui <b>ordine</b>: <b>nu ștergi nimic</b>, doar le dai nume noi și le pui în foldere. Apoi arăți rezultatul. Durată: <b>2 ore</b>. Tema <b>nu se notează</b> (e exercițiu); baremul e doar pentru autoevaluare.</p>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Citește lista celor 12 fișiere</b> (fila <b>Exemplu</b>, de sus din fereastră). Fiecare are un nume haotic și, alături, ce este de fapt.</li>\n<li><b>Dă fiecărui fișier un nume nou, clar.</b> Regula: <code>AAAA-LL_Subiect_vN</code> (an, lună, subiect scurt, versiune). Ex.: <code>2026-04_Buget_v1.xlsx</code>. <b>Fără</b> „final”, „copie”, „nou”, fără semne de exclamare și <b>fără spații</b> (folosești liniuță de subliniere _).</li>\n<li><b>Alege 4 foldere</b> pentru cele 12 fișiere, numerotate ca să stea în ordine, ex.: <code>01_Munca</code>, <code>02_Acte</code>, <code>03_Bani</code>, <code>04_Poze</code>. Poți alege alte nume.</li>\n<li><b>În Word</b> fă un <b>tabel</b> cu <b>4 coloane</b>: <i>Nr. | Nume vechi | Nume nou | Folder</i>, cu <b>12 rânduri</b>, și completează-l. (Trei rânduri-model sunt la fila Exemplu; celelalte 9 le faci tu.)</li>\n<li><b>Sub tabel</b> scrie <b>3–4 propoziții</b>: care sunt regulile tale de denumire și de ce ajută (de ex. sortare după dată, căutare mai rapidă).</li>\n<li>Dacă <b>două fișiere sunt aceeași lucrare</b> (cererea și copia ei), explică într-o propoziție <b>care se păstrează și de ce</b>. Nu ștergi, doar propui.</li>\n<li><b>Salvează documentul Word</b> ca <code>T02_Fisiere_Nume_Prenume.docx</code>.</li>\n<li><b>În OneDrive:</b> creează cele 4 foldere și încarcă documentul Word într-unul dintre ele (de ex. în <code>02_Acte</code>).</li>\n<li><b>Partajează</b> folderul sau fișierul: <b>Partajare → „Oricine are linkul poate vizualiza”</b> → copiază linkul și pune-l în chat-ul grupului. Dacă organizația ta blochează partajarea, fă o <b>captură de ecran</b> cu structura de foldere și arat-o pe Zoom.</li>\n</ol>\n<h3>Cum arăți rezultatul</h3>\n<p>La <b>sfârșitul orei</b> (21:00): <b>partajezi ecranul</b> pe Zoom sau pui <b>linkul OneDrive în chat</b>. Nu trimiți obligatoriu pe e-mail. Doar dacă formatorul îți cere documentul, îl trimiți la <code>bogdan@pandapc.ro</code>, cu subiectul <code>Tema 2 – Fișiere – Nume Prenume</code>.</p>\n<h3>Verifică înainte să arăți</h3>\n<ul class=\"chk\"><li>Toate cele 12 fișiere au nume nou, fără „final”, „copie”, „nou” și fără spații.</li><li>Toate numele urmează <b>aceeași regulă</b> (AAAA-LL_Subiect_vN).</li><li>Sunt <b>4 foldere</b> numerotate și fiecare fișier are un folder.</li><li>Tabelul din Word are <b>4 coloane și 12 rânduri</b>, plus 3–4 propoziții despre reguli.</li><li>Folderele sunt create în OneDrive; ai link sau captură de ecran pregătită.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: cum ai numi documentul dacă ar exista 7 versiuni ale lui? „FINAL_v7_copie” nu se acceptă.</p>"};
 const ECRAN = TEME.filter(t=>t.id!=="liber");
 
 const MODUL = {1:"Modulul 1 · Bazele digitale",2:"Modulul 2 · Comunicare și colaborare",3:"Modulul 3 · Crearea de conținut digital",4:"Modulul 4 · Siguranța pe internet",5:"Modulul 5 · Rezolvarea problemelor"};
@@ -572,7 +579,7 @@ document.addEventListener("click",e=>{
   if(t.dataset.t!==undefined){ sel={tip:"teorie",i:+t.dataset.t,sgVazut:sel.sg||sel.sgVazut||1}; salveazaSel(); deseneazaTot(); }
   else if(t.dataset.p!==undefined){ const g=$("sg2").getAttribute("aria-pressed")==="true"?2:1; sel={tip:"practica",sg:g,i:+t.dataset.p}; salveazaSel(); deseneazaTot(); }
   else if(t.dataset.ec) deschideEcran(t.dataset.ec);
-  else if(t.dataset.fisa) deschideFisa(t.dataset.fisa,"ex");
+  else if(t.dataset.fisa) deschideFisa(t.dataset.fisa,"do");
   else if(t.dataset.cp) copiaza(t.dataset.cp,t);
 });
 function alegeSg(g){ sel={tip:"practica",sg:g,i:Math.min(sel.tip==="practica"?sel.i:0,16)}; if(sel.tip==="practica"&&g!==1&&false){} salveazaSel(); deseneazaTot(); }
@@ -604,9 +611,10 @@ const dlg=$("dFisa"); let fisaTema=null, fisaTab="ex";
 function deseneazaFisa(){
   const t=ECRAN.find(x=>x.id===fisaTema); if(!t) return;
   $("dFT").textContent="Fișa – "+t.titlu;
-  $("tEx").setAttribute("aria-pressed",fisaTab==="ex"); $("tBa").setAttribute("aria-pressed",fisaTab==="ba");
-  $("tBa").hidden=!(t.barem&&t.barem.length);
-  if(fisaTab==="ba"&&t.barem&&t.barem.length){
+  $("tDo").setAttribute("aria-pressed",fisaTab==="do"); $("tEx").setAttribute("aria-pressed",fisaTab==="ex"); $("tBa").setAttribute("aria-pressed",fisaTab==="ba");
+  $("tBa").hidden=!(t.barem&&t.barem.length); $("tDo").hidden=!CURSANT[t.id]; if(!CURSANT[t.id]&&fisaTab==="do") fisaTab="ex";
+  if(fisaTab==="do"){ $("dBody").innerHTML=CURSANT[t.id]; }
+  else if(fisaTab==="ba"&&t.barem&&t.barem.length){
     const tot=t.barem.reduce((a,r)=>a+r[2],0)+10;
     $("dBody").innerHTML=`<div class="tw"><table><thead><tr><th>Criteriu</th><th>Ce verificăm</th><th>Max.</th></tr></thead><tbody>`+
       t.barem.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td class="c">${r[2]}</td></tr>`).join("")+
@@ -619,6 +627,7 @@ const FISE_DOCX={t1:"fise/Fisa_1_Excel_Bugetul_lunii.docx",t2:"fise/Fisa_2_Fisie
 function deschideFisa(id,tab){ fisaTema=id; fisaTab=tab||"ex"; deseneazaFisa();
   addDocx(); if(!dlg.open) dlg.showModal(); }
 $("dClose").addEventListener("click",()=>dlg.close());
+$("tDo").addEventListener("click",()=>{fisaTab="do";deseneazaFisa();addDocx();});
 $("tEx").addEventListener("click",()=>{fisaTab="ex";deseneazaFisa();addDocx();});
 $("tBa").addEventListener("click",()=>{fisaTab="ba";deseneazaFisa();addDocx();});
 if(!("closedBy" in HTMLDialogElement.prototype)){          // rezervă pentru Safari: clic pe fundal închide
@@ -683,7 +692,7 @@ function reset(){
 function ecranComplet(){ try{ if(document.fullscreenElement) document.exitFullscreen(); else $("ecran").requestFullscreen().catch(()=>{}); }catch(e){} }
 
 $("eBack").addEventListener("click",inchideEcran);
-$("eFisa").addEventListener("click",()=>E&&deschideFisa(E.t.id,"ex"));
+$("eFisa").addEventListener("click",()=>E&&deschideFisa(E.t.id,"do"));
 $("eFull").addEventListener("click",ecranComplet);
 $("bGo").addEventListener("click",e=>{startPauza();e.currentTarget.blur();});
 $("bPrev").addEventListener("click",e=>{pas(-1);e.currentTarget.blur();});
