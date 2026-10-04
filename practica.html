@@ -62,7 +62,16 @@ h1{font:800 clamp(21px,3vw,28px)/1.18 var(--hd);margin:0;text-wrap:balance}
 .pb:hover{border-color:var(--line2)}
 .pb .n{display:block;font:800 13px var(--hd)}
 .pb .dt{display:block;color:var(--dim);font-size:12.5px;font-variant-numeric:tabular-nums}
-.pb .nt{display:block;margin-top:3px;font:700 10px/1 var(--hd);letter-spacing:.06em;color:var(--warm);min-height:10px}
+.notaflag{display:inline-flex;align-items:center;gap:6px 14px;flex-wrap:wrap;margin:2px 0 8px;padding:8px 18px;border-radius:12px;background:linear-gradient(135deg,#A85D0C,#7E4207);color:#fff;box-shadow:0 4px 14px rgba(126,66,7,.28)}
+.notaflag b{font:800 clamp(22px,3.2vw,30px)/1 var(--hd);letter-spacing:.04em}
+.notaflag span{font:700 12.5px/1.3 var(--bd);letter-spacing:.04em}
+.recflag{display:inline-flex;align-items:baseline;gap:4px 10px;flex-wrap:wrap;margin:2px 0 8px;padding:5px 14px;border-radius:999px;border:1.5px solid var(--teal);color:#1d5650;background:rgba(44,122,114,.08)}
+.recflag b{font:800 13.5px var(--bd)}.recflag span{font-size:12.5px;color:var(--ink-dim)}
+.pb .nt{margin-top:5px}.pb .nt.n{display:inline-block;font:800 13px/1 var(--hd);letter-spacing:.05em;color:#fff;background:#8F4E0A;border-radius:6px;padding:4px 8px;margin-right:3px}
+.pb .nt.r{font:600 11px/1 var(--bd);letter-spacing:.03em;color:var(--ink-dim)}
+.bdg.rec{border-color:var(--teal);color:#1d5650;background:rgba(44,122,114,.08)}.hartac .bdg.nota{font-size:13px;padding:5px 9px}
+.notes .set{margin:8px 0 4px;display:grid;gap:3px}.notes .sh{display:block;font:800 12.5px var(--bd);letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:2px}.notes .sh span{font-weight:600;letter-spacing:.02em;color:var(--ink-dim);text-transform:none}
+
 .pb.past .dt::after{content:" ✓";color:var(--accent)}
 .pb .azi{position:absolute;top:6px;right:6px;font:700 9px var(--hd);letter-spacing:.08em;text-transform:uppercase;background:var(--warm);color:var(--bg);border-radius:999px;padding:2px 6px}
 .cal .gol{visibility:hidden}
@@ -156,6 +165,11 @@ ul.chk{list-style:none;padding-left:4px}
 ul.chk li::before{content:"☐ ";color:var(--warm)}
 .boxx{border:1px solid var(--line2);background:var(--bg2);border-radius:10px;padding:10px 14px;margin:8px 0 12px}
 .boxx p{margin:2px 0}
+.leg{margin:8px 0 2px;font-size:14px;line-height:1.5}.leg .l{display:block;font:700 11.5px/1.2 var(--bd);letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:2px}
+.leg a{color:var(--navy-2);text-decoration:underline;text-underline-offset:2px}.leg a:hover{color:var(--amber-ink)}
+.leg2{border:1px solid var(--line);border-left:4px solid var(--teal);background:var(--teal-soft,rgba(44,122,114,.08));border-radius:10px;padding:4px 16px 8px;margin:14px 0}
+.leg2 h3{margin-top:12px!important;color:#1d5650}.leg2 .lh{margin:6px 0 2px;font-weight:700}.leg2 ul{margin:4px 0 6px;padding-left:20px}.leg2 li{margin:4px 0}
+.leg2 a{color:var(--navy-2)}
 #dBody h3{margin-top:18px}
 /* fișa (dialog) */
 dialog{width:min(980px,94vw);max-height:90vh;overflow:auto;border:1px solid var(--warm);border-radius:16px;padding:18px 22px;background:var(--surface);color:var(--text)}
@@ -216,12 +230,9 @@ td.c{text-align:center}
         <ol><li><b>Salvează fișierul</b> cu numele cerut, de ex. <code class="ex">T01_Excel_Popescu_Maria.xlsx</code></li><li><b>Trimite un e-mail</b> la <code>bogdan@pandapc.ro</code>, cu fișierul atașat.</li><li>La <b>Subiect</b> scrii exact textul din pagină (e un buton <b>Copiază</b>), de ex. <code class="ex">Tema 1 – Excel – Nume Prenume</code></li></ol>
         <p>Dacă tema nu cere fișier, o arăți pe ecran sau în chat, în timpul orei.</p></div>
       <div class="gc"><h3><span class="nr">5</span>Cum se notează</h3>
-        <div class="notes">
-          <span><b>NOTA 1</b> — e-mail și surse (Temele 3 și 4)</span>
-          <span><b>NOTA 2</b> — egalitate de șanse și nediscriminare (Tema 7)</span>
-          <span><b>NOTA 3</b> — Excel, formula SUM (Tema 1)</span>
-        </div>
-        <p style="margin-top:8px">Restul temelor <b>nu se notează</b>: sunt exerciții ca să exersezi. <b>OBLIGATORIU</b> înseamnă că tema e cerută de organizatorul cursului. Din cele 100 de puncte ale unei lucrări, 10 sunt <b>din oficiu</b> (pentru prezență și participare).</p></div>
+        <p>În fiecare <b>set de zile</b> sunt <b>3 exerciții obligatorii</b>, care se notează: <b>NOTA 1</b>, <b>NOTA 2</b> și <b>NOTA 3</b>. Toate celelalte sunt <b>exerciții recomandate</b>: nu se notează, dar te pregătesc pentru cele notate.</p>
+        <div class="notes" id="listaNote" aria-live="polite"></div>
+        <p style="margin-top:8px"><b>CERUT DE ORGANIZATOR</b> înseamnă că tema e impusă de organizatorul cursului. Din cele 100 de puncte ale unei lucrări notate, 10 sunt <b>din oficiu</b> (pentru prezență și participare). Ultima zi de practică e recapitulare finală, fără notă nouă.</p></div>
       <div class="gc"><h3><span class="nr">6</span>Ai o problemă sau o întrebare?</h3>
         <p>În timpul orelor scrie în <b>chat</b> sau ridică mâna pe Zoom. În afara orelor scrie la <code>bogdan@pandapc.ro</code>.</p>
         </div>
@@ -248,8 +259,9 @@ td.c{text-align:center}
     <h2 id="hHarta">Toate cele 21 de teme <button class="i" type="button" aria-label="Ce este harta temelor?" data-tip-t="Harta temelor" data-tip="Aici vezi toate temele cursului, în ordine. Apasă pe o temă și mergi direct în ziua în care o lucrăm (pentru subgrupa aleasă mai sus). Filtrele ascund temele care nu te interesează.">?</button></h2>
     <div class="chips" id="hartaF" role="group" aria-label="Filtrează temele">
       <button class="chip" type="button" data-f="toate" aria-pressed="true" data-tip="Toate cele 21 de teme.">Toate</button>
-      <button class="chip" type="button" data-f="note" aria-pressed="false" data-tip="Doar temele care primesc o notă (NOTA 1, 2 sau 3).">Se notează</button>
-      <button class="chip" type="button" data-f="ob" aria-pressed="false" data-tip="Temele cerute de organizatorul cursului: nediscriminare și competențe verzi.">Obligatorii</button>
+      <button class="chip" type="button" data-f="note" aria-pressed="false" data-tip="Doar exercițiile obligatorii, care primesc o notă (NOTA 1, 2 sau 3 în fiecare set).">Se notează</button>
+      <button class="chip" type="button" data-f="rec" aria-pressed="false" data-tip="Exercițiile recomandate: nu se notează, dar te pregătesc pentru cele notate.">Recomandate</button>
+      <button class="chip" type="button" data-f="ob" aria-pressed="false" data-tip="Temele cerute de organizatorul cursului: nediscriminare și competențe verzi.">Cerute de organizator</button>
       <button class="chip" type="button" data-f="fisa" aria-pressed="false" data-tip="Temele pentru care fișa cu pași, exemplu și barem este deja gata.">Fișa e gata</button>
     </div>
     <div class="harta" id="harta"></div>
@@ -263,13 +275,13 @@ td.c{text-align:center}
         <li>Subiectul e-mailului rămâne cel anunțat: <code>Tema 1 – Excel – Nume Prenume</code>.</li>
         <li>Pe calculatorul tău: un folder pe subgrupă și pe temă, de exemplu <code>Practica/SG1/T01_Excel/</code>, cu fișierele cursanților.</li>
         <li>În Gmail: o etichetă pe temă (<code>Practică/T01</code>), aplicată automat printr-un filtru pe subiect.</li>
-        <li>Notele se trec în Foaia de notare (coloanele Nota 1, 2 și 3), pe măsură ce primești lucrările.</li>
+        <li>Notele se trec în Foaia de notare (3 note pe set: Nota 1, 2 și 3), pe măsură ce primești lucrările.</li>
       </ul>
     </div>
   </details>
 
   <aside class="foot" aria-label="Legendă">
-    <span><b>Legendă:</b> NOTA 1, 2, 3 = notele din Fișa de evaluare (e-mail și surse; nediscriminare; Excel). „Obligatoriu” = cerut de organizator (nediscriminare, competențe verzi).</span>
+    <span><b>Legendă:</b> NOTA 1, 2, 3 = cele 3 exerciții obligatorii ale fiecărui set de zile (se notează). „Exercițiu recomandat” = nu se notează. „Cerut de organizator” = tema e impusă de organizatorul cursului (nediscriminare, competențe verzi).</span>
     <span>Zilele de practică sunt calculate: 4 ore pe zi, luni–vineri, fără sărbători legale în interval. Cele 21 de teme urmează blocurile din cuprins, în ordine; Modulul 1 este împărțit în Temele 1–5.</span>
   </aside>
  </div>
@@ -378,7 +390,7 @@ const TEME = [
   ]
  },
  {
-  id:"t2", titlu:"Tema 2 – „Misterul fișierelor FINAL_v7_copie”", sub:"Modulul 1 · nenotată · 19:00–21:00",
+  id:"t2", titlu:"Tema 2 – „Misterul fișierelor FINAL_v7_copie”", sub:"Modulul 1 · exercițiu recomandat · 19:00–21:00",
   durataMin:120,
   predare:"Rezultat: partajăm ecranul în Zoom sau punem linkul OneDrive în chat · fără partajare: captură de ecran cu folderele",
   glume:["Cuvântul „FINAL” nu înseamnă că documentul chiar e final. Regulă de aur: dacă are „_v7”, nu e.",
@@ -476,7 +488,7 @@ const TEME = [
    "d": "Câțiva cursanți citesc concluzia. Comparăm: au ajuns toți la același verdict? cu ce surse?"
   }
  ],
- "exemplu": "<h3>Mesajul primit de Radu (inventat, în stilul celor care circulă în lanț)</h3>\n<div class=\"boxx\"><p>ATENȚIE!!! De la 1 decembrie WhatsApp devine cu plată! Cine nu trimite mesajul la 10 persoane în următoarele 24 de ore își pierde contul.</p><p>Trimite mai departe, e adevărat, mi-a spus un prieten care lucrează la firmă!</p></div>\n<h3>Cele 4 întrebări ale detectivului</h3>\n<ul><li><b>Cine</b> a scris? (nume, instituție sau «anonim»)</li><li><b>De unde știe?</b> (citează surse sau doar «mi-a spus cineva»)</li><li><b>Cum sună?</b> (calm și precis sau alarmist, cu MAJUSCULE și semne de exclamare)</li><li><b>Mai spune și altcineva</b> același lucru, în surse independente?</li></ul>\n<h3>Model de completare (tipuri de surse, nu răspunsul tău)</h3>\n<table><thead><tr><th>Sursa</th><th>Cine a scris</th><th>Citează surse?</th><th>Verdict (și de ce)</th></tr></thead><tbody><tr><td>Postare pe o pagină de Facebook</td><td>nu apare</td><td>nu</td><td>necredibilă – ton alarmist, MAJUSCULE</td></tr><tr><td>Articol într-un site de presă</td><td>reporter, cu nume</td><td>da, o instituție</td><td>credibilă – ton calm, surse citate</td></tr><tr><td>Secțiunea «Ajutor» a aplicației</td><td>compania</td><td>trimite la reguli oficiale</td><td>credibilă – sursă oficială</td></tr></tbody></table>\n<h3>Model de concluzie (completezi cu cuvintele tale)</h3>\n<div class=\"boxx\"><p>Mesajul este [adevărat / fals].</p><p>Mă bazez pe [ce surse și de ce le cred].</p><p>Îi spun lui Radu să [ce să facă: nu-l trimite mai departe, îl șterge etc.].</p></div>\n<p class=\"nota\">Rândurile de mai sus arată doar <b>cum se completează</b>. Sursele tale vor fi altele, găsite de tine. Verdictul final îl dai tu, după căutare.</p>",
+ "exemplu": "<h3>Mesajul primit de Radu (inventat, în stilul celor care circulă în lanț)</h3>\n<div class=\"boxx\"><p>ATENȚIE!!! De la 1 decembrie WhatsApp devine cu plată! Cine nu trimite mesajul la 10 persoane în următoarele 24 de ore își pierde contul.</p><p>Trimite mai departe, e adevărat, mi-a spus un prieten care lucrează la firmă!</p></div>\n<h3>Cele 5 întrebări din Ora 11 (Gândire critică), pe care le folosești pentru fiecare sursă</h3>\n<ul><li><b>Cine scrie?</b> (nume, instituție sau «Admin» / anonim) → coloana <i>Cine a scris</i></li><li><b>Unde apare?</b> (presă, site oficial, blog, rețea de socializare) → coloana <i>Sursa</i></li><li><b>Când a fost scris?</b> (data apare sau lipsește) → notezi la <i>Verdict</i></li><li><b>Cum sună?</b> (calm și precis sau alarmist, cu MAJUSCULE) → notezi la <i>Verdict</i></li><li><b>Cu ce dovezi?</b> (linkuri, documente, nume sau doar «mi-a spus cineva») → coloana <i>Citează surse?</i></li></ul>\n<h3>Model de completare (tipuri de surse, nu răspunsul tău)</h3>\n<table><thead><tr><th>Sursa</th><th>Cine a scris</th><th>Citează surse?</th><th>Verdict (și de ce)</th></tr></thead><tbody><tr><td>Postare pe o pagină de Facebook</td><td>nu apare</td><td>nu</td><td>necredibilă – ton alarmist, MAJUSCULE</td></tr><tr><td>Articol într-un site de presă</td><td>reporter, cu nume</td><td>da, o instituție</td><td>credibilă – ton calm, surse citate</td></tr><tr><td>Secțiunea «Ajutor» a aplicației</td><td>compania</td><td>trimite la reguli oficiale</td><td>credibilă – sursă oficială</td></tr></tbody></table>\n<h3>Model de concluzie (completezi cu cuvintele tale)</h3>\n<div class=\"boxx\"><p>Mesajul este [adevărat / fals].</p><p>Mă bazez pe [ce surse și de ce le cred].</p><p>Îi spun lui Radu să [ce să facă: nu-l trimite mai departe, îl șterge etc.].</p></div>\n<p class=\"nota\">Rândurile de mai sus arată doar <b>cum se completează</b>. Sursele tale vor fi altele, găsite de tine. Verdictul final îl dai tu, după căutare.</p>",
  "barem": [
   [
    "Planificarea conținutului",
@@ -663,6 +675,340 @@ const TEME = [
  "notaBarem": "Tema nu se notează."
 },
  {
+ "id": "t7",
+ "titlu": "Tema 7 – „Egalitate de șanse și nediscriminare în mediul digital”",
+ "sub": "Modulul 2 · Nota 2 (obligatorie) · 4 ore, în două zile (3 ore + 1 oră)",
+ "durataMin": 240,
+ "predare": "Predare: e-mail la bogdan@pandapc.ro · subiect „Tema 7 – Nediscriminare – Nume Prenume” · fișier T07_Nediscriminare_Nume_Prenume.docx",
+ "glume": [
+  "Egal nu înseamnă identic. Rampa nu e privilegiu, e o scară pentru toți.",
+  "Un algoritm nu e neutru doar fiindcă n-are față. A învățat de la noi, deci și greșelile noastre."
+ ],
+ "pasi": [
+  {
+   "t": "Deschidem fișierul de pornire",
+   "min": 5,
+   "d": "Descarcă <b>fișierul de pornire</b> din fișa temei și salvează-l ca <code>T07_Nediscriminare_Nume_Prenume.docx</code>. Conține conversația, tabelul cu 4 rânduri și locurile de completat."
+  },
+  {
+   "t": "Recapitulăm din teorie (Ora 15)",
+   "min": 15,
+   "d": "Citește caseta <b>Ce ai învățat la teorie</b>: cele <b>3 întrebări</b> (cine nu primește, cine nu poate folosi, cine ar fi tratat altfel dacă ar cere ajutor) și diferența dintre <b>discriminare directă</b> și <b>indirectă</b>."
+  },
+  {
+   "t": "Citim conversația",
+   "min": 15,
+   "d": "Citește conversația din fișier, o dată cu atenție. Subliniază în cap ce ți se pare nepotrivit."
+  },
+  {
+   "t": "Tabelul: 4 situații",
+   "min": 55,
+   "d": "Pentru fiecare situație completează: <i>directă sau indirectă</i> (sau «nu e discriminare»), <i>de ce</i> (criteriul: vârstă, sex, dizabilitate etc.) și <i>ce ar trebui făcut</i>, într-o propoziție."
+  },
+  {
+   "t": "Mini-cazul: programul care notează CV-uri",
+   "min": 25,
+   "d": "Citește cazul din fișier și răspunde în <b>3 propoziții</b>, câte una la fiecare întrebare: cine s-a uitat la rezultat? pe ce date a fost învățat programul? cine răspunde de decizie?"
+  },
+  {
+   "t": "Mesajul corectat",
+   "min": 40,
+   "d": "Rescrie <b>anunțul de instruire</b> ca să ajungă la toți colegii: pe ce căi îl trimiți (e-mail, hârtie, telefon), cu o ofertă de ajutor. <b>4–5 propoziții</b>, ton politicos, fără MAJUSCULE."
+  },
+  {
+   "t": "Trei pași la o glumă pe seama unui coleg",
+   "min": 20,
+   "d": "Scrie în 3 propoziții ce faci dacă vezi în grup o glumă pe seama unui coleg: ce faci imediat, ce îi spui colegului, ce faci dacă se repetă."
+  },
+  {
+   "t": "Discuție scurtă, prima zi",
+   "min": 5,
+   "d": "Câțiva cursanți spun cum au încadrat situația 1. Salvăm fișierul. <b>Ziua următoare, ultima oră a temei.</b>"
+  },
+  {
+   "t": "A doua zi: verificăm cu cele 3 întrebări",
+   "min": 15,
+   "d": "Redeschide fișierul. Aplică cele 3 întrebări pe <b>mesajul tău corectat</b>. Dacă la vreuna răspunsul e «cineva rămâne pe dinafară», îmbunătățește mesajul. Corectează și ce nu mai ți se pare bine în tabel."
+  },
+  {
+   "t": "Salvăm și trimitem",
+   "min": 15,
+   "d": "Verifică lista din fișă, salvează și trimite e-mailul (vezi „Cum predai”)."
+  },
+  {
+   "t": "Discuție în grup",
+   "min": 30,
+   "d": "Câțiva cursanți citesc mesajul lor corectat. Comparăm: cine a gândit și la colegul fără smartphone? cine a oferit ajutor?"
+  }
+ ],
+ "exemplu": "<h3>Cele 3 întrebări pentru orice mesaj sau instrument (Ora 15)</h3>\n<ul><li><b>Cine nu primește?</b> (șansa la informație)</li><li><b>Cine nu poate folosi?</b> (șansa de a folosi instrumentul)</li><li><b>Cine ar fi tratat altfel dacă ar cere ajutor?</b> (tratamentul pe parcurs)</li></ul>\n<h3>Directă sau indirectă? Un model rezolvat (altă situație decât cele din fișier)</h3>\n<table><thead><tr><th>Situația</th><th>Directă / indirectă</th><th>De ce?</th><th>Ce ar trebui făcut</th></tr></thead><tbody><tr><td>Anunț de instruire trimis doar bărbaților, «că ei se ocupă de aplicații»</td><td>directă</td><td>criteriul: sexul; unii sunt tratați pe față diferit</td><td>se retrage anunțul și se retrimite tuturor, fără distincție</td></tr><tr><td>Înscrierea la o instruire se face doar online, fără altă variantă</td><td>poate fi indirectă</td><td>regulă aparent neutră; contează efectul și dacă există alternativă simplă</td><td>se adaugă o variantă simplă: hârtie sau telefon</td></tr></tbody></table>\n<h3>Model de mesaj corectat (altă temă: schimbarea sălii de ședințe, nu răspunsul tău)</h3>\n<div class=\"boxx\"><p>Subiect: Schimbare de sală pentru ședința de joi</p><p>Bună ziua tuturor,</p><p>Ședința de joi se mută în sala 4, de la ora 10:00. Anunțul îl trimitem pe e-mail și îl afișăm la intrarea în birou, ca să ajungă la toți.</p><p>Dacă aveți nevoie de ajutor ca să ajungeți în sală sau de alt format al documentelor, scrieți-ne sau sunați-ne.</p><p>Mulțumim, [Nume Prenume]</p></div>\n<p class=\"nota\">Modelele de mai sus arată doar <b>cum se completează</b>. Situațiile din fișier sunt altele, iar încadrarea și mesajul le faci tu.</p>",
+ "barem": [
+  [
+   "Planificarea conținutului",
+   "Tabel cu 4 situații, mini-caz, mesaj corectat și cei 3 pași, toate completate",
+   10
+  ],
+  [
+   "Calitatea informației",
+   "Directă / indirectă și criteriul identificate corect; măsuri potrivite",
+   15
+  ],
+  [
+   "Creativitate și design",
+   "Document ordonat: titluri, tabel cu antet, paragrafe scurte",
+   10
+  ],
+  [
+   "Utilizarea instrumentelor digitale",
+   "Tabel real în Word; e-mail trimis corect, cu atașament",
+   10
+  ],
+  [
+   "Respectarea drepturilor de autor",
+   "Lucrare proprie; fără date sau comentarii despre persoane reale",
+   10
+  ],
+  [
+   "Adaptarea la publicul țintă",
+   "Mesajul corectat e clar, respectuos și ajunge la toți colegii",
+   15
+  ],
+  [
+   "Corectitudine lingvistică",
+   "Propoziții corecte, cu diacritice; fără MAJUSCULE sau exclamări în exces",
+   10
+  ],
+  [
+   "Finalizare și prezentare",
+   "T07_Nediscriminare_Nume_Prenume.docx; subiect cerut; în termen",
+   10
+  ]
+ ]
+},
+ {
+ "id": "t6",
+ "titlu": "Tema 6 – „Comunicare digitală la locul de muncă”",
+ "sub": "Modulul 2 · exercițiu recomandat · 4 ore, în două zile (3 ore + 1 oră)",
+ "durataMin": 240,
+ "predare": "Fără predare obligatorie: arăți fișierul pe ecran. Dacă vrei părerea formatorului, îl poți trimite la bogdan@pandapc.ro",
+ "glume": [
+  "Un mesaj fără context e ca un tren fără număr: toți îl văd, nimeni nu știe unde merge.",
+  "Înainte de «Trimitere»: e necesar? e clar? e respectuos? Trei secunde care salvează o după-amiază."
+ ],
+ "pasi": [
+  {
+   "t": "Deschidem fișierul de pornire",
+   "min": 5,
+   "d": "Descarcă <b>fișierul de pornire</b> din fișa temei și salvează-l ca <code>T06_Comunicare_Nume_Prenume.docx</code>. Are cele 4 tabele gata făcute."
+  },
+  {
+   "t": "Recapitulăm din teorie (Ora 13)",
+   "min": 15,
+   "d": "Citește caseta <b>Ce ai învățat la teorie</b>: cele <b>4 lucruri</b> pe care le spune un mesaj bun, canalul potrivit, datele personale și testul de trei secunde."
+  },
+  {
+   "t": "Mesaje care se înțeleg singure",
+   "min": 45,
+   "d": "Pentru fiecare dintre cele <b>3 mesaje vagi</b> scrie <i>ce lipsește</i> și apoi <b>mesajul complet</b>: ce s-a întâmplat, cât de mare e problema, cauza (dacă o știi) și ce se așteaptă de la cel care citește. Cu cifre, nu «mai încolo»."
+  },
+  {
+   "t": "Canalul potrivit",
+   "min": 30,
+   "d": "Pentru fiecare dintre cele <b>4 situații</b> alege canalul (apel telefonic, e-mail, grup cu etichetă, față în față) și scrie într-o propoziție de ce."
+  },
+  {
+   "t": "Datele personale în grupul general",
+   "min": 35,
+   "d": "Citește scenariul cu lista de CNP-uri trimisă în grupul general. Scrie <b>ce nu e în regulă</b> și <b>ce faci, în 4 pași</b>."
+  },
+  {
+   "t": "Același mesaj, alt ton",
+   "min": 30,
+   "d": "Rescrie cele <b>3 mesaje</b> nepoliticoase ca să fie respectuoase și complete."
+  },
+  {
+   "t": "Discuție scurtă, prima zi",
+   "min": 20,
+   "d": "Câțiva cursanți citesc un mesaj rescris. Salvăm fișierul. <b>Ziua următoare, ultima oră a temei.</b>"
+  },
+  {
+   "t": "A doua zi: testul de trei secunde",
+   "min": 15,
+   "d": "Redeschide fișierul. Aplică pe cele 3 mesaje ale tale testul de trei secunde: e necesar? e clar? e respectuos? Corectează ce nu trece."
+  },
+  {
+   "t": "Bonus: planul B",
+   "min": 15,
+   "d": "Răspunde în 3 propoziții: ce facem dacă pică sistemul? cine decide când trecem pe hârtie? unde stă foaia ca s-o găsim în două minute?"
+  },
+  {
+   "t": "Salvăm",
+   "min": 5,
+   "d": "Salvează fișierul. Dacă vrei părerea formatorului, îl poți trimite pe e-mail (vezi „Cum închei”)."
+  },
+  {
+   "t": "Discuție în grup",
+   "min": 25,
+   "d": "Câțiva cursanți citesc mesajele lor. Comparăm: care e mai clar? ce a lipsit? cine a ales alt canal și de ce?"
+  }
+ ],
+ "exemplu": "<h3>Cele 4 lucruri pe care le spune un mesaj bun</h3>\n<ul><li><b>Ce s-a întâmplat?</b></li><li><b>Cât de mare e problema?</b></li><li><b>Care e cauza?</b> (dacă o știm)</li><li><b>Ce se așteaptă de la cel care citește?</b></li></ul>\n<h3>Model de mesaj completat (altă situație decât cele din fișier)</h3>\n<table><thead><tr><th>Mesaj vag</th><th>Ce lipsește?</th><th>Mesaj complet</th></tr></thead><tbody><tr><td>«Nu merge imprimanta.»</td><td>care imprimantă, de când, ce se așteaptă</td><td>Imprimanta de la ghișeul 2 nu mai tipărește din 14:10 (indică «hârtie blocată»). Vă rog să trimiteți cererile la ghișeul 1 până revine IT-ul.</td></tr></tbody></table>\n<h3>Model pentru canalul potrivit</h3>\n<table><thead><tr><th>Situația</th><th>Canal</th><th>De ce?</th></tr></thead><tbody><tr><td>O urgență care nu poate aștepta</td><td>apel telefonic</td><td>e-mailul nu sună și nu vibrează</td></tr><tr><td>Ceri o aprobare care trebuie să rămână scrisă</td><td>e-mail</td><td>rămâne urma scrisă</td></tr></tbody></table>\n<h3>Model de mesaj corectat ca ton</h3>\n<div class=\"boxx\"><p>Înainte: «Nu ajung la ședință, scuze.»</p><p>După: «Nu pot participa la ședința de azi, de la 14:00, din cauza unei deplasări. Vă trimit notele mele mâine dimineață. Mulțumesc pentru înțelegere.»</p></div>\n<p class=\"nota\">Modelele arată doar <b>cum se completează</b>. Mesajele din fișier sunt altele.</p>",
+ "barem": [],
+ "notaBarem": "Tema nu se notează."
+},
+ {
+ "id": "t8",
+ "titlu": "Tema 8 – „Accesibilitate digitală”",
+ "sub": "Modulul 2 · exercițiu recomandat · 4 ore, în două zile (3 ore + 1 oră)",
+ "durataMin": 240,
+ "predare": "Fără predare obligatorie: arăți fișierul pe ecran. Dacă vrei părerea formatorului, îl poți trimite la bogdan@pandapc.ro",
+ "glume": [
+  "Rampa nu e pentru un singur coleg: o folosesc și cărucioarele, și valizele, și curierii.",
+  "Textul gri deschis pe alb arată elegant doar pentru cine nu trebuie să-l citească."
+ ],
+ "pasi": [
+  {
+   "t": "Deschidem fișierul de pornire",
+   "min": 5,
+   "d": "Descarcă <b>fișierul de pornire</b> din fișa temei și salvează-l ca <code>T08_Accesibilitate_Nume_Prenume.docx</code>. Conține anunțul prost scris și locurile de completat."
+  },
+  {
+   "t": "Recapitulăm din teorie (Orele 15 și 17)",
+   "min": 15,
+   "d": "Citește caseta <b>Ce ai învățat la teorie</b>: efectul rampei, cele 6 reflexe, formatele alternative și verificarea de 30 de secunde."
+  },
+  {
+   "t": "Citim anunțul",
+   "min": 10,
+   "d": "Citește anunțul din fișier, o dată cu atenție. Notează în gând ce ți se pare greu de citit sau nepotrivit."
+  },
+  {
+   "t": "Problemele anunțului",
+   "min": 40,
+   "d": "În tabel scrie <b>cel puțin 4 probleme</b> și, pentru fiecare, cui îi încurcă (cine nu vede bine, cine nu are smartphone, cine nu lucrează zilnic în aplicație etc.)."
+  },
+  {
+   "t": "Anunțul accesibil, în Word",
+   "min": 60,
+   "d": "Rescrie anunțul în zona goală din fișier: <b>titlu clar</b>, <b>litere mari</b> (cel puțin 14 pt), <b>text închis pe fundal deschis</b>, ture scrise ca <b>listă</b>, adresare neutră («Dragi colegi și colege»), ofertă de ajutor. Fără MAJUSCULE în text."
+  },
+  {
+   "t": "Canale și formate",
+   "min": 25,
+   "d": "Scrie 2 propoziții: cum ajunge anunțul la <b>colegul fără smartphone</b> și la <b>colega cu vedere slabă</b>. Bifează canalele și formatele alese (e-mail, afiș tipărit, telefon, audio)."
+  },
+  {
+   "t": "Verificarea de 30 de secunde",
+   "min": 15,
+   "d": "Răspunde cu Da / Nu la cele 4 întrebări din fișier, apoi corectează anunțul dacă un răspuns e Nu."
+  },
+  {
+   "t": "Discuție scurtă, prima zi",
+   "min": 10,
+   "d": "Câțiva cursanți arată anunțul lor. Salvăm fișierul. <b>Ziua următoare, ultima oră a temei.</b>"
+  },
+  {
+   "t": "A doua zi: reformulări",
+   "min": 20,
+   "d": "Redeschide fișierul. Rescrie cele <b>3 replici nepotrivite</b> din tabel, în variante respectuoase."
+  },
+  {
+   "t": "Bonus: Verificare accesibilitate în Word",
+   "min": 15,
+   "d": "În Word: <b>Revizuire → Verificare accesibilitate</b>. Notează câte avertismente apar pentru anunțul tău corectat. Dacă sunt, rezolvă-le."
+  },
+  {
+   "t": "Salvăm",
+   "min": 5,
+   "d": "Salvează fișierul. Dacă vrei părerea formatorului, îl poți trimite pe e-mail (vezi „Cum închei”)."
+  },
+  {
+   "t": "Discuție în grup",
+   "min": 20,
+   "d": "Câțiva cursanți citesc anunțul lor. Comparăm: care e mai ușor de citit? cine a gândit și la colegul fără smartphone?"
+  }
+ ],
+ "exemplu": "<h3>Cele 3 întrebări de verificat înainte de «Trimitere» (verificarea de 30 de secunde)</h3>\n<ul><li>Lista de destinatari e completă? Cine lipsește?</li><li>Canalul ajunge la toți? (e-mail, afiș, telefon)</li><li>Formatul poate fi citit de cineva care nu vede bine sau are un telefon vechi?</li><li>Tonul: l-aș spune la fel față în față?</li></ul>\n<h3>Model de reformulare (altă replică decât cele din fișier)</h3>\n<table><thead><tr><th>Replica nepotrivită</th><th>Varianta respectuoasă</th></tr></thead><tbody><tr><td>«Băieți, cine duce cutiile?»</td><td>«Colegi, cine poate duce cutiile?»</td></tr><tr><td>«Iar nu ați înțeles?»</td><td>«Hai să o luăm pas cu pas.»</td></tr></tbody></table>\n<h3>Model de anunț accesibil (altă temă: schimbarea sălii)</h3>\n<div class=\"boxx\"><p><b>Schimbare de sală pentru ședința de joi</b></p><p>Dragi colegi și colege,</p><p>Ședința de joi se mută:</p><p>• Sala 4 (în loc de sala 3)</p><p>• Ora: 10:00</p><p>Vă trimitem anunțul pe e-mail și îl afișăm la intrare. Dacă aveți nevoie de ajutor sau de alt format, sunați-ne sau scrieți-ne.</p></div>\n<p class=\"nota\">Modelele arată doar <b>cum se completează</b>. Anunțul tău va fi altul, pe baza celui din fișier.</p>",
+ "barem": [],
+ "notaBarem": "Tema nu se notează."
+},
+ {
+ "id": "t9",
+ "titlu": "Tema 9 – „Colaborare: co-editare, modificări, ședință online”",
+ "sub": "Modulul 2 · exercițiu recomandat · 4 ore, în două zile (3 ore + 1 oră)",
+ "durataMin": 240,
+ "predare": "Fără predare obligatorie: arăți fișierul pe ecran. Dacă vrei părerea formatorului, îl poți trimite la bogdan@pandapc.ro",
+ "glume": [
+  "«Raport_final_corectat_v3_ULTIMUL» nu e un nume de fișier, e o plângere.",
+  "Microfonul pe mute: două sute de oameni pot tăcea, dar unul care tușește tot se aude."
+ ],
+ "pasi": [
+  {
+   "t": "Deschidem fișierul de pornire",
+   "min": 5,
+   "d": "Descarcă <b>fișierul de pornire</b> din fișa temei și salvează-l ca <code>T09_Colaborare_Nume_Prenume.docx</code>. Documentul conține modificări urmărite și un comentariu."
+  },
+  {
+   "t": "Recapitulăm din teorie (Orele 13, 17, 21)",
+   "min": 15,
+   "d": "Citește caseta <b>Ce ai învățat la teorie</b>: un singur document de lucru, Urmărire modificări, document în timp real, ședință pregătită, partajare."
+  },
+  {
+   "t": "Citim raportul și modificările",
+   "min": 10,
+   "d": "Deschide fila <b>Revizuire</b> și parcurge modificările, una câte una. Vezi cine a făcut fiecare modificare (nume și culoare)."
+  },
+  {
+   "t": "Acceptăm sau respingem",
+   "min": 45,
+   "d": "Pentru fiecare dintre cele <b>4 modificări</b> hotărăște: <b>Acceptare</b> sau <b>Respingere</b>. În tabelul din fișier scrie, într-o propoziție, de ce."
+  },
+  {
+   "t": "Comentariul tău și modificarea ta",
+   "min": 20,
+   "d": "Răspunde la comentariul Mariei (<b>Revizuire → Comentariu nou</b>, nu suprascrii textul) și fă <b>o modificare a ta</b>, urmărită. Ar trebui să se vadă ale cui sunt."
+  },
+  {
+   "t": "Calendar sau document?",
+   "min": 25,
+   "d": "Pentru fiecare dintre cele <b>4 situații</b> alege: calendar comun, document comun cu comentarii sau ambele (cu anunț explicit). Scrie de ce."
+  },
+  {
+   "t": "Invitația și agenda ședinței",
+   "min": 45,
+   "d": "Completează <b>invitația</b>: subiect, data și ora exactă, link (poți scrie [link]), agendă în 3 rânduri, ce pregătește fiecare, număr de telefon de rezervă."
+  },
+  {
+   "t": "Discuție scurtă, prima zi",
+   "min": 15,
+   "d": "Câțiva cursanți arată cum au tratat modificările. Salvăm fișierul. <b>Ziua următoare, ultima oră a temei.</b>"
+  },
+  {
+   "t": "A doua zi: cele 4 obiceiuri",
+   "min": 15,
+   "d": "Redeschide fișierul. Bifează în fișă care dintre cele <b>4 obiceiuri</b> ale unei ședințe pregătite le-ai aplicat în invitație și completează ce lipsește."
+  },
+  {
+   "t": "Bonus: partajare și istoric de versiuni",
+   "min": 25,
+   "d": "Pe OneDrive: <b>Partajare</b>, alegi <b>cine</b> și <b>ce poate face</b>. Apoi <b>Fișier → Informații → Istoric versiuni</b> (sau pe OneDrive). Notează câte versiuni vezi. Dacă ai un coleg, încercați să scrieți amândoi în același timp."
+  },
+  {
+   "t": "Salvăm",
+   "min": 5,
+   "d": "Salvează fișierul. Dacă vrei părerea formatorului, îl poți trimite pe e-mail (vezi „Cum închei”)."
+  },
+  {
+   "t": "Discuție în grup",
+   "min": 15,
+   "d": "Câțiva cursanți citesc invitația lor. Comparăm: care are ora exactă? cine a gândit planul B?"
+  }
+ ],
+ "exemplu": "<h3>Cum se decide o modificare (model, altă situație)</h3>\n<table><thead><tr><th>Modificarea</th><th>Decizie</th><th>De ce?</th></tr></thead><tbody><tr><td>Un coleg adaugă ora exactă a incidentului</td><td>Acceptare</td><td>informația e precisă și utilă</td></tr><tr><td>Un coleg șterge propoziția «Călătorii au fost anunțați»</td><td>Respingere</td><td>se pierde o informație importantă</td></tr></tbody></table>\n<h3>Calendar sau document? (model)</h3>\n<table><thead><tr><th>Situația</th><th>Alegerea</th><th>De ce?</th></tr></thead><tbody><tr><td>Cine e de tură mâine dimineață?</td><td>calendar comun</td><td>informația trebuie să se vadă dintr-o privire, într-un singur loc</td></tr><tr><td>Trei colegi adaugă pe rând observații la același raport</td><td>document comun, cu comentarii</td><td>un singur fișier, mereu la zi</td></tr></tbody></table>\n<h3>Model de invitație (altă temă: ședința de instruire)</h3>\n<div class=\"boxx\"><p>Subiect: Ședința de instruire, miercuri, 10:00–10:30</p><p>Când: miercuri, 14 octombrie, 10:00–10:30 · Unde: [link Teams]</p><p>Agendă: 1) cum folosim calendarul comun · 2) întrebări · 3) pași următori.</p><p>Ce pregătiți: fiecare vine cu o întrebare despre calendar.</p><p>Dacă pică conexiunea: sunați la 0700 000 000, vă trimitem un rezumat scris.</p></div>\n<p class=\"nota\">Modelele arată doar <b>cum se completează</b>. Modificările și situațiile din fișier sunt altele.</p>",
+ "barem": [],
+ "notaBarem": "Tema nu se notează."
+},
+ {
   id:"liber", titlu:"Cronometru liber", sub:"Pauză, discuții, orice interval",
   durataMin:15, predare:"",
   glume:["Pauza e parte din curs. Cafeaua nu se ia în calcul la punctaj."],
@@ -670,7 +1016,7 @@ const TEME = [
   exemplu:"<p class='nota'>Pentru acest cronometru nu există fișă.</p>", barem:[]
  }
  ];
-const CURSANT = {t1:"<h3>Pe scurt</h3>\n<p>Construiești în <b>Excel</b> bugetul unei luni, cu <b>5 cheltuieli</b>. Excel face singur adunarea. Durată: <b>2 ore</b>. Tema <b>se notează</b> (NOTA 3).</p>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Deschide Excel</b> și un registru nou. <b>Salvează-l imediat</b> cu numele <code>T01_Excel_Nume_Prenume.xlsx</code> (cu numele tău, de ex. <code>T01_Excel_Popescu_Maria.xlsx</code>). Salvează des.</li>\n<li>În celula <b>A1</b> scrie titlul: <i>Bugetul meu – luna …</i> (completezi luna).</li>\n<li>Pe <b>rândul 3</b> scrie antetul: <b>A3</b> = Nr., <b>B3</b> = Cheltuiala, <b>C3</b> = Suma (lei).</li>\n<li>Pe <b>rândurile 4–8</b> scrie cele 5 cheltuieli: chirie, mâncare, transport, utilități, telefon. Pune <b>sume realiste</b> (ale tale sau ale unei familii imaginare), ca <b>numere</b>, nu ca text. Nu scrie date personale reale dacă nu vrei.</li>\n<li>Pe <b>rândul 9</b>: în <b>B9</b> scrie TOTAL, iar în <b>C9</b> scrie formula <code>=SUM(C4:C8)</code>. <b>Nu tasta totalul de mână!</b></li>\n<li><b>Verifică:</b> schimbă suma de la chirie. Dacă totalul s-a schimbat singur, ai făcut corect. Dacă nu, ai scris un număr în loc de formulă: refă pasul 5.</li>\n<li><b>Formatează:</b> antet îngroșat și colorat, bordură pe toate celulele, sume cu două zecimale și „lei”, coloana C destul de lată (să nu apară #####).</li>\n<li><b>Salvează</b> și <b>trimite</b> fișierul pe e-mail (vezi mai jos).</li>\n</ol>\n<h3>Cum predai</h3>\n<ol class=\"stp\">\n<li>Trimite un e-mail la <code>bogdan@pandapc.ro</code>.</li>\n<li>Subiect: <code>Tema 1 – Excel – Nume Prenume</code></li>\n<li>Atașează fișierul <code>T01_Excel_Nume_Prenume.xlsx</code> și scrie o propoziție de politețe (ex.: „Bună ziua, vă transmit Tema 1. Mulțumesc.”).</li>\n<li><b>Termen:</b> la sfârșitul orei de practică (19:00), în aceeași seară.</li>\n</ol>\n<p class=\"nota\">Poți lucra și în Google Sheets, dar fișierul trimis trebuie descărcat ca <b>.xlsx</b>.</p>\n<h3>Verifică înainte să trimiți</h3>\n<ul class=\"chk\"><li>Totalul e calculat cu <code>=SUM</code>, nu tastat.</li><li>Tabelul are titlu, antet și cele 5 cheltuieli.</li><li>Sumele au format de număr, iar coloana nu arată #####.</li><li>Diacriticele sunt corecte (Utilități, Mâncare).</li><li>Fișierul și subiectul e-mailului au numele cerut.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: adaugă un rând 6, „Neprevăzute”, și urmărește cum se schimbă totalul. Dacă rândul nou nu intră în formulă, extinde intervalul din SUM.</p>",t2:"<h3>Pe scurt</h3>\n<p>Colega ta Costina are pe desktop <b>12 fișiere cu nume haotice</b> și nu le mai găsește. Tu pui <b>ordine</b>: <b>nu ștergi nimic</b>, doar le dai nume noi și le pui în foldere. Apoi arăți rezultatul. Durată: <b>2 ore</b>. Tema <b>nu se notează</b> (e exercițiu); baremul e doar pentru autoevaluare.</p>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Citește lista celor 12 fișiere</b> (fila <b>Exemplu</b>, de sus din fereastră). Fiecare are un nume haotic și, alături, ce este de fapt.</li>\n<li><b>Dă fiecărui fișier un nume nou, clar.</b> Regula: <code>AAAA-LL_Subiect_vN</code> (an, lună, subiect scurt, versiune). Ex.: <code>2026-04_Buget_v1.xlsx</code>. <b>Fără</b> „final”, „copie”, „nou”, fără semne de exclamare și <b>fără spații</b> (folosești liniuță de subliniere _).</li>\n<li><b>Alege 4 foldere</b> pentru cele 12 fișiere, numerotate ca să stea în ordine, ex.: <code>01_Munca</code>, <code>02_Acte</code>, <code>03_Bani</code>, <code>04_Poze</code>. Poți alege alte nume.</li>\n<li><b>În Word</b> fă un <b>tabel</b> cu <b>4 coloane</b>: <i>Nr. | Nume vechi | Nume nou | Folder</i>, cu <b>12 rânduri</b>, și completează-l. (Trei rânduri-model sunt la fila Exemplu; celelalte 9 le faci tu.)</li>\n<li><b>Sub tabel</b> scrie <b>3–4 propoziții</b>: care sunt regulile tale de denumire și de ce ajută (de ex. sortare după dată, căutare mai rapidă).</li>\n<li>Dacă <b>două fișiere sunt aceeași lucrare</b> (cererea și copia ei), explică într-o propoziție <b>care se păstrează și de ce</b>. Nu ștergi, doar propui.</li>\n<li><b>Salvează documentul Word</b> ca <code>T02_Fisiere_Nume_Prenume.docx</code>.</li>\n<li><b>În OneDrive:</b> creează cele 4 foldere și încarcă documentul Word într-unul dintre ele (de ex. în <code>02_Acte</code>).</li>\n<li><b>Partajează</b> folderul sau fișierul: <b>Partajare → „Oricine are linkul poate vizualiza”</b> → copiază linkul și pune-l în chat-ul grupului. Dacă organizația ta blochează partajarea, fă o <b>captură de ecran</b> cu structura de foldere și arat-o pe Zoom.</li>\n</ol>\n<h3>Cum arăți rezultatul</h3>\n<p>La <b>sfârșitul orei</b> (21:00): <b>partajezi ecranul</b> pe Zoom sau pui <b>linkul OneDrive în chat</b>. Nu trimiți obligatoriu pe e-mail. Doar dacă formatorul îți cere documentul, îl trimiți la <code>bogdan@pandapc.ro</code>, cu subiectul <code>Tema 2 – Fișiere – Nume Prenume</code>.</p>\n<h3>Verifică înainte să arăți</h3>\n<ul class=\"chk\"><li>Toate cele 12 fișiere au nume nou, fără „final”, „copie”, „nou” și fără spații.</li><li>Toate numele urmează <b>aceeași regulă</b> (AAAA-LL_Subiect_vN).</li><li>Sunt <b>4 foldere</b> numerotate și fiecare fișier are un folder.</li><li>Tabelul din Word are <b>4 coloane și 12 rânduri</b>, plus 3–4 propoziții despre reguli.</li><li>Folderele sunt create în OneDrive; ai link sau captură de ecran pregătită.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: cum ai numi documentul dacă ar exista 7 versiuni ale lui? „FINAL_v7_copie” nu se acceptă.</p>",t3:"<h3>Pe scurt</h3>\n<p>Colegul tău Radu a primit pe telefon un <b>mesaj în lanț</b> și vrea să-l trimită mai departe. Tu ești <b>detectivul de surse</b>: cauți pe internet, <b>compari 3 surse</b> și îi spui dacă mesajul e adevărat. Primești un <b>fișier de pornire</b>: mesajul, tabelul și începutul concluziei sunt deja scrise, tu doar le completezi. Durată: <b>2 ore</b>. Tema <b>se notează</b> (Nota 1, împreună cu Tema 4).</p>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Descarcă fișierul de pornire</b> (butonul de sus) și salvează-l ca <code>T03_Surse_Nume_Prenume.docx</code>, cu numele tău. În el găsești deja: mesajul lui Radu, tabelul cu antet și începutul concluziei.</li>\n<li><b>Citește mesajul</b> din fișier. Dacă îți cere să-l trimiți repede la mulți oameni, e deja un semnal de alarmă.</li>\n<li><b>Caută pe internet în două feluri:</b> (1) cuvinte-cheie, ex. <code>WhatsApp cu plată 1 decembrie</code>; (2) expresia exactă între ghilimele + <code>fals</code>, ex. <code>\"WhatsApp devine cu plată\" fals</code>. Nu te opri la primul rezultat.</li>\n<li><b>Alege 3 surse de tipuri diferite</b> (o postare pe rețea de socializare sau blog, un articol dintr-un site de presă, o sursă oficială) și completează în tabel <b>un rând pentru fiecare</b>: <i>Sursa (nume și link)</i>, <i>Cine a scris</i>, <i>Citează surse?</i> (da / nu), <i>Verdict</i> (credibilă / necredibilă / nu pot spune + un motiv scurt, de ex. «ton alarmist»).</li>\n<li><b>Completează concluzia.</b> Sub tabel sunt 3 propoziții începute: «Mesajul este…», «Mă bazez pe…», «Îi spun lui Radu să…». Termină-le cu cuvintele tale.</li>\n<li><b>Verifică lista de mai jos, salvează și trimite</b> documentul (vezi „Cum predai”).</li>\n</ol>\n<h3>Cum predai</h3>\n<ol class=\"stp\"><li>Trimite un e-mail la <code>bogdan@pandapc.ro</code>.</li><li>Subiect: <code>Tema 3 – Surse – Nume Prenume</code></li><li>Atașează <code>T03_Surse_Nume_Prenume.docx</code> și scrie o propoziție de politețe (ex.: „Bună ziua, vă transmit Tema 3. Mulțumesc.”).</li><li><b>Termen:</b> la sfârșitul orei de practică (19:00), în aceeași seară.</li></ol>\n<p class=\"nota\">Textele găsite pe internet <b>nu se copiază întregi</b>: le spui în cuvintele tale. Dacă citezi o frază, o pui între ghilimele.</p>\n<h3>Verifică înainte să trimiți</h3>\n<ul class=\"chk\"><li>Ai 3 surse de <b>tipuri diferite</b>, fiecare cu link în tabel.</li><li>Fiecare rând al tabelului e completat (sursa, cine a scris, citează surse, verdict).</li><li>Concluzia are 3 propoziții complete, cu diacritice.</li><li>Textele sunt scrise în cuvintele tale, nu copiate.</li><li>Fișierul și subiectul e-mailului au numele cerut.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: verifică <b>data</b> primei apariții a mesajului. Circulă de ieri sau de ani de zile, cu alte nume și alte date schimbate?</p>",t4:"<h3>Pe scurt</h3>\n<p>La <b>07:58</b> primești de la șeful de birou un e-mail scris în grabă, cu multe greșeli. Tu <b>găsești 4 lucruri care nu merg</b> și scrii un <b>răspuns politicos</b>. Primești un <b>fișier de pornire</b>: e-mailul șefului, tabelul și scheletul răspunsului sunt deja în el. Apoi trimiți răspunsul ca pe un e-mail adevărat, cu atașament. Durată: <b>2 ore</b>. Tema <b>se notează</b> (Nota 1, împreună cu Tema 3).</p>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Descarcă fișierul de pornire</b> (butonul de sus) și salvează-l ca <code>T04_Email_Nume_Prenume.docx</code>, cu numele tău. În el găsești: e-mailul șefului, un tabel cu 4 rânduri și scheletul răspunsului.</li>\n<li><b>Găsește 4 greșeli</b> în e-mailul de la 07:58. Indicii: subiectul, tonul, cererea (e clar ce tabel și până când?), cui e trimis, cum e scris (diacritice, majuscule), cum se termină.</li>\n<li><b>Completează tabelul:</b> un rând pe greșeală, în coloanele <i>Ce nu e în regulă</i> și <i>Cum ar trebui</i>.</li>\n<li><b>Completează scheletul de răspuns</b> din fișier: subiectul propus pentru șef, salut, ce trimiți, detalii, ce urmează, semnătură. Scurt: 3–6 propoziții. Fără MAJUSCULE și fără semne de exclamare multe.</li>\n<li><b>Trimite e-mailul.</b> Mesaj nou în Gmail, Outlook etc.: <b>La:</b> <code>bogdan@pandapc.ro</code>; <b>Subiect:</b> <code>Tema 4 – Email – Nume Prenume</code>; în corp lipești răspunsul tău din Word; atașezi <code>T04_Email_Nume_Prenume.docx</code>. Verifică să apară atașamentul, apoi trimite.</li>\n</ol>\n<h3>Cum predai</h3>\n<ol class=\"stp\"><li>E-mail la <code>bogdan@pandapc.ro</code>, subiect <code>Tema 4 – Email – Nume Prenume</code> (subiectul <b>acesta fix</b> e pentru arhivare; subiectul bun pentru șef îl scrii în Word).</li><li>Atașament: <code>T04_Email_Nume_Prenume.docx</code>. Dacă ai și <code>T01_Excel_Nume_Prenume.xlsx</code> din Tema 1, îl poți atașa și pe el (nu e obligatoriu).</li><li><b>Termen:</b> la sfârșitul orei de practică (21:00), în aceeași seară.</li></ol>\n<p class=\"nota\">Nu apăsa <b>Răspunde tuturor</b> decât dacă toți au nevoie de răspuns. În viața reală, răspunsul de aici ar merge <b>doar</b> către domnul Ionescu.</p>\n<h3>Verifică înainte să trimiți</h3>\n<ul class=\"chk\"><li>Ai găsit <b>4 greșeli</b> în e-mailul de la 07:58, în tabel.</li><li>Răspunsul are subiect, salut, mesaj, ton politicos și semnătură.</li><li>Nu ai MAJUSCULE sau mai multe semne de exclamare la rând.</li><li>Mesajul are <b>corp scris</b>, nu doar «vezi atașat».</li><li>Atașamentul chiar apare în e-mail și are numele cerut.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: adaugă o <b>semnătură automată</b> în programul de e-mail (nume, funcție, telefon) și verifică cum apare într-un mesaj nou.</p>",t5:"<h3>Pe scurt</h3>\n<p>Primești un <b>fișier de pornire</b> cu un buget pe <b>3 luni</b>, deja completat, cu totalurile calculate. Tu adaugi doar <b>media lunară</b> a fiecărei cheltuieli, cu funcția <b>AVERAGE</b>. Durată: <b>1 oră</b>. Tema <b>nu se notează</b> și nu se trimite pe e-mail.</p>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Descarcă fișierul de pornire</b> (butonul de sus) și salvează-l ca <code>T05_Media_Nume_Prenume.xlsx</code>. Bugetul pe 3 luni și totalurile sunt deja completate.</li>\n<li><b>Media fiecărei cheltuieli:</b> în <b>F4</b> scrie <code>=AVERAGE(C4:E4)</code>. Trage de colțul din dreapta jos al celulei în jos, până la <b>F8</b>.</li>\n<li><b>Media totalurilor:</b> în <b>F9</b> scrie <code>=AVERAGE(C9:E9)</code>.</li>\n<li><b>Testul:</b> schimbă o sumă din Luna 3. Dacă totalul și media s-au schimbat singure, e corect. Pune suma la loc.</li>\n<li><b>Formatează:</b> selectează F4:F9, pune <b>două zecimale</b> și lărgește coloana dacă apare #####.</li>\n</ol>\n<h3>Cum închei</h3>\n<ol class=\"stp\"><li><b>Nu se trimite pe e-mail.</b> Când ai terminat, ridici mâna sau scrii în chat. Poți arăta fișierul pe ecran sau spune cât ți-a ieșit <b>media totalurilor</b> (în fila Exemplu vezi rezultatul corect).</li></ol>\n<p class=\"nota\">Dacă Excelul tău e în altă limbă, numele funcțiilor poate fi tradus. Folosește butonul <b>Σ (Însumare automată)</b> de pe bara Excel: lângă el, săgeata deschide lista cu <b>Medie / Average</b>.</p>\n<h3>Verifică înainte să anunți că ai terminat</h3>\n<ul class=\"chk\"><li>Coloana F are media pentru fiecare dintre cele 5 cheltuieli, calculată cu <code>=AVERAGE</code>, nu tastată.</li><li>F9 conține media totalurilor.</li><li>Dacă schimbi o sumă, totalul și media se schimbă singure.</li><li>Nicio coloană nu arată #####.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: în două celule libere scrie <code>=MAX(F4:F8)</code> și <code>=MIN(F4:F8)</code>. Care e cea mai mare și cea mai mică cheltuială medie?</p>"};
+const CURSANT = {t1:"<h3>Pe scurt</h3>\n<p>Construiești în <b>Excel</b> bugetul unei luni, cu <b>5 cheltuieli</b>. Excel face singur adunarea. Durată: <b>2 ore</b>. Tema <b>se notează</b> (NOTA 3).</p>\n<div class=\"leg2\"><h3>Ce ai învățat la teorie și îți folosește aici</h3><p class=\"lh\"><a href=\"index.html#ziua-2\" target=\"_blank\" rel=\"noopener\">Ziua 2 · Ora 7 — Word, Excel și drumul fișierului</a> · <a href=\"brosuri/Ziua2_Rezumat.pdf\" target=\"_blank\" rel=\"noopener\">broșura PDF</a></p><ul><li>Formula începe <b>întotdeauna cu `=`</b>. Fără <code>=</code>, <code>A1+A2</code> rămâne simplu text.</li><li><code>=SUM(B2:B31)</code>: «două puncte» înseamnă «de la… până la». Butonul <b>Σ</b> o scrie automat.</li><li><b>Trage pătrățelul</b> din colțul dreapta-jos al celulei: Excel copiază formula și adaptează adresele.</li><li><b>####</b> în celulă nu e o greșeală: coloana e prea îngustă (dublu-clic pe marginea antetului). Un număr scris ca text e ignorat de <code>SUM</code>.</li></ul></div>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Deschide Excel</b> și un registru nou. <b>Salvează-l imediat</b> cu numele <code>T01_Excel_Nume_Prenume.xlsx</code> (cu numele tău, de ex. <code>T01_Excel_Popescu_Maria.xlsx</code>). Salvează des.</li>\n<li>În celula <b>A1</b> scrie titlul: <i>Bugetul meu – luna …</i> (completezi luna).</li>\n<li>Pe <b>rândul 3</b> scrie antetul: <b>A3</b> = Nr., <b>B3</b> = Cheltuiala, <b>C3</b> = Suma (lei).</li>\n<li>Pe <b>rândurile 4–8</b> scrie cele 5 cheltuieli: chirie, mâncare, transport, utilități, telefon. Pune <b>sume realiste</b> (ale tale sau ale unei familii imaginare), ca <b>numere</b>, nu ca text. Nu scrie date personale reale dacă nu vrei.</li>\n<li>Pe <b>rândul 9</b>: în <b>B9</b> scrie TOTAL, iar în <b>C9</b> scrie formula <code>=SUM(C4:C8)</code>. <b>Nu tasta totalul de mână!</b></li>\n<li><b>Verifică:</b> schimbă suma de la chirie. Dacă totalul s-a schimbat singur, ai făcut corect. Dacă nu, ai scris un număr în loc de formulă: refă pasul 5.</li>\n<li><b>Formatează:</b> antet îngroșat și colorat, bordură pe toate celulele, sume cu două zecimale și „lei”, coloana C destul de lată (să nu apară #####).</li>\n<li><b>Salvează</b> și <b>trimite</b> fișierul pe e-mail (vezi mai jos).</li>\n</ol>\n<h3>Cum predai</h3>\n<ol class=\"stp\">\n<li>Trimite un e-mail la <code>bogdan@pandapc.ro</code>.</li>\n<li>Subiect: <code>Tema 1 – Excel – Nume Prenume</code></li>\n<li>Atașează fișierul <code>T01_Excel_Nume_Prenume.xlsx</code> și scrie o propoziție de politețe (ex.: „Bună ziua, vă transmit Tema 1. Mulțumesc.”).</li>\n<li><b>Termen:</b> la sfârșitul orei de practică (19:00), în aceeași seară.</li>\n</ol>\n<p class=\"nota\">Poți lucra și în Google Sheets, dar fișierul trimis trebuie descărcat ca <b>.xlsx</b>.</p>\n<h3>Verifică înainte să trimiți</h3>\n<ul class=\"chk\"><li>Totalul e calculat cu <code>=SUM</code>, nu tastat.</li><li>Tabelul are titlu, antet și cele 5 cheltuieli.</li><li>Sumele au format de număr, iar coloana nu arată #####.</li><li>Diacriticele sunt corecte (Utilități, Mâncare).</li><li>Fișierul și subiectul e-mailului au numele cerut.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: adaugă un rând 6, „Neprevăzute”, și urmărește cum se schimbă totalul. Dacă rândul nou nu intră în formulă, extinde intervalul din SUM.</p>",t2:"<h3>Pe scurt</h3>\n<p>Colega ta Costina are pe desktop <b>12 fișiere cu nume haotice</b> și nu le mai găsește. Tu pui <b>ordine</b>: <b>nu ștergi nimic</b>, doar le dai nume noi și le pui în foldere. Apoi arăți rezultatul. Durată: <b>2 ore</b>. Tema <b>nu se notează</b> (e exercițiu); baremul e doar pentru autoevaluare.</p>\n<div class=\"leg2\"><h3>Ce ai învățat la teorie și îți folosește aici</h3><p class=\"lh\"><a href=\"index.html#ziua-2\" target=\"_blank\" rel=\"noopener\">Ziua 2 · Ora 7 — Word, Excel și drumul fișierului (OneDrive)</a> · <a href=\"brosuri/Ziua2_Rezumat.pdf\" target=\"_blank\" rel=\"noopener\">broșura PDF</a></p><ul><li><b>Numele spune ce e în fișier</b>: «Raport» nu spune nimic, «Raport activitate septembrie 2026» spune tot.</li><li><b>Data la început, an-lună-zi</b> (<code>2026-09-23 Proces-verbal</code>): fișierele se ordonează singure cronologic.</li><li><b>Versiuni numerotate</b> (<code>v1</code>, <code>v2</code>) în loc de «final», «final 2», «CORECT».</li><li><b>Afișează extensiile</b> (Explorer → Vizualizare → Afișare): <code>factura.pdf.exe</code> arată ca <code>factura.pdf</code>, dar e un program.</li></ul></div>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Citește lista celor 12 fișiere</b> (fila <b>Exemplu</b>, de sus din fereastră). Fiecare are un nume haotic și, alături, ce este de fapt.</li>\n<li><b>Dă fiecărui fișier un nume nou, clar.</b> Regula: <code>AAAA-LL_Subiect_vN</code> (an, lună, subiect scurt, versiune). Ex.: <code>2026-04_Buget_v1.xlsx</code>. <b>Fără</b> „final”, „copie”, „nou”, fără semne de exclamare și <b>fără spații</b> (folosești liniuță de subliniere _).</li>\n<li><b>Alege 4 foldere</b> pentru cele 12 fișiere, numerotate ca să stea în ordine, ex.: <code>01_Munca</code>, <code>02_Acte</code>, <code>03_Bani</code>, <code>04_Poze</code>. Poți alege alte nume.</li>\n<li><b>În Word</b> fă un <b>tabel</b> cu <b>4 coloane</b>: <i>Nr. | Nume vechi | Nume nou | Folder</i>, cu <b>12 rânduri</b>, și completează-l. (Trei rânduri-model sunt la fila Exemplu; celelalte 9 le faci tu.)</li>\n<li><b>Sub tabel</b> scrie <b>3–4 propoziții</b>: care sunt regulile tale de denumire și de ce ajută (de ex. sortare după dată, căutare mai rapidă).</li>\n<li>Dacă <b>două fișiere sunt aceeași lucrare</b> (cererea și copia ei), explică într-o propoziție <b>care se păstrează și de ce</b>. Nu ștergi, doar propui.</li>\n<li><b>Salvează documentul Word</b> ca <code>T02_Fisiere_Nume_Prenume.docx</code>.</li>\n<li><b>În OneDrive:</b> creează cele 4 foldere și încarcă documentul Word într-unul dintre ele (de ex. în <code>02_Acte</code>).</li>\n<li><b>Partajează</b> folderul sau fișierul: <b>Partajare → „Oricine are linkul poate vizualiza”</b> → copiază linkul și pune-l în chat-ul grupului. Dacă organizația ta blochează partajarea, fă o <b>captură de ecran</b> cu structura de foldere și arat-o pe Zoom.</li>\n</ol>\n<h3>Cum arăți rezultatul</h3>\n<p>La <b>sfârșitul orei</b> (21:00): <b>partajezi ecranul</b> pe Zoom sau pui <b>linkul OneDrive în chat</b>. Nu trimiți obligatoriu pe e-mail. Doar dacă formatorul îți cere documentul, îl trimiți la <code>bogdan@pandapc.ro</code>, cu subiectul <code>Tema 2 – Fișiere – Nume Prenume</code>.</p>\n<h3>Verifică înainte să arăți</h3>\n<ul class=\"chk\"><li>Toate cele 12 fișiere au nume nou, fără „final”, „copie”, „nou” și fără spații.</li><li>Toate numele urmează <b>aceeași regulă</b> (AAAA-LL_Subiect_vN).</li><li>Sunt <b>4 foldere</b> numerotate și fiecare fișier are un folder.</li><li>Tabelul din Word are <b>4 coloane și 12 rânduri</b>, plus 3–4 propoziții despre reguli.</li><li>Folderele sunt create în OneDrive; ai link sau captură de ecran pregătită.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: cum ai numi documentul dacă ar exista 7 versiuni ale lui? „FINAL_v7_copie” nu se acceptă.</p>",t3:"<h3>Pe scurt</h3>\n<p>Colegul tău Radu a primit pe telefon un <b>mesaj în lanț</b> și vrea să-l trimită mai departe. Tu ești <b>detectivul de surse</b>: cauți pe internet, <b>compari 3 surse</b> și îi spui dacă mesajul e adevărat. Primești un <b>fișier de pornire</b>: mesajul, tabelul și începutul concluziei sunt deja scrise, tu doar le completezi. Durată: <b>2 ore</b>. Tema <b>se notează</b> (Nota 1, împreună cu Tema 4).</p>\n<div class=\"leg2\"><h3>Ce ai învățat la teorie și îți folosește aici</h3><p class=\"lh\"><a href=\"index.html#ziua-2\" target=\"_blank\" rel=\"noopener\">Ziua 2 · Ora 5 — Motoare de căutare, operatori, surse</a> · <a href=\"brosuri/Ziua2_Rezumat.pdf\" target=\"_blank\" rel=\"noopener\">broșura PDF</a></p><ul><li><b>Expresia exactă între ghilimele</b>: <code>\"cerere de concediu\"</code>; <code>site:</code> caută doar pe un domeniu.</li><li><b>Trei obiceiuri</b>: verifici domeniul, cauți două-trei surse independente, mergi direct la instituție. Nu te oprești la primul rezultat.</li></ul><p class=\"lh\"><a href=\"index.html#ziua-3\" target=\"_blank\" rel=\"noopener\">Ziua 3 · Ora 11 — Gândire critică</a> · <a href=\"brosuri/Ziua3_Rezumat.pdf\" target=\"_blank\" rel=\"noopener\">broșura PDF</a></p><ul><li><b>Cinci întrebări pentru orice sursă</b>: cine scrie? unde apare? când a fost scris? cum sună? cu ce dovezi?</li><li>Un text cu autor necunoscut, fără dată, ton triumfător și «studiile arată» fără niciun studiu are cinci semne roșii. Nu e sigur fals, dar nu avem motiv să-l credem.</li></ul></div>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Descarcă fișierul de pornire</b> (butonul de sus) și salvează-l ca <code>T03_Surse_Nume_Prenume.docx</code>, cu numele tău. În el găsești deja: mesajul lui Radu, tabelul cu antet și începutul concluziei.</li>\n<li><b>Citește mesajul</b> din fișier. Dacă îți cere să-l trimiți repede la mulți oameni, e deja un semnal de alarmă.</li>\n<li><b>Caută pe internet în două feluri:</b> (1) cuvinte-cheie, ex. <code>WhatsApp cu plată 1 decembrie</code>; (2) expresia exactă între ghilimele + <code>fals</code>, ex. <code>\"WhatsApp devine cu plată\" fals</code>. Nu te opri la primul rezultat.</li>\n<li><b>Alege 3 surse de tipuri diferite</b> (o postare pe rețea de socializare sau blog, un articol dintr-un site de presă, o sursă oficială) și completează în tabel <b>un rând pentru fiecare</b>: <i>Sursa (nume și link)</i>, <i>Cine a scris</i>, <i>Citează surse?</i> (da / nu), <i>Verdict</i> (credibilă / necredibilă / nu pot spune + motivul: cum sună, dacă are dată, de ex. «ton alarmist, fără dată»).</li>\n<li><b>Completează concluzia.</b> Sub tabel sunt 3 propoziții începute: «Mesajul este…», «Mă bazez pe…», «Îi spun lui Radu să…». Termină-le cu cuvintele tale.</li>\n<li><b>Verifică lista de mai jos, salvează și trimite</b> documentul (vezi „Cum predai”).</li>\n</ol>\n<h3>Cum predai</h3>\n<ol class=\"stp\"><li>Trimite un e-mail la <code>bogdan@pandapc.ro</code>.</li><li>Subiect: <code>Tema 3 – Surse – Nume Prenume</code></li><li>Atașează <code>T03_Surse_Nume_Prenume.docx</code> și scrie o propoziție de politețe (ex.: „Bună ziua, vă transmit Tema 3. Mulțumesc.”).</li><li><b>Termen:</b> la sfârșitul orei de practică (19:00), în aceeași seară.</li></ol>\n<p class=\"nota\">Textele găsite pe internet <b>nu se copiază întregi</b>: le spui în cuvintele tale. Dacă citezi o frază, o pui între ghilimele.</p>\n<h3>Verifică înainte să trimiți</h3>\n<ul class=\"chk\"><li>Ai 3 surse de <b>tipuri diferite</b>, fiecare cu link în tabel.</li><li>Fiecare rând al tabelului e completat (sursa, cine a scris, citează surse, verdict).</li><li>Concluzia are 3 propoziții complete, cu diacritice.</li><li>Textele sunt scrise în cuvintele tale, nu copiate.</li><li>Fișierul și subiectul e-mailului au numele cerut.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: verifică <b>data</b> primei apariții a mesajului. Circulă de ieri sau de ani de zile, cu alte nume și alte date schimbate?</p>",t4:"<h3>Pe scurt</h3>\n<p>La <b>07:58</b> primești de la șeful de birou un e-mail scris în grabă, cu multe greșeli. Tu <b>găsești 4 lucruri care nu merg</b> și scrii un <b>răspuns politicos</b>. Primești un <b>fișier de pornire</b>: e-mailul șefului, tabelul și scheletul răspunsului sunt deja în el. Apoi trimiți răspunsul ca pe un e-mail adevărat, cu atașament. Durată: <b>2 ore</b>. Tema <b>se notează</b> (Nota 1, împreună cu Tema 3).</p>\n<div class=\"leg2\"><h3>Ce ai învățat la teorie și îți folosește aici</h3><p class=\"lh\"><a href=\"index.html#ziua-3\" target=\"_blank\" rel=\"noopener\">Ziua 3 · Ora 9 — Comunicare digitală · e-mail</a> · <a href=\"brosuri/Ziua3_Rezumat.pdf\" target=\"_blank\" rel=\"noopener\">broșura PDF</a></p><ul><li><b>Subiectul decide dacă mesajul e citit</b>: clar, scurt, despre ce e vorba. «URGENT!!!» spune prea mult; «Salut» nu spune nimic.</li><li><b>Corpul mesajului, în ordine:</b> formula de adresare, apoi <i>contextul, ce doriți, până când</i>, apoi încheierea politicoasă și semnătura.</li><li><b>Trei secunde înainte de «Trimitere»:</b> ortografia, destinatarii (cei corecți și nimeni în plus), atașamentul chiar atașat.</li><li><b>Cc</b> = cei care doar trebuie să știe; <b>Bcc</b> = adrese ascunse. Nu răspunde tuturor decât dacă toți au nevoie de răspuns.</li></ul></div>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Descarcă fișierul de pornire</b> (butonul de sus) și salvează-l ca <code>T04_Email_Nume_Prenume.docx</code>, cu numele tău. În el găsești: e-mailul șefului, un tabel cu 4 rânduri și scheletul răspunsului.</li>\n<li><b>Găsește 4 greșeli</b> în e-mailul de la 07:58. Indicii: subiectul, tonul, cererea (e clar ce tabel și până când?), cui e trimis, cum e scris (diacritice, majuscule), cum se termină.</li>\n<li><b>Completează tabelul:</b> un rând pe greșeală, în coloanele <i>Ce nu e în regulă</i> și <i>Cum ar trebui</i>.</li>\n<li><b>Completează scheletul de răspuns</b> din fișier: subiectul propus pentru șef, salut, ce trimiți, detalii, ce urmează, semnătură. Scurt: 3–6 propoziții. Fără MAJUSCULE și fără semne de exclamare multe.</li>\n<li><b>Trimite e-mailul.</b> Mesaj nou în Gmail, Outlook etc.: <b>La:</b> <code>bogdan@pandapc.ro</code>; <b>Subiect:</b> <code>Tema 4 – Email – Nume Prenume</code>; în corp lipești răspunsul tău din Word; atașezi <code>T04_Email_Nume_Prenume.docx</code>. Verifică să apară atașamentul, apoi trimite.</li>\n</ol>\n<h3>Cum predai</h3>\n<ol class=\"stp\"><li>E-mail la <code>bogdan@pandapc.ro</code>, subiect <code>Tema 4 – Email – Nume Prenume</code> (subiectul <b>acesta fix</b> e pentru arhivare; subiectul bun pentru șef îl scrii în Word).</li><li>Atașament: <code>T04_Email_Nume_Prenume.docx</code>. Dacă ai și <code>T01_Excel_Nume_Prenume.xlsx</code> din Tema 1, îl poți atașa și pe el (nu e obligatoriu).</li><li><b>Termen:</b> la sfârșitul orei de practică (21:00), în aceeași seară.</li></ol>\n<p class=\"nota\">Nu apăsa <b>Răspunde tuturor</b> decât dacă toți au nevoie de răspuns. În viața reală, răspunsul de aici ar merge <b>doar</b> către domnul Ionescu.</p>\n<h3>Verifică înainte să trimiți</h3>\n<ul class=\"chk\"><li>Ai găsit <b>4 greșeli</b> în e-mailul de la 07:58, în tabel.</li><li>Răspunsul are subiect, salut, mesaj, ton politicos și semnătură.</li><li>Nu ai MAJUSCULE sau mai multe semne de exclamare la rând.</li><li>Mesajul are <b>corp scris</b>, nu doar «vezi atașat».</li><li>Atașamentul chiar apare în e-mail și are numele cerut.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: adaugă o <b>semnătură automată</b> în programul de e-mail (nume, funcție, telefon) și verifică cum apare într-un mesaj nou.</p>",t5:"<h3>Pe scurt</h3>\n<p>Primești un <b>fișier de pornire</b> cu un buget pe <b>3 luni</b>, deja completat, cu totalurile calculate. Tu adaugi doar <b>media lunară</b> a fiecărei cheltuieli, cu funcția <b>AVERAGE</b>. Durată: <b>1 oră</b>. Tema <b>nu se notează</b> și nu se trimite pe e-mail.</p>\n<div class=\"leg2\"><h3>Ce ai învățat la teorie și îți folosește aici</h3><p class=\"lh\"><a href=\"index.html#ziua-2\" target=\"_blank\" rel=\"noopener\">Ziua 2 · Ora 7 — Excel: grila, celula și formula</a> · <a href=\"brosuri/Ziua2_Rezumat.pdf\" target=\"_blank\" rel=\"noopener\">broșura PDF</a></p><ul><li>Tiparul unei funcții: <b>`=` + numele funcției + celulele între paranteze</b>. <code>AVERAGE</code> (media) e în aceeași familie cu <code>SUM</code>, <code>MIN</code>, <code>MAX</code>, <code>COUNT</code>.</li><li>Scrii formula <b>o singură dată</b>, apoi tragi pătrățelul din colț: adresele se adaptează singure.</li><li>Dacă schimbi o valoare, formulele <b>se recalculează singure</b>. De asta le folosim în loc de numere scrise.</li></ul></div>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Descarcă fișierul de pornire</b> (butonul de sus) și salvează-l ca <code>T05_Media_Nume_Prenume.xlsx</code>. Bugetul pe 3 luni și totalurile sunt deja completate.</li>\n<li><b>Media fiecărei cheltuieli:</b> în <b>F4</b> scrie <code>=AVERAGE(C4:E4)</code>. Trage de colțul din dreapta jos al celulei în jos, până la <b>F8</b>.</li>\n<li><b>Media totalurilor:</b> în <b>F9</b> scrie <code>=AVERAGE(C9:E9)</code>.</li>\n<li><b>Testul:</b> schimbă o sumă din Luna 3. Dacă totalul și media s-au schimbat singure, e corect. Pune suma la loc.</li>\n<li><b>Formatează:</b> selectează F4:F9, pune <b>două zecimale</b> și lărgește coloana dacă apare #####.</li>\n</ol>\n<h3>Cum închei</h3>\n<ol class=\"stp\"><li><b>Nu se trimite pe e-mail.</b> Când ai terminat, ridici mâna sau scrii în chat. Poți arăta fișierul pe ecran sau spune cât ți-a ieșit <b>media totalurilor</b> (în fila Exemplu vezi rezultatul corect).</li></ol>\n<p class=\"nota\">Dacă Excelul tău e în altă limbă, numele funcțiilor poate fi tradus. Folosește butonul <b>Σ (Însumare automată)</b> de pe bara Excel: lângă el, săgeata deschide lista cu <b>Medie / Average</b>.</p>\n<h3>Verifică înainte să anunți că ai terminat</h3>\n<ul class=\"chk\"><li>Coloana F are media pentru fiecare dintre cele 5 cheltuieli, calculată cu <code>=AVERAGE</code>, nu tastată.</li><li>F9 conține media totalurilor.</li><li>Dacă schimbi o sumă, totalul și media se schimbă singure.</li><li>Nicio coloană nu arată #####.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: în două celule libere scrie <code>=MAX(F4:F8)</code> și <code>=MIN(F4:F8)</code>. Care e cea mai mare și cea mai mică cheltuială medie?</p>",t7:"<h3>Pe scurt</h3>\n<p>Primești <b>conversația unui grup de birou</b> în care apar patru situații nepotrivite. Tu le <b>recunoști</b> (directă sau indirectă), spui <b>ce ar trebui făcut</b> și <b>rescrii un mesaj</b> care ajunge la toți colegii. Primești un <b>fișier de pornire</b> cu conversația, tabelul și locurile de completat. Durată: <b>4 ore</b>, în două zile (3 ore prima zi, 1 oră a doua zi). Tema <b>se notează</b> (Nota 2) și este <b>obligatorie</b>.</p>\n<div class=\"leg2\"><h3>Ce ai învățat la teorie și îți folosește aici</h3><p class=\"lh\"><a href=\"index.html#ziua-4\" target=\"_blank\" rel=\"noopener\">Ziua 4 · Ora 15 — Egalitate de șanse și nediscriminare</a> · <a href=\"brosuri/Ziua4_Rezumat.pdf\" target=\"_blank\" rel=\"noopener\">broșura PDF</a></p><ul><li><b>Testul de 3 întrebări</b>: cine nu primește? cine nu poate folosi? cine ar fi tratat altfel dacă ar cere ajutor?</li><li><b>Directă</b> = tratament diferit, pe față, din cauza unui criteriu (vârstă, sex, dizabilitate…). <b>Indirectă</b> = o regulă aparent neutră care dezavantajează pe unii (ex.: «toți completăm în aplicație», dar aplicația nu merge cu cititorul de ecran). Mai frecventă în digital.</li><li><b>Un algoritm nu e neutru</b>: învață din datele trecutului. Întrebăm cine s-a uitat la rezultat, pe ce date a învățat, cine răspunde de decizie.</li><li><b>Glumă pe seama unui coleg, în 3 pași:</b> nu râzi și nu dai «like»; îi spui în privat, calm; raportezi superiorului dacă se repetă. Unde raportăm: superior, resurse umane, <b>CNCD</b>.</li></ul></div>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Descarcă fișierul de pornire</b> (butonul de sus) și salvează-l ca <code>T07_Nediscriminare_Nume_Prenume.docx</code>, cu numele tău. În el găsești conversația, un tabel cu 4 rânduri și locurile de completat. Tema are <b>4 ore, în două zile</b>: pașii 1–6 în prima zi (3 ore), pașii 7–8 în a doua zi (1 oră).</li>\n<li><b>Citește caseta „Ce ai învățat la teorie”</b> (mai sus) și apoi <b>conversația</b> din fișier. Gândește-te la cele 3 întrebări: cine nu primește? cine nu poate folosi? cine ar fi tratat altfel dacă ar cere ajutor?</li>\n<li><b>Completează tabelul:</b> pentru fiecare dintre cele 4 situații scrie <i>directă / indirectă / nu e discriminare</i>, <i>de ce</i> (criteriul: vârstă, sex, dizabilitate…) și <i>ce ar trebui făcut</i>, într-o propoziție.</li>\n<li><b>Mini-cazul cu programul care notează CV-uri:</b> răspunde în 3 propoziții, una la fiecare întrebare (cine s-a uitat la rezultat? pe ce date a învățat? cine răspunde?).</li>\n<li><b>Mesajul corectat:</b> rescrie anunțul de instruire ca să ajungă la <b>toți</b> colegii (e-mail, hârtie, telefon, ofertă de ajutor). 4–5 propoziții, ton politicos, fără MAJUSCULE.</li>\n<li><b>Trei pași la o glumă:</b> scrie în 3 propoziții ce faci dacă vezi în grup o glumă pe seama unui coleg (imediat, în privat, dacă se repetă). Salvează fișierul.</li>\n<li><b>A doua zi – verifică mesajul tău</b> cu cele 3 întrebări. Dacă la vreuna răspunsul e «cineva rămâne pe dinafară», îmbunătățește mesajul.</li>\n<li><b>Salvează și trimite</b> documentul (vezi „Cum predai”).</li>\n</ol>\n<h3>Cum predai</h3>\n<ol class=\"stp\"><li>E-mail la <code>bogdan@pandapc.ro</code>, subiect <code>Tema 7 – Nediscriminare – Nume Prenume</code>.</li><li>Atașează <code>T07_Nediscriminare_Nume_Prenume.docx</code> și scrie o propoziție de politețe (ex.: „Bună ziua, vă transmit Tema 7. Mulțumesc.”).</li><li><b>Termen:</b> la sfârșitul ultimei ore a temei (a doua zi), în aceeași zi.</li></ol>\n<p class=\"nota\">Conversația și numele sunt inventate: nu folosi în temă date sau comentarii despre colegi reali. Dacă un coleg are o dizabilitate sau o boală, <b>nu o comentăm în grup</b>; ne ocupăm de ajustare, fără să explicăm nimănui de ce.</p>\n<h3>Verifică înainte să trimiți</h3>\n<ul class=\"chk\"><li>Tabelul are cele 4 situații, fiecare cu: directă / indirectă, de ce, ce ar trebui făcut.</li><li>Mini-cazul cu CV-urile are 3 propoziții, câte una la fiecare întrebare.</li><li>Mesajul corectat are 4–5 propoziții și ajunge la toți colegii (cel puțin două căi, cu ofertă de ajutor).</li><li>Cei 3 pași la o glumă sunt scriși în 3 propoziții.</li><li>Tonul e politicos, fără MAJUSCULE și fără semne de exclamare multe.</li><li>Fișierul și subiectul e-mailului au numele cerut.</li></ul>\n<p class=\"nota\">💡 Bonus, fără punctaj: caută pe site-ul CNCD (Consiliul Național pentru Combaterea Discriminării) unde se face o sesizare și în cât timp de la faptă. Scrie o propoziție cu ce ai găsit.</p>",t6:"<h3>Pe scurt</h3>\n<p>Lucrezi în biroul unei stații, unde mesajele se scriu în grabă. Tu <b>rescrii mesaje vagi</b> ca să fie complete, alegi <b>canalul potrivit</b>, te oprești la <b>datele personale</b> trimise în grupul general și îndrepți <b>tonul</b> unor mesaje. Primești un <b>fișier de pornire</b> cu tabelele gata făcute. Durată: <b>4 ore</b>, în două zile (3 ore prima zi, 1 oră a doua zi). Tema este <b>exercițiu recomandat</b>: nu se notează.</p>\n<div class=\"leg2\"><h3>Ce ai învățat la teorie și îți folosește aici</h3><p class=\"lh\"><a href=\"index.html#ziua-4\" target=\"_blank\" rel=\"noopener\">Ziua 4 · Ora 13 — Comunicarea digitală la serviciu</a> · <a href=\"brosuri/Ziua4_Rezumat.pdf\" target=\"_blank\" rel=\"noopener\">broșura PDF</a></p><ul><li>Un mesaj bun spune <b>patru lucruri</b>: ce s-a întâmplat, cât de mare e problema, care e cauza (dacă o știm) și ce se așteaptă de la cel care citește. Cu <b>cifre</b>: ora, numărul trenului, locul.</li><li><b>Canalul potrivit:</b> urgențele merg prin apel sau aplicația de alertare; e-mailul rămâne pentru ce trebuie să lase urme. Grupurile se separă pe scopuri, cu etichete (<b>URGENT</b> / <b>INFORMARE</b>).</li><li><b>Datele personale în grupul general = risc.</b> Doar celui care are nevoie, pe canalul aprobat, doar ce e strict necesar; dacă s-a întâmplat, anunți imediat persoana responsabilă.</li><li><b>Testul de trei secunde înainte de «Trimitere»:</b> e necesar? e clar? e respectuos?</li></ul></div>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Descarcă fișierul de pornire</b> (butonul de sus) și salvează-l ca <code>T06_Comunicare_Nume_Prenume.docx</code>. Conține 4 tabele gata făcute. Tema are <b>4 ore, în două zile</b>: pașii 1–5 în prima zi (3 ore), pașii 6–7 în a doua zi (1 oră).</li>\n<li><b>Citește caseta „Ce ai învățat la teorie”</b> (mai sus). Reține: un mesaj bun spune 4 lucruri (ce s-a întâmplat, cât de mare e problema, cauza, ce se așteaptă de la cel care citește).</li>\n<li><b>Tabelul 1 – mesaje complete:</b> pentru fiecare dintre cele 3 mesaje vagi scrie ce lipsește și rescrie-l complet, cu cifre (ora, numele, locul).</li>\n<li><b>Tabelul 2 – canalul potrivit:</b> pentru fiecare dintre cele 4 situații alege canalul (apel telefonic, e-mail, grup cu etichetă, față în față) și scrie de ce.</li>\n<li><b>Datele personale:</b> în scenariul cu lista de CNP-uri trimisă în grupul general scrie ce nu e în regulă și ce faci, în 4 pași.</li>\n<li><b>A doua zi – tonul:</b> rescrie cele 3 mesaje nepoliticoase, apoi aplică pe ele testul de trei secunde (e necesar? e clar? e respectuos?).</li>\n<li><b>Salvează fișierul.</b> Bonus: răspunde în 3 propoziții la întrebările despre planul B (ce facem dacă pică sistemul?).</li>\n</ol>\n<h3>Cum închei</h3>\n<ol class=\"stp\"><li><b>Nu e obligatoriu să trimiți nimic.</b> Când ai terminat, ridici mâna sau scrii în chat; poți arăta fișierul pe ecran.</li><li>Dacă vrei părerea formatorului, trimite <code>T06_Comunicare_Nume_Prenume.docx</code> la <code>bogdan@pandapc.ro</code>, cu subiectul <code>Tema 6 – Comunicare – Nume Prenume</code>.</li></ol>\n<p class=\"nota\">Exemplele sunt inventate. Nu folosi date personale reale (nume, CNP, telefon) ale colegilor sau ale călătorilor.</p>\n<h3>Verifică înainte să anunți că ai terminat</h3>\n<ul class=\"chk\"><li>Cele 3 mesaje vagi au fost rescrise complet, cu cifre.</li><li>Pentru fiecare dintre cele 4 situații ai ales un canal și ai scris de ce.</li><li>La datele personale ai scris ce nu e în regulă și cei 4 pași.</li><li>Cele 3 mesaje nepoliticoase au devenit respectuoase, fără MAJUSCULE.</li><li>Fișierul are numele cerut.</li></ul>\n<p class=\"nota\">💡 Bonus: scrie un mesaj de 4 rânduri pentru un coleg care a trimis o listă cu CNP-uri în grupul general: să-l ajuți fără să-l faci de râs.</p>",t8:"<h3>Pe scurt</h3>\n<p>Primești un <b>anunț scris prost</b> (literă mică, contrast slab, MAJUSCULE, ton nepotrivit, trimis doar într-o aplicație). Tu <b>găsești problemele</b>, <b>rescrii anunțul</b> ca să poată fi citit de oricine, alegi <b>canalele și formatele</b> prin care ajunge la toți și îndrepți câteva <b>replici</b> nepotrivite. Primești un <b>fișier de pornire</b>. Durată: <b>4 ore</b>, în două zile (3 ore prima zi, 1 oră a doua zi). Tema este <b>exercițiu recomandat</b>: nu se notează.</p>\n<div class=\"leg2\"><h3>Ce ai învățat la teorie și îți folosește aici</h3><p class=\"lh\"><a href=\"index.html#ziua-4\" target=\"_blank\" rel=\"noopener\">Ziua 4 · Ora 15 — Egalitate de șanse și incluziune (reflexele echipei)</a> · <a href=\"brosuri/Ziua4_Rezumat.pdf\" target=\"_blank\" rel=\"noopener\">broșura PDF</a></p><ul><li><b>Efectul rampei:</b> ce ajută pe unii ajută pe toți: litere mari, contrast bun, subtitrări. Accesibilitatea nu e o favoare, ci o investiție.</li><li><b>Reflexe:</b> verificăm lista de destinatari; anunțăm pe mai multe canale; nu ghicim competența după gen sau vârstă; limbaj neutru și respectuos; oferim alternative (text, audio, tipărit); raportăm ce observăm.</li><li><b>Verificarea de 30 de secunde</b> înainte de «Trimitere»: lista de destinatari completă? canalul ajunge la toți? formatul poate fi citit de cineva care nu vede bine sau are un telefon vechi? tonul — l-aș spune la fel față în față?</li></ul><p class=\"lh\"><a href=\"index.html#ziua-5\" target=\"_blank\" rel=\"noopener\">Ziua 5 · Ora 17 — Colaborare la distanță: studiul de caz</a> · <a href=\"brosuri/Ziua5_Rezumat.pdf\" target=\"_blank\" rel=\"noopener\">broșura PDF</a></p><ul><li><b>Aplicația testată înainte de a fi impusă</b> (inclusiv cu tehnologiile asistive) sau o variantă alternativă; schimbarea se anunță explicit, pe un canal care ajunge la toți.</li></ul></div>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Descarcă fișierul de pornire</b> (butonul de sus) și salvează-l ca <code>T08_Accesibilitate_Nume_Prenume.docx</code>. Conține anunțul prost scris și locurile de completat. Tema are <b>4 ore, în două zile</b>: pașii 1–5 în prima zi (3 ore), pașii 6–7 în a doua zi (1 oră).</li>\n<li><b>Citește caseta „Ce ai învățat la teorie”</b> (mai sus) și apoi anunțul din fișier.</li>\n<li><b>Problemele anunțului:</b> în tabel scrie cel puțin 4 probleme și, pentru fiecare, cui îi încurcă.</li>\n<li><b>Anunțul accesibil:</b> rescrie-l în zona goală din fișier: titlu clar, litere mari (cel puțin 14 pt), text închis pe fundal deschis, ture ca listă, adresare neutră («Dragi colegi și colege»), ofertă de ajutor. Fără MAJUSCULE.</li>\n<li><b>Canale și formate:</b> scrie 2 propoziții despre cum ajunge anunțul la colegul fără smartphone și la colega cu vedere slabă. Bifează canalele alese.</li>\n<li><b>A doua zi – verificarea de 30 de secunde și reformulările:</b> răspunde cu Da / Nu la cele 4 întrebări și rescrie cele 3 replici nepotrivite.</li>\n<li><b>Salvează fișierul.</b> Bonus: în Word, <b>Revizuire → Verificare accesibilitate</b>: câte avertismente apar?</li>\n</ol>\n<h3>Cum închei</h3>\n<ol class=\"stp\"><li><b>Nu e obligatoriu să trimiți nimic.</b> Când ai terminat, ridici mâna sau scrii în chat; poți arăta fișierul pe ecran.</li><li>Dacă vrei părerea formatorului, trimite <code>T08_Accesibilitate_Nume_Prenume.docx</code> la <code>bogdan@pandapc.ro</code>, cu subiectul <code>Tema 8 – Accesibilitate – Nume Prenume</code>.</li></ol>\n<p class=\"nota\">Accesibilitatea nu e o favoare, ci o investiție: ce ajută pe unii ajută pe toți (litere mari, contrast bun, subtitrări). Persoanele reale cu dizabilități nu se comentează în grup.</p>\n<h3>Verifică înainte să anunți că ai terminat</h3>\n<ul class=\"chk\"><li>Ai găsit cel puțin 4 probleme ale anunțului, cu cine e afectat.</li><li>Anunțul tău are titlu clar, litere de cel puțin 14 pt, text închis pe fundal deschis și ture ca listă.</li><li>Adresarea e neutră și respectuoasă; fără MAJUSCULE în text.</li><li>Ai gândit cum ajunge la colegul fără smartphone și la cel cu vedere slabă (cel puțin 2 canale).</li><li>Cele 3 replici nepotrivite au variante respectuoase.</li></ul>\n<p class=\"nota\">💡 Bonus: citește anunțul tău cu voce tare, ca și cum l-ai transmite la telefon unui coleg care nu vede ecranul. Se înțelege totul?</p>",t9:"<h3>Pe scurt</h3>\n<p>Un <b>raport de tură</b> a trecut prin mâinile a doi colegi. Fișierul de pornire conține <b>modificările lor urmărite</b>. Tu le <b>accepți sau le respingi</b>, adaugi un comentariu, decizi ce merge în <b>calendar</b> și ce într-un <b>document comun</b>, apoi pregătești <b>invitația și agenda</b> unei ședințe online. Durată: <b>4 ore</b>, în două zile (3 ore prima zi, 1 oră a doua zi). Tema este <b>exercițiu recomandat</b>: nu se notează.</p>\n<div class=\"leg2\"><h3>Ce ai învățat la teorie și îți folosește aici</h3><p class=\"lh\"><a href=\"index.html#ziua-4\" target=\"_blank\" rel=\"noopener\">Ziua 4 · Ora 13 — Colaborare: același document, mai mulți oameni</a> · <a href=\"brosuri/Ziua4_Rezumat.pdf\" target=\"_blank\" rel=\"noopener\">broșura PDF</a></p><ul><li><b>Un singur document de lucru</b>; numele spune versiunea (data, conținutul, versiunea).</li><li><b>Urmărire modificări</b> (Revizuire → Urmărire modificări): fiecare cuvânt adăugat sau șters apare colorat, cu numele autorului. Cel care primește documentul alege <b>Acceptare</b> sau <b>Respingere</b>. Un <b>comentariu nou</b> e o întrebare, nu o modificare.</li></ul><p class=\"lh\"><a href=\"index.html#ziua-5\" target=\"_blank\" rel=\"noopener\">Ziua 5 · Ora 17 — Colaborare la distanță, în practică</a> · <a href=\"brosuri/Ziua5_Rezumat.pdf\" target=\"_blank\" rel=\"noopener\">broșura PDF</a></p><ul><li><b>Calendar comun</b> pentru cine e disponibil și când; <b>document în timp real</b> pentru varianta corectă. Comentariu, nu suprascriere. <b>Istoricul de versiuni</b> OneDrive păstrează fiecare variantă.</li><li><b>Ședință pregătită, 4 obiceiuri:</b> agendă scurtă trimisă din timp; ora exactă în calendarul comun; linkul verificat și trimis din timp; camera și microfonul testate cu un minut înainte. Plan B: număr de rezervă și o persoană care trimite rezumatul.</li></ul><p class=\"lh\"><a href=\"index.html#ziua-6\" target=\"_blank\" rel=\"noopener\">Ziua 6 · Ora 21 — Export PDF și partajare pe OneDrive</a> · <a href=\"brosuri/Ziua6_Rezumat.pdf\" target=\"_blank\" rel=\"noopener\">broșura PDF</a></p><ul><li><b>Cele două întrebări ale oricărei partajări:</b> cine poate accesa linkul și ce poate face (doar să vizualizeze sau și să editeze). Verifici accesul oricând din același meniu.</li></ul></div>\n<h3>Ce faci, pas cu pas</h3>\n<ol class=\"stp\">\n<li><b>Descarcă fișierul de pornire</b> (butonul de sus) și salvează-l ca <code>T09_Colaborare_Nume_Prenume.docx</code>. Documentul conține modificări urmărite și un comentariu. Tema are <b>4 ore, în două zile</b>: pașii 1–6 în prima zi (3 ore), pașii 7–8 în a doua zi (1 oră).</li>\n<li><b>Citește caseta „Ce ai învățat la teorie”</b> (mai sus). Apoi, în fișier, deschide fila <b>Revizuire</b> și parcurge modificările una câte una.</li>\n<li><b>Acceptă sau respinge</b> cele 4 modificări (Revizuire → Acceptare / Respingere) și scrie în tabel, într-o propoziție, de ce.</li>\n<li><b>Comentariul tău:</b> răspunde la comentariul Mariei cu <b>Revizuire → Comentariu nou</b>, apoi fă o modificare a ta, urmărită.</li>\n<li><b>Calendar sau document?</b> Pentru cele 4 situații alege calendar comun, document comun cu comentarii sau ambele, și scrie de ce.</li>\n<li><b>Invitația și agenda:</b> completează subiectul, data și ora exactă, link-ul, agenda în 3 rânduri, ce pregătește fiecare, numărul de rezervă.</li>\n<li><b>A doua zi – cele 4 obiceiuri:</b> bifează în fișă ce ai aplicat în invitație (agendă din timp, oră exactă în calendar, link verificat, cameră și microfon testate) și completează ce lipsește.</li>\n<li><b>Salvează fișierul.</b> Bonus: partajează-l pe OneDrive (alegi cine și ce poate face) și notează câte versiuni vezi în istoricul de versiuni.</li>\n</ol>\n<h3>Cum închei</h3>\n<ol class=\"stp\"><li><b>Nu e obligatoriu să trimiți nimic.</b> Când ai terminat, ridici mâna sau scrii în chat; poți arăta fișierul pe ecran.</li><li>Dacă vrei părerea formatorului, trimite <code>T09_Colaborare_Nume_Prenume.docx</code> la <code>bogdan@pandapc.ro</code>, cu subiectul <code>Tema 9 – Colaborare – Nume Prenume</code>.</li></ol>\n<p class=\"nota\">Colegii și faptele din raport sunt inventate. La o ședință reală: o întâlnire nu se înregistrează fără acordul celor prezenți.</p>\n<h3>Verifică înainte să anunți că ai terminat</h3>\n<ul class=\"chk\"><li>Cele 4 modificări sunt acceptate sau respinse, fiecare cu un motiv.</li><li>Comentariul tău apare ca <b>Comentariu nou</b>, nu ca text suprascris.</li><li>Ai ales calendar / document comun / ambele pentru cele 4 situații.</li><li>Invitația are subiect clar, oră exactă, link, agendă în 3 rânduri și număr de rezervă.</li><li>Ai bifat cele 4 obiceiuri ale unei ședințe pregătite.</li></ul>\n<p class=\"nota\">💡 Bonus: deschide fișierul pe OneDrive (Word Online) și vezi cursorul colorat al unui coleg care scrie în același timp cu tine.</p>"};
 const ECRAN = TEME.filter(t=>t.id!=="liber");
 
 const MODUL = {1:"Modulul 1 · Bazele digitale",2:"Modulul 2 · Comunicare și colaborare",3:"Modulul 3 · Crearea de conținut digital",4:"Modulul 4 · Siguranța pe internet",5:"Modulul 5 · Rezolvarea problemelor"};
@@ -682,24 +1028,27 @@ const BLOC = [
  {m:1,nume:"Detectivul de surse",ecran:"t3",ore:2,recap:"Ora 5, 11",nota:1,fis:"T03_Surse_Nume_Prenume.docx",sub:"Tema 3 – Surse – Nume Prenume",dupa:"Nota 1 se dă după Temele 3 și 4"},
  {m:1,nume:"E-mailul de la 07:58",ecran:"t4",ore:2,recap:"Ora 9",nota:1,fis:"T04_Email_Nume_Prenume.docx",sub:"Tema 4 – Email – Nume Prenume"},
  {m:1,nume:"Șeful final al Modulului 1: AVERAGE",ecran:"t5",ore:1,recap:"Ora 7"},
- {m:2,nume:"Comunicare digitală la locul de muncă",ore:4,recap:"Ora 13"},
- {m:2,nume:"Egalitate de șanse și nediscriminare în mediul digital",ore:4,recap:"Ora 15",nota:2,ob:true,fis:"T07_Nediscriminare_Nume_Prenume",sub:"Tema 7 – Nediscriminare – Nume Prenume"},
- {m:2,nume:"Accesibilitate digitală",ore:4,recap:"Ora 17"},
- {m:2,nume:"Colaborare: co-editare, modificări, ședință online",ore:4,recap:"Ora 17, 21"},
- {m:3,nume:"Prezentare PowerPoint pe temă dată",ore:4,recap:"Ora 19"},
+ {m:2,nume:"Comunicare digitală la locul de muncă",ecran:"t6",ore:4,recap:"Ora 13"},
+ {m:2,nume:"Egalitate de șanse și nediscriminare în mediul digital",ecran:"t7",ore:4,recap:"Ora 15",nota:2,ob:true,fis:"T07_Nediscriminare_Nume_Prenume.docx",sub:"Tema 7 – Nediscriminare – Nume Prenume"},
+ {m:2,nume:"Accesibilitate digitală",ecran:"t8",ore:4,recap:"Ora 15, 17"},
+ {m:2,nume:"Colaborare: co-editare, modificări, ședință online",ecran:"t9",ore:4,recap:"Ora 13, 17, 21"},
+ {m:3,nume:"Prezentare PowerPoint pe temă dată",ore:4,recap:"Ora 19",nota:1},
  {m:3,nume:"Word în PDF și partajare corectă pe OneDrive",ore:3,recap:"Ora 21"},
- {m:3,nume:"Proiect integrator: document + prezentare",ore:2},
+ {m:3,nume:"Proiect integrator: document + prezentare",ore:2,nota:2},
  {m:4,nume:"Audit personal de securitate: parole și 2FA",ore:4,recap:"Ora 23"},
- {m:4,nume:"Identificare phishing avansată („spot the phish”)",ore:5,recap:"Ora 25"},
+ {m:4,nume:"Identificare phishing avansată („spot the phish”)",ore:5,recap:"Ora 25",nota:3},
  {m:4,nume:"Protecția datelor personale, pe scenarii",ore:3,recap:"Ora 27"},
- {m:4,nume:"Siguranța copiilor pe internet, pe scenarii",ore:3,recap:"Ora 27"},
- {m:4,nume:"Competențe verzi și sustenabilitate digitală",ore:4,ob:true},
+ {m:4,nume:"Siguranța copiilor pe internet, pe scenarii",ore:3,recap:"Ora 27",nota:1},
+ {m:4,nume:"Competențe verzi și sustenabilitate digitală",ore:4,ob:true,nota:2},
  {m:4,nume:"Actualizări și plăți online în siguranță",ore:3,recap:"Ora 29"},
- {m:4,nume:"Recapitulare completă + test practic de phishing",ore:5},
+ {m:4,nume:"Recapitulare completă + test practic de phishing",ore:5,nota:3},
  {m:5,nume:"Troubleshooting pe scenarii comune",ore:5,recap:"Ora 31"},
  {m:5,nume:"Checklist de auto-diagnosticare + recapitulare finală",ore:2}
 ].map((b,i)=>Object.assign({id:i+1,cod:"T"+String(i+1).padStart(2,"0")},b));
 
+/* Seturile de evaluare: în fiecare set (zile de practică P…–P…) sunt 3 exerciții obligatorii, notate NOTA 1, 2, 3.
+   Ultima zi (P17) e recapitulare finală, fără notă nouă. Notele se pun în BLOC (câmpul nota), seturile aici. */
+const SETURI = [{n:1,de:0,pana:5},{n:2,de:6,pana:10},{n:3,de:11,pana:15}];
 const START = {1:"2026-10-02", 2:"2026-10-27"};
 const ZS = ["duminică","luni","marți","miercuri","joi","vineri","sâmbătă"];
 const ZSC = ["Du","Lu","Ma","Mi","Jo","Vi","Sâ"];
@@ -719,6 +1068,8 @@ function zileLucratoare(start,n){
 const ORE_PE_ZI = []; BLOC.forEach(b=>{ for(let k=0;k<b.ore;k++) ORE_PE_ZI.push(b.id); });  // 68 ore, în ordine
 const PRACTICA = {1:zileLucratoare(START[1],17), 2:zileLucratoare(START[2],17)};
 
+const ziaTemei = b => Math.floor(ORE_PE_ZI.indexOf(b.id)/4);                       // indexul zilei în care începe tema
+const setDe = b => { const z=ziaTemei(b); const s=SETURI.find(x=>z>=x.de&&z<=x.pana); return s?s.n:0; };
 /* Segmentele unei zile: pe fiecare slot de 2 ore, rândurile consecutive din aceeași temă. */
 function segmente(i){
   const out=[];
@@ -758,10 +1109,11 @@ function deseneazaButoane(){
   let h='<div class="wd">Lu</div><div class="wd">Ma</div><div class="wd">Mi</div><div class="wd">Jo</div><div class="wd">Vi</div>';
   for(let k=0;k<col0;k++) h+='<div class="gol"></div>';
   zile.forEach((s,i)=>{
-    const nt=[...new Set(segmente(i).map(x=>BLOC[x.id-1].nota).filter(Boolean))].map(n=>"NOTA "+n).join(" · ");
+    const nn=[...new Set(segmente(i).map(x=>BLOC[x.id-1].nota).filter(Boolean))];
+    const nt = nn.length ? nn.map(n=>`<span class="nt n">NOTA ${n}</span>`).join("") : '<span class="nt r">recomandat</span>';
     const dayCol=(iso2d(s).getUTCDay()+6)%7;
-    h+=`<button type="button" class="pb${s<a?" past":""}" data-p="${i}" aria-pressed="${sel.tip==="practica"&&sel.sg===g&&sel.i===i}" aria-label="Ziua de practică ${i+1}, ${ZS[iso2d(s).getUTCDay()]} ${fData(s,true)}">`+
-       `<span class="n">P${i+1}</span><span class="dt">${fData(s)}</span><span class="nt">${nt}</span>${s===a?'<span class="azi">azi</span>':''}</button>`;
+    h+=`<button type="button" class="pb${s<a?" past":""}" data-p="${i}" aria-pressed="${sel.tip==="practica"&&sel.sg===g&&sel.i===i}" aria-label="Ziua de practică ${i+1}, ${ZS[iso2d(s).getUTCDay()]} ${fData(s,true)}${nn.length?", "+nn.map(n=>"NOTA "+n).join(" și "):", exercițiu recomandat"}">`+
+       `<span class="n">P${i+1}</span><span class="dt">${fData(s)}</span>${nt}${s===a?'<span class="azi">azi</span>':''}</button>`;
     if(dayCol===4 && i<zile.length-1){ /* rând nou se face automat prin grilă de 5 coloane */ }
   });
   $("cal").innerHTML=h;
@@ -780,23 +1132,39 @@ function randTeorie(z){
   return h;
 }
 
+/* „Se leagă de teorie”: din câmpul recap („Ora 5, 11”) scoatem ziua și titlul orei și facem link spre Teorie */
+function legTeorie(b){
+  if(!b.recap) return "";
+  const ore=(b.recap.match(/\d+/g)||[]).map(Number);
+  const linkuri=ore.map(n=>{
+    const zi=Math.ceil(n/4), z=TEORIE[zi-1]; if(!z) return "";
+    const o=z.ore[(n-1)%4], titlu=o?o.t.replace(/ · recap.*$/,""):"";
+    return `<a href="index.html#ziua-${zi}" title="Deschide recapitularea zilei ${zi} din Teorie">Ziua ${zi} · Ora ${n}${titlu?" — "+titlu:""}</a>`;
+  }).filter(Boolean);
+  if(!linkuri.length) return "";
+  const zile=[...new Set(ore.map(n=>Math.ceil(n/4)))];
+  return `<div class="leg"><span class="l">Se leagă de teorie</span> ${linkuri.join(" · ")} · <a href="brosuri/Ziua${zile[0]}_Rezumat.pdf" target="_blank" rel="noopener">broșura PDF</a></div>`;
+}
+
 function randPractica(g,i){
   const s=PRACTICA[g][i], a=azi(), d=iso2d(s);
   let h=`<div class="dayhead"><h3 class="zi">Ziua de practică ${i+1} din 17 · ${ZS[d.getUTCDay()][0].toUpperCase()+ZS[d.getUTCDay()].slice(1)}, ${fData(s,true)}${s===a?'<span class="tag">azi</span>':''}</h3><span class="sub">Subgrupa ${g} · 17:00–21:00 · online</span></div>`;
-  const seg=segmente(i);
+  const seg=segmente(i), vazute=new Set();
   [0,1].forEach(sl=>{
     const dinSlot=seg.filter(x=>x.slot===sl);
     h+=`<div class="half">${dinSlot.length>1?`<h4>${17+2*sl}:00–${19+2*sl}:00</h4>`:'<div style="height:6px"></div>'}`;
     dinSlot.forEach(x=>{
-      const b=BLOC[x.id-1], intreaga=x.len===b.ore;
+      const b=BLOC[x.id-1], intreaga=x.len===b.ore, repetat=vazute.has(x.id); vazute.add(x.id);   // aceeași temă în două sloturi: link și butoane doar o dată pe zi
       const clock=`${pad(x.start)}:00–${pad(x.start+x.len)}:00`;
       const parte = intreaga ? "" : ` · ora ${x.dinainte+1}${x.len>1?"–"+(x.dinainte+x.len):""} din ${b.ore}`;
-      const bd=[]; if(b.nota) bd.push(`<span class="bdg nota">NOTA ${b.nota} · se notează</span>`); if(b.ob) bd.push(`<span class="bdg ob">OBLIGATORIU · cerut de organizator</span>`);
-      if(!b.nota) bd.push(`<span class="bdg">${b.opt?"nu se notează · predai doar dacă ți se cere":"nu se notează · exercițiu"}</span>`);
+      const bd=[]; if(b.ob) bd.push(`<span class="bdg ob">CERUT DE ORGANIZATOR</span>`);
+      const steag = b.nota
+        ? `<div class="notaflag"><b>NOTA ${b.nota}</b><span>Exercițiu obligatoriu · se notează · Setul ${setDe(b)}</span></div>`
+        : `<div class="recflag"><b>Exercițiu recomandat</b><span>nu se notează${b.opt?" · se predă doar dacă ți se cere":""}</span></div>`;
       const ec=b.ecran && ECRAN.find(t=>t.id===b.ecran);
-      const acts = ec && intreaga
-        ? `<div class="acts"><button class="btn sol" type="button" data-ec="${b.ecran}">▶ Ecran cu cronometru</button><button class="btn warm" type="button" data-fisa="${b.ecran}">📄 Fișa</button></div>`
-        : `<div class="acts"><span class="miss">${ec?"Fișa e gata, dar tema continuă în altă zi — o găsești în ziua în care începe":"Fișa apare aici înainte de această temă"}</span></div>`;
+      const acts = ec
+        ? `<div class="acts"><button class="btn sol" type="button" data-ec="${b.ecran}">▶ Ecran cu cronometru</button><button class="btn warm" type="button" data-fisa="${b.ecran}">📄 Fișa</button>${intreaga?"":`<span class="miss">Tema continuă a doua zi; fișa e aceeași.</span>`}</div>`
+        : `<div class="acts"><span class="miss">Fișa apare aici înainte de această temă</span></div>`;
       let pr="";
       if(b.fis){
         pr=`<div class="pred"><div><span class="l">Cum se numește fișierul</span><code>${b.fis}</code></div>`+
@@ -805,8 +1173,8 @@ function randPractica(g,i){
       }
       const acum = s===a && new Date().getHours()>=x.start && new Date().getHours()<x.start+x.len;
       h+=`<div class="row${acum?" acum":""}"><div class="when"><b>${clock}</b>${x.len} ${x.len===1?"oră":"ore"}</div><div class="what">`+
-         `<div class="title"><span class="th${b.nota?" ex":""}">${b.cod}</span>${b.nume}</div>`+
-         `<div class="kind">${MODUL[b.m]}${b.recap?" · recapitulare din teorie: "+b.recap:""}${parte}</div><div class="badges">${bd.join("")}</div>${pr}${acts}</div></div>`;
+         `${repetat?"":steag}<div class="title"><span class="th${b.nota?" ex":""}">${b.cod}</span>${b.nume}</div>`+
+         `<div class="kind">${MODUL[b.m]}${parte}</div>${repetat?"":legTeorie(b)}<div class="badges">${bd.join("")}</div>${repetat?"":pr}${repetat?"":acts}</div></div>`;
     });
     h+=`</div>`;
   });
@@ -816,7 +1184,19 @@ function randPractica(g,i){
 function deseneazaZi(){
   $("zi").innerHTML = sel.tip==="teorie" ? randTeorie(TEORIE[sel.i]) : randPractica(sel.sg,sel.i);
 }
-function deseneazaTot(){ deseneazaButoane(); deseneazaZi(); if(window.deseneazaHarta) deseneazaHarta(); }
+/* lista notelor pe seturi (din BLOC și calendar; se schimbă singură dacă mutăm o notă) */
+function deseneazaNote(){
+  const el=$("listaNote"); if(!el) return;
+  const g = sel.tip==="practica" ? sel.sg : (sel.sgVazut||1);
+  el.innerHTML = SETURI.map(s=>{
+    const ts=BLOC.filter(b=>b.nota && setDe(b)===s.n).sort((a,b)=>a.nota-b.nota||a.id-b.id);
+    const gr={}; ts.forEach(b=>{ (gr[b.nota]=gr[b.nota]||[]).push(b); });
+    const d1=fData(PRACTICA[g][s.de]), d2=fData(PRACTICA[g][s.pana]);
+    return `<div class="set"><b class="sh">Setul ${s.n} <span>${d1} – ${d2}</span></b>`+
+      Object.keys(gr).sort().map(n=>`<span><b>NOTA ${n}</b> — ${gr[n].map(b=>`${b.nume.replace(/ \(.*$/,"")} (T${b.id})`).join(" + ")}</span>`).join("")+`</div>`;
+  }).join("");
+}
+function deseneazaTot(){ deseneazaButoane(); deseneazaZi(); deseneazaNote(); if(window.deseneazaHarta) deseneazaHarta(); }
 
 /* deruleaza pagina la începutul zilei alese (antetul zilei + prima lecție) */
 function mergiLaZi(){
@@ -872,8 +1252,8 @@ function addDocx(){ const id=fisaTema; const bt=[];
   if(FISE_DOCX[id]) bt.push('<a class="btn" href="'+FISE_DOCX[id]+'" download>⬇ Descarcă fișa (.docx)</a>');
   if(bt.length){ const a=document.createElement("p"); a.className="acts"; a.innerHTML=bt.join(" "); $("dBody").prepend(a); } }
 /* fișiere de pornire: tema -> [adresa, tipul fișierului] (cursantul primește tabelul/textul început, doar completează) */
-const PORNIRE={t3:["fise/T03_Surse_PORNIRE.docx",".docx"],t4:["fise/T04_Email_PORNIRE.docx",".docx"],t5:["fise/T05_Media_PORNIRE.xlsx",".xlsx"]};
-const FISE_DOCX={t1:"fise/Fisa_1_Excel_Bugetul_lunii.docx",t2:"fise/Fisa_2_Fisiere_FINAL_v7_copie.docx",t3:"fise/Fisa_3_Detectivul_de_surse.docx",t4:"fise/Fisa_4_Emailul_de_la_0758.docx",t5:"fise/Fisa_5_AVERAGE_Modulul_1.docx"};
+const PORNIRE={t9:["fise/T09_Colaborare_PORNIRE.docx",".docx"],t8:["fise/T08_Accesibilitate_PORNIRE.docx",".docx"],t6:["fise/T06_Comunicare_PORNIRE.docx",".docx"],t7:["fise/T07_Nediscriminare_PORNIRE.docx",".docx"],t3:["fise/T03_Surse_PORNIRE.docx",".docx"],t4:["fise/T04_Email_PORNIRE.docx",".docx"],t5:["fise/T05_Media_PORNIRE.xlsx",".xlsx"]};
+const FISE_DOCX={t9:"fise/Fisa_9_Colaborare.docx",t8:"fise/Fisa_8_Accesibilitate_digitala.docx",t6:"fise/Fisa_6_Comunicare_digitala.docx",t7:"fise/Fisa_7_Nediscriminare.docx",t1:"fise/Fisa_1_Excel_Bugetul_lunii.docx",t2:"fise/Fisa_2_Fisiere_FINAL_v7_copie.docx",t3:"fise/Fisa_3_Detectivul_de_surse.docx",t4:"fise/Fisa_4_Emailul_de_la_0758.docx",t5:"fise/Fisa_5_AVERAGE_Modulul_1.docx"};
 function deschideFisa(id,tab){ fisaTema=id; fisaTab=tab||"ex"; deseneazaFisa();
   addDocx(); if(!dlg.open) dlg.showModal(); }
 $("dClose").addEventListener("click",()=>dlg.close());
@@ -964,11 +1344,11 @@ document.addEventListener("keydown",e=>{
 let filtruHarta="toate";
 function deseneazaHarta(){
   const g = sel.tip==="practica" ? sel.sg : (sel.sgVazut||1);
-  const lista=BLOC.filter(b=> filtruHarta==="toate" || (filtruHarta==="note"&&b.nota) || (filtruHarta==="ob"&&b.ob) || (filtruHarta==="fisa"&&b.ecran));
+  const lista=BLOC.filter(b=> filtruHarta==="toate" || (filtruHarta==="note"&&b.nota) || (filtruHarta==="ob"&&b.ob) || (filtruHarta==="rec"&&!b.nota) || (filtruHarta==="fisa"&&b.ecran));
   $("harta").innerHTML = lista.map(b=>{
     const z=Math.floor(ORE_PE_ZI.indexOf(b.id)/4), d=PRACTICA[g][z];
-    const bd=[]; if(b.nota) bd.push(`<span class="bdg nota">NOTA ${b.nota}</span>`); if(b.ob) bd.push(`<span class="bdg ob">OBLIGATORIU</span>`);
-    if(b.ecran) bd.push(`<span class="bdg">fișa e gata</span>`);
+    const bd=[]; if(b.nota) bd.push(`<span class="bdg nota">NOTA ${b.nota} · Setul ${setDe(b)}</span>`); else bd.push(`<span class="bdg rec">recomandat</span>`);
+    if(b.ob) bd.push(`<span class="bdg ob">CERUT DE ORGANIZATOR</span>`); if(b.ecran) bd.push(`<span class="bdg">fișa e gata</span>`);
     return `<button type="button" class="hartac" data-hz="${z}"><span class="hn">${b.cod} · Modulul ${b.m}</span><span class="ht">${b.nume}</span>`+
       `<span class="hm">Ziua P${z+1} · ${fData(d)} · ${b.ore} ${b.ore===1?"oră":"ore"}</span>`+(bd.length?`<span class="badges">${bd.join("")}</span>`:"")+`</button>`;
   }).join("") || '<p class="nota">Nicio temă la acest filtru.</p>';
