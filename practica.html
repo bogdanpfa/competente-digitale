@@ -68,6 +68,11 @@ h1{font:800 clamp(21px,3vw,28px)/1.18 var(--hd);margin:0;text-wrap:balance}
 .recflag{display:inline-flex;align-items:baseline;gap:4px 10px;flex-wrap:wrap;margin:2px 0 8px;padding:5px 14px;border-radius:999px;border:1.5px solid var(--teal);color:#1d5650;background:rgba(44,122,114,.08)}
 .recflag b{font:800 13.5px var(--bd)}.recflag span{font-size:12.5px;color:var(--ink-dim)}
 .pb .nt{margin-top:5px}.pb .nt.n{display:inline-block;font:800 13px/1 var(--hd);letter-spacing:.05em;color:#fff;background:#8F4E0A;border-radius:6px;padding:4px 8px;margin-right:3px}
+.pb .cd{display:block;margin-top:3px;font:600 11.5px var(--bd);color:var(--ink-dim);font-variant-numeric:tabular-nums}
+.pb .nt{display:block}
+.pb .nt.n{font-size:12px;padding:3px 6px;margin:3px 0 0;width:max-content;max-width:100%;white-space:nowrap}
+.pb .nt.n i{font:600 10.5px var(--bd);font-style:normal;margin-left:5px;opacity:.92}
+@media(max-width:600px){.pb{padding:7px 5px 8px}.pb .nt.n{letter-spacing:0;font-size:11px;padding:3px 4px}.pb .nt.n i{display:block;margin:2px 0 0}.pb .nt.r{letter-spacing:-.02em;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:clip;max-width:100%}.pb .cd{font-size:10px;letter-spacing:-.02em}}
 .pb .nt.r{font:600 11px/1 var(--bd);letter-spacing:.03em;color:var(--ink-dim)}
 .bdg.rec{border-color:var(--teal);color:#1d5650;background:rgba(44,122,114,.08)}.hartac .bdg.nota{font-size:13px;padding:5px 9px}
 .notes .set{margin:8px 0 4px;display:grid;gap:3px}.notes .sh{display:block;font:800 12.5px var(--bd);letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:2px}.notes .sh span{font-weight:600;letter-spacing:.02em;color:var(--ink-dim);text-transform:none}
@@ -2201,10 +2206,13 @@ function deseneazaButoane(){
   let h='<div class="wd">Lu</div><div class="wd">Ma</div><div class="wd">Mi</div><div class="wd">Jo</div><div class="wd">Vi</div>';
   for(let k=0;k<col0;k++) h+='<div class="gol"></div>';
   zile.forEach((s,i)=>{
-    const nn=[...new Set(segmente(i).map(x=>BLOC[x.id-1].nota).filter(Boolean))];
-    const nt = nn.length ? nn.map(n=>`<span class="nt n">NOTA ${n}</span>`).join("") : '<span class="nt r">recomandat</span>';
+    const ids=[...new Set(segmente(i).map(x=>x.id))];                       // temele zilei, în ordine (inclusiv cele care continuă din ziua anterioară)
+    const cu=ids.filter(id=>BLOC[id-1].nota);                              // temele notate din zi
+    const nn=cu.map(id=>BLOC[id-1].nota);
+    const cod=`<span class="cd">${ids.map(id=>BLOC[id-1].cod).join(" · ")}</span>`;
+    const nt = cod + (cu.length ? [...new Set(nn)].map(n=>`<span class="nt n">NOTA ${n}<i>${cu.filter(id=>BLOC[id-1].nota===n).map(id=>BLOC[id-1].cod).join("+")}</i></span>`).join("") : '<span class="nt r">recomandat</span>');
     const dayCol=(iso2d(s).getUTCDay()+6)%7;
-    h+=`<button type="button" class="pb${s<a?" past":""}" data-p="${i}" aria-pressed="${sel.tip==="practica"&&sel.sg===g&&sel.i===i}" aria-label="Ziua de practică ${i+1}, ${ZS[iso2d(s).getUTCDay()]} ${fData(s,true)}${nn.length?", "+nn.map(n=>"NOTA "+n).join(" și "):", exercițiu recomandat"}">`+
+    h+=`<button type="button" class="pb${s<a?" past":""}" data-p="${i}" aria-pressed="${sel.tip==="practica"&&sel.sg===g&&sel.i===i}" aria-label="Ziua de practică ${i+1}, ${ZS[iso2d(s).getUTCDay()]} ${fData(s,true)}${", teme "+ids.map(id=>BLOC[id-1].cod).join(", ")}${cu.length?", "+cu.map(id=>"NOTA "+BLOC[id-1].nota+" la "+BLOC[id-1].cod).join(" și "):", exercițiu recomandat"}">`+
        `<span class="n">P${i+1}</span><span class="dt">${fData(s)}</span>${nt}${s===a?'<span class="azi">azi</span>':''}</button>`;
     if(dayCol===4 && i<zile.length-1){ /* rând nou se face automat prin grilă de 5 coloane */ }
   });
