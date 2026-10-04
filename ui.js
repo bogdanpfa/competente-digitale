@@ -11,9 +11,9 @@
 
   /* ---------- 1. Tooltip ---------- */
   var tip = document.createElement("div");
-  tip.id = "tip"; tip.setAttribute("role", "tooltip");
+  tip.id = "tip"; tip.setAttribute("role", "tooltip"); tip.setAttribute("popover", "manual");
   document.body.appendChild(tip);
-  var cur = null, hideT = 0, showT = 0;
+  var cur = null, hideT = 0, showT = 0, shownAt = 0;
 
   /* Reguli pentru elementele fără data-tip (și pentru cele desenate dinamic):
      selector → text (sau funcție care primește elementul). */
@@ -70,7 +70,13 @@
     tip.innerHTML = ""; if (titlu) { var b = document.createElement("b"); b.textContent = titlu; tip.appendChild(b); }
     tip.appendChild(document.createTextNode(t));
     tip.id = "tip"; el.setAttribute("aria-describedby", "tip");
-    place(el); tip.classList.add("on");
+    /* Fișa e un <dialog> modal: ea stă în „top layer”, deasupra oricărui z-index. Ca tooltip-ul să se vadă PE fișă, îl mutăm în dialog
+       și îl afișăm ca popover (tot top layer, dar ultimul deschis = cel mai de sus). În afara dialogului rămâne în <body>. */
+    var gazda = el.closest("dialog[open]") || document.body;
+    try { if (tip.matches(":popover-open")) tip.hidePopover(); } catch (e) {}
+    if (tip.parentNode !== gazda) gazda.appendChild(tip);
+    try { if (tip.showPopover) tip.showPopover(); } catch (e) {}
+    place(el); tip.classList.add("on"); shownAt = Date.now();
   }
   function hide(now) {
     clearTimeout(showT);
@@ -96,11 +102,11 @@
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && tip.classList.contains("on")) hide(true); });
   /* pe telefon: atingere pe termen explicat sau pe „?” deschide/închide tooltip-ul (linkurile și butoanele își fac treaba normal) */
   document.addEventListener("click", function (e) {
-    var el = e.target.closest ? e.target.closest(".gl,.i") : null;
-    if (el) { e.preventDefault(); if (cur === el && tip.classList.contains("on")) hide(true); else show(el); return; }
+    var el = e.target.closest ? e.target.closest(".gl,.i,[data-tip]") : null;
+    if (el) { e.preventDefault(); if (cur === el && tip.classList.contains("on") && Date.now() - shownAt > 400) hide(true); else if (!(cur === el && tip.classList.contains("on"))) show(el); return; }   /* atingerea focalizează întâi elementul (focusin deschide), apoi vine clicul: nu-l închidem imediat */
     if (!tip.contains(e.target)) hide(true);
   });
-  window.addEventListener("scroll", function () { if (cur) hide(true); }, { passive: true });
+  window.addEventListener("scroll", function () { if (cur) hide(true); }, { passive: true, capture: true });   /* capture: prinde și derularea din interiorul fișei */
   window.addEventListener("resize", function () { if (cur) hide(true); });
 
   /* ---------- 2. Glosar ---------- */

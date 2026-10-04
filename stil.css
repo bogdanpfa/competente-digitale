@@ -189,7 +189,7 @@ header.top .clock .t{color:#fff}header.top .clock .d{color:#d9e5ee}
 .retinut h5,.retinut .h5{color:#1d5650;margin:0 0 6px;font:700 12px/1 var(--bd);letter-spacing:.08em;text-transform:uppercase}
 
 /* ---------- Tooltip-uri (JS propriu, accesibil: hover, focus, atingere, Esc) ---------- */
-#tip{position:fixed;z-index:200;max-width:min(320px,calc(100vw - 24px));padding:10px 13px 11px;border-radius:12px;
+#tip{position:fixed;inset:auto;margin:0;overflow:visible;z-index:200;max-width:min(320px,calc(100vw - 24px));padding:10px 13px 11px;border-radius:12px;
   background:var(--navy-2);color:#fff;font:500 13.5px/1.45 var(--bd);box-shadow:0 14px 34px -8px rgba(21,40,63,.6);
   border:1px solid rgba(255,255,255,.18);pointer-events:auto;opacity:0;visibility:hidden;transform:translateY(4px);
   transition:opacity .14s,transform .14s,visibility .14s}

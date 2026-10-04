@@ -68,11 +68,15 @@ h1{font:800 clamp(21px,3vw,28px)/1.18 var(--hd);margin:0;text-wrap:balance}
 .recflag{display:inline-flex;align-items:baseline;gap:4px 10px;flex-wrap:wrap;margin:2px 0 8px;padding:5px 14px;border-radius:999px;border:1.5px solid var(--teal);color:#1d5650;background:rgba(44,122,114,.08)}
 .recflag b{font:800 13.5px var(--bd)}.recflag span{font-size:12.5px;color:var(--ink-dim)}
 .pb .nt{margin-top:5px}.pb .nt.n{display:inline-block;font:800 13px/1 var(--hd);letter-spacing:.05em;color:#fff;background:#8F4E0A;border-radius:6px;padding:4px 8px;margin-right:3px}
+.fz{display:inline-block;vertical-align:middle;margin-left:8px;font:700 10.5px var(--hd);letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:3px 9px;border:1px solid var(--line2);color:var(--ink-dim);background:var(--surface)}
+.fz.sp{border-color:var(--accent);color:var(--accent)}
+.fz.fn{border-color:var(--warm);color:#8F4E0A}
+.calleg{display:flex;flex-wrap:wrap;gap:4px 14px;margin:8px 0 0;font-size:12px;color:var(--dim)}
 .pb .cd{display:block;margin-top:3px;font:600 11.5px var(--bd);color:var(--ink-dim);font-variant-numeric:tabular-nums}
 .pb .nt{display:block}
 .pb .nt.n{font-size:12px;padding:3px 6px;margin:3px 0 0;width:max-content;max-width:100%;white-space:nowrap}
 .pb .nt.n i{font:600 10.5px var(--bd);font-style:normal;margin-left:5px;opacity:.92}
-@media(max-width:600px){.pb{padding:7px 5px 8px}.pb .nt.n{letter-spacing:0;font-size:11px;padding:3px 4px}.pb .nt.n i{display:block;margin:2px 0 0}.pb .nt.r{letter-spacing:-.02em;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:clip;max-width:100%}.pb .cd{font-size:10px;letter-spacing:-.02em}}
+@media(max-width:600px){.pb .nt.r{display:none}.cal{gap:4px}.pb{padding:7px 5px 8px}.pb .nt.n{letter-spacing:0;font-size:11px;padding:3px 4px}.pb .nt.n i{display:block;margin:2px 0 0}.pb .nt.r{letter-spacing:-.02em;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:clip;max-width:100%}.pb .cd{font-size:10px;letter-spacing:-.02em}}
 .pb .nt.r{font:600 11px/1 var(--bd);letter-spacing:.03em;color:var(--ink-dim)}
 .bdg.rec{border-color:var(--teal);color:#1d5650;background:rgba(44,122,114,.08)}.hartac .bdg.nota{font-size:13px;padding:5px 9px}
 .notes .set{margin:8px 0 4px;display:grid;gap:3px}.notes .sh{display:block;font:800 12.5px var(--bd);letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:2px}.notes .sh span{font-weight:600;letter-spacing:.02em;color:var(--ink-dim);text-transform:none}
@@ -256,6 +260,7 @@ td.c{text-align:center}
       <button type="button" id="sg2" aria-pressed="false">Subgrupa 2 · 27 oct – 18 nov</button>
     </div>
     <div class="cal" id="cal"></div>
+    <p class="calleg"><span>↦ continuă în ziua următoare</span><span>↤ continuă din ziua anterioară</span><span>fără insignă = exercițiu recomandat</span></p>
   </section>
 
   <main id="zi" aria-live="polite" data-gloss-live></main>
@@ -2167,6 +2172,10 @@ const PRACTICA = {1:zileLucratoare(START[1],17), 2:zileLucratoare(START[2],17)};
 
 const ziaTemei = b => Math.floor(ORE_PE_ZI.indexOf(b.id)/4);                       // indexul zilei în care începe tema
 const setDe = b => { const z=ziaTemei(b); const s=SETURI.find(x=>z>=x.de&&z<=x.pana); return s?s.n:0; };
+/* Faza unei teme într-o zi: începe azi / continuă din ziua anterioară / continuă în ziua următoare */
+const primaZi = id => Math.floor(ORE_PE_ZI.indexOf(id)/4), ultimaZi = id => Math.floor(ORE_PE_ZI.lastIndexOf(id)/4);
+const oreInZi = (id,i) => ORE_PE_ZI.slice(4*i,4*i+4).filter(x=>x===id).length;
+const faza = (id,i) => ({din: primaZi(id)<i, spre: ultimaZi(id)>i});
 /* Segmentele unei zile: pe fiecare slot de 2 ore, rândurile consecutive din aceeași temă. */
 function segmente(i){
   const out=[];
@@ -2209,10 +2218,10 @@ function deseneazaButoane(){
     const ids=[...new Set(segmente(i).map(x=>x.id))];                       // temele zilei, în ordine (inclusiv cele care continuă din ziua anterioară)
     const cu=ids.filter(id=>BLOC[id-1].nota);                              // temele notate din zi
     const nn=cu.map(id=>BLOC[id-1].nota);
-    const cod=`<span class="cd">${ids.map(id=>BLOC[id-1].cod).join(" · ")}</span>`;
+    const cod=`<span class="cd">${ids.map(id=>{ const f=faza(id,i); return (f.din?"↤":"")+BLOC[id-1].cod+(f.spre?"↦":""); }).join(" · ")}</span>`;
     const nt = cod + (cu.length ? [...new Set(nn)].map(n=>`<span class="nt n">NOTA ${n}<i>${cu.filter(id=>BLOC[id-1].nota===n).map(id=>BLOC[id-1].cod).join("+")}</i></span>`).join("") : '<span class="nt r">recomandat</span>');
     const dayCol=(iso2d(s).getUTCDay()+6)%7;
-    h+=`<button type="button" class="pb${s<a?" past":""}" data-p="${i}" aria-pressed="${sel.tip==="practica"&&sel.sg===g&&sel.i===i}" aria-label="Ziua de practică ${i+1}, ${ZS[iso2d(s).getUTCDay()]} ${fData(s,true)}${", teme "+ids.map(id=>BLOC[id-1].cod).join(", ")}${cu.length?", "+cu.map(id=>"NOTA "+BLOC[id-1].nota+" la "+BLOC[id-1].cod).join(" și "):", exercițiu recomandat"}">`+
+    h+=`<button type="button" class="pb${s<a?" past":""}" data-p="${i}" aria-pressed="${sel.tip==="practica"&&sel.sg===g&&sel.i===i}" aria-label="Ziua de practică ${i+1}, ${ZS[iso2d(s).getUTCDay()]} ${fData(s,true)}${", teme "+ids.map(id=>{ const f=faza(id,i); return BLOC[id-1].cod+(f.din?" (continuă din ziua anterioară)":"")+(f.spre?" (continuă în ziua următoare)":""); }).join(", ")}${cu.length?", "+cu.map(id=>"NOTA "+BLOC[id-1].nota+" la "+BLOC[id-1].cod).join(" și "):", exercițiu recomandat"}">`+
        `<span class="n">P${i+1}</span><span class="dt">${fData(s)}</span>${nt}${s===a?'<span class="azi">azi</span>':''}</button>`;
     if(dayCol===4 && i<zile.length-1){ /* rând nou se face automat prin grilă de 5 coloane */ }
   });
@@ -2254,7 +2263,9 @@ function randPractica(g,i){
     const dinSlot=seg.filter(x=>x.slot===sl);
     h+=`<div class="half">${dinSlot.length>1?`<h4>${17+2*sl}:00–${19+2*sl}:00</h4>`:'<div style="height:6px"></div>'}`;
     dinSlot.forEach(x=>{
-      const b=BLOC[x.id-1], intreaga=x.len===b.ore, repetat=vazute.has(x.id); vazute.add(x.id);   // aceeași temă în două sloturi: link și butoane doar o dată pe zi
+      const b=BLOC[x.id-1], intreaga=x.len===b.ore, repetat=vazute.has(x.id), f=faza(x.id,i), azO=oreInZi(x.id,i);
+      const ziUrm = i<16 ? `ziua P${i+2} (${fData(PRACTICA[g][i+1])})` : "ziua următoare";
+      const mark = f.spre ? `<span class="fz sp">continuă în P${i+2}</span>` : (f.din ? `<span class="fz fn">${azO===1?"ultima oră":"ultimele "+azO+" ore"} din temă</span>` : ""); vazute.add(x.id);   // aceeași temă în două sloturi: link și butoane doar o dată pe zi
       const clock=`${pad(x.start)}:00–${pad(x.start+x.len)}:00`;
       const parte = intreaga ? "" : ` · ora ${x.dinainte+1}${x.len>1?"–"+(x.dinainte+x.len):""} din ${b.ore}`;
       const bd=[]; if(b.ob) bd.push(`<span class="bdg ob">CERUT DE ORGANIZATOR</span>`);
@@ -2263,7 +2274,7 @@ function randPractica(g,i){
         : `<div class="recflag"><b>Exercițiu recomandat</b><span>nu se notează${b.opt?" · se predă doar dacă ți se cere":""}</span></div>`;
       const ec=b.ecran && ECRAN.find(t=>t.id===b.ecran);
       const acts = ec
-        ? `<div class="acts"><button class="btn sol" type="button" data-ec="${b.ecran}">▶ Ecran cu cronometru</button><button class="btn warm" type="button" data-fisa="${b.ecran}">📄 Fișa</button>${intreaga?"":`<span class="miss">Tema continuă a doua zi; fișa e aceeași.</span>`}</div>`
+        ? `<div class="acts"><button class="btn sol" type="button" data-ec="${b.ecran}">▶ Ecran cu cronometru</button><button class="btn warm" type="button" data-fisa="${b.ecran}">📄 Fișa</button>${f.spre?`<span class="miss">Tema continuă în ${ziUrm}; fișa e aceeași.</span>`:""}</div>`
         : `<div class="acts"><span class="miss">Fișa apare aici înainte de această temă</span></div>`;
       let pr="";
       if(b.fis){
@@ -2273,7 +2284,7 @@ function randPractica(g,i){
       }
       const acum = s===a && new Date().getHours()>=x.start && new Date().getHours()<x.start+x.len;
       h+=`<div class="row${acum?" acum":""}"><div class="when"><b>${clock}</b>${x.len} ${x.len===1?"oră":"ore"}</div><div class="what">`+
-         `${repetat?"":steag}<div class="title"><span class="th${b.nota?" ex":""}">${b.cod}</span>${b.nume}</div>`+
+         `${repetat?"":steag}<div class="title"><span class="th${b.nota?" ex":""}">${b.cod}</span>${b.nume}${repetat?"":mark}</div>`+
          `<div class="kind">${MODUL[b.m]}${parte}</div>${repetat?"":legTeorie(b)}<div class="badges">${bd.join("")}</div>${repetat?"":pr}${repetat?"":acts}</div></div>`;
     });
     h+=`</div>`;
@@ -2446,11 +2457,11 @@ function deseneazaHarta(){
   const g = sel.tip==="practica" ? sel.sg : (sel.sgVazut||1);
   const lista=BLOC.filter(b=> filtruHarta==="toate" || (filtruHarta==="note"&&b.nota) || (filtruHarta==="ob"&&b.ob) || (filtruHarta==="rec"&&!b.nota) || (filtruHarta==="fisa"&&b.ecran));
   $("harta").innerHTML = lista.map(b=>{
-    const z=Math.floor(ORE_PE_ZI.indexOf(b.id)/4), d=PRACTICA[g][z];
+    const z=primaZi(b.id), z2=ultimaZi(b.id), d=PRACTICA[g][z];
     const bd=[]; if(b.nota) bd.push(`<span class="bdg nota">NOTA ${b.nota} · Setul ${setDe(b)}</span>`); else bd.push(`<span class="bdg rec">recomandat</span>`);
     if(b.ob) bd.push(`<span class="bdg ob">CERUT DE ORGANIZATOR</span>`); if(b.ecran) bd.push(`<span class="bdg">fișa e gata</span>`);
     return `<button type="button" class="hartac" data-hz="${z}"><span class="hn">${b.cod} · Modulul ${b.m}</span><span class="ht">${b.nume}</span>`+
-      `<span class="hm">Ziua P${z+1} · ${fData(d)} · ${b.ore} ${b.ore===1?"oră":"ore"}</span>`+(bd.length?`<span class="badges">${bd.join("")}</span>`:"")+`</button>`;
+      `<span class="hm">${z2>z?`Zilele P${z+1}–P${z2+1} · ${fData(d)} – ${fData(PRACTICA[g][z2])}`:`Ziua P${z+1} · ${fData(d)}`} · ${b.ore} ${b.ore===1?"oră":"ore"}</span>`+(bd.length?`<span class="badges">${bd.join("")}</span>`:"")+`</button>`;
   }).join("") || '<p class="nota">Nicio temă la acest filtru.</p>';
   document.querySelectorAll("#hartaF .chip").forEach(c=>c.setAttribute("aria-pressed", c.dataset.f===filtruHarta));
 }
