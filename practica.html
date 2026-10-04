@@ -180,6 +180,7 @@ ul.chk li::before{content:"☐ ";color:var(--warm)}
 .leg2 h3{margin-top:12px!important;color:#1d5650}.leg2 .lh{margin:6px 0 2px;font-weight:700}.leg2 ul{margin:4px 0 6px;padding-left:20px}.leg2 li{margin:4px 0}
 .leg2 a{color:var(--navy-2)}
 #dBody h3{margin-top:18px}
+.vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 /* fișa (dialog) */
 dialog{width:min(980px,94vw);max-height:90vh;overflow:auto;border:1px solid var(--warm);border-radius:16px;padding:18px 22px;background:var(--surface);color:var(--text)}
 dialog::backdrop{background:rgba(0,0,0,.6)}
@@ -2477,5 +2478,24 @@ incarcaSel(); deseneazaTot(); tick();
 setInterval(()=>{ tick(); deseneazaE(); },250);
 </script>
 
+<script>
+/* Linkurile care duc în afara panoului de practică (Teorie, broșuri PDF, pagina principală) se deschid în tab nou,
+   ca tab-ul cu practica să rămână deschis. Excepții: ancore în aceeași pagină (#…), descărcări, mailto și linkul spre practică.
+   Se aplică și pe linkurile desenate dinamic (calendar, fișe) prin MutationObserver. */
+(function(){
+  const TXT="se deschide într-un tab nou";
+  function marcheaza(a){
+    if(a.dataset.nt) return; a.dataset.nt="1";
+    const h=a.getAttribute("href")||"";
+    if(!h || h[0]==="#" || a.hasAttribute("download") || /^(mailto:|tel:|javascript:)/i.test(h) || /^practica\.html(#|$)/.test(h) || a.getAttribute("aria-current")==="page") return;
+    a.target="_blank"; a.rel="noopener";
+    if(a.hasAttribute("aria-label")) a.setAttribute("aria-label", a.getAttribute("aria-label")+" ("+TXT+")");
+    else { const v=document.createElement("span"); v.className="vh"; v.textContent=" ("+TXT+")"; a.appendChild(v); }
+  }
+  function toate(r){ (r.querySelectorAll?r.querySelectorAll("a[href]"):[]).forEach(marcheaza); if(r.matches&&r.matches("a[href]")) marcheaza(r); }
+  toate(document);
+  new MutationObserver(m=>m.forEach(x=>x.addedNodes.forEach(n=>{ if(n.nodeType===1) toate(n); }))).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
 <script src="ui.js" defer></script>
 </body></html>
