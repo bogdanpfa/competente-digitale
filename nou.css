@@ -143,3 +143,6 @@ details.faq>summary{cursor:pointer;font-weight:700;padding:12px 0;min-height:44p
 @media print{.topbar,.azi,.btns,#ecran,.seg,.cal{display:none!important}.ex details{display:block}.ex details>*{display:block}}
 /* pe paginile noi bara de sus nu e în .wrap: fără margini negative (altfel apare derulare orizontală pe telefon) */
 body>nav.topbar{margin-inline:0;padding-inline:0}
+/* butoanele din pagini: înălțime compactă (stil.css are reguli mai vechi care le întind) */
+.btns .btn,.zihead .btn,.subiect .btn{display:inline-flex;flex-direction:row;align-items:center;height:auto;min-height:44px;max-height:none;padding:10px 15px;line-height:1.2;box-sizing:border-box}
+.btn,.chip,.seg button,.cal button,.azi a.go{box-sizing:border-box}
