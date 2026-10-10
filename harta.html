@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Harta cursului · Competențe digitale</title>
+<meta name="description" content="Toate cele 34 de exerciții de practică, cu ziua de teorie, pagina din suportul de curs și nota la care contează.">
+<link rel="stylesheet" href="stil.css">
+<link rel="stylesheet" href="nou.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Sari la conținut</a>
+<nav class="topbar" aria-label="Secțiunile site-ului" data-nav></nav>
+<main class="wrap" id="main">
+  <header class="top"><div><p class="eyebrow">Harta cursului</p><h1>Ce exersăm, când și din ce teorie</h1>
+  <p style="margin:6px 0 0;color:#e8eef4">Pentru fiecare exercițiu: ziua de practică (pe subgrupe), ora de teorie din spatele lui, pagina din suportul de curs și materialul organizatorului folosit.</p></div></header>
+  <div class="chips" role="group" aria-label="Filtrează"><button class="chip" type="button" data-f="toate" aria-pressed="true">Toate</button><button class="chip" type="button" data-f="obl" aria-pressed="false">Doar obligatorii</button></div>
+  <div class="tw"><table class="t"><thead><tr><th scope="col">Ziua</th><th scope="col">Exercițiul</th><th scope="col">Statut</th><th scope="col">Teorie</th><th scope="col">Suport de curs</th><th scope="col">Material organizator</th><th scope="col">SG1 / SG2</th></tr></thead><tbody id="tb"></tbody></table></div>
+  <footer class="sitefoot" data-foot></footer>
+</main>
+<script src="exercitii.js"></script>
+<script src="comun.js"></script>
+<script>
+(function(){ var esc=U.esc;
+  function desen(f){ document.getElementById("tb").innerHTML=window.EX.filter(function(e){return f==="toate"||e.statut===f;}).map(function(e){
+    return '<tr><td>'+e.zi+'<br><span class="muted">'+e.interval+'</span></td><td><a href="practica.html#'+e.cod+'"><b>'+e.cod+'</b> '+esc(e.titlu)+'</a></td><td>'+
+      (e.statut==="obl"?'<span class="badge obl">OBLIGATORIU · '+e.nota+'</span>':'<span class="badge rec">Recomandat</span>')+'</td><td>'+
+      e.teorie.map(function(t){return '<a href="teorie.html#ziua-'+t.zi+'">Z'+t.zi+' · Ora '+t.ora+'</a> '+esc(t.titlu);}).join("<br>")+'</td><td>'+esc(e.suport)+'</td><td>'+esc(e.org)+'</td><td>'+U.scurt(e.sg1)+' / '+U.scurt(e.sg2)+'</td></tr>'; }).join(""); }
+  desen("toate");
+  document.addEventListener("click",function(ev){ var b=ev.target.closest("[data-f]"); if(!b) return; document.querySelectorAll(".chip").forEach(function(c){c.setAttribute("aria-pressed",String(c===b));}); desen(b.dataset.f); });
+})();
+</script>
+<script src="ui.js" defer></script>
+</body>
+</html>

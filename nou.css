@@ -1,0 +1,145 @@
+/* =====================================================================
+   nou.css — componentele setului nou (acasă, practică E01–E34, despre, examen, ghiduri, hartă).
+   Se încarcă DUPĂ stil.css și folosește aceiași tokeni (culori, fonturi), ca site-ul să rămână „o familie”.
+   ===================================================================== */
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+main.wrap{padding-bottom:40px}
+.tnav{flex-wrap:wrap}
+@media(max-width:760px){.tnav{margin-left:0;width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}.tnav a{flex:none}}
+
+/* ---------- carduri și secțiuni ---------- */
+.sec{margin:26px 0}
+.sec>h2{font:700 clamp(21px,3vw,27px)/1.2 var(--hd);color:var(--navy-2);margin:0 0 10px}
+.card{border:1px solid var(--line);border-radius:var(--r);padding:18px clamp(14px,2.4vw,24px);background:var(--card);box-shadow:var(--shadow)}
+.muted{color:var(--ink-dim)}
+.lead{font-size:17.5px}
+
+/* ---------- banda „AZI” ---------- */
+.azi{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;border-radius:20px;padding:16px 20px;margin:18px 0 6px;
+  background:linear-gradient(135deg,#A85D0C,#7E4207);color:#fff;box-shadow:var(--shadow-up)}
+.azi .k{font:700 12px/1 var(--bd);letter-spacing:.16em;text-transform:uppercase;color:var(--amber-soft)}
+.azi .t{font:700 clamp(18px,2.6vw,23px)/1.25 var(--hd);flex:1 1 320px}
+.azi .t small{display:block;font:500 15px/1.4 var(--bd);color:#fbe9d2;margin-top:4px}
+.azi a.go{background:#fff;color:#5a2f05;font-weight:800;text-decoration:none;border-radius:999px;padding:11px 20px;min-height:44px;display:inline-flex;align-items:center}
+.azi a.go:hover{background:var(--amber-soft)}
+.azi :focus-visible{outline-color:#fff}
+
+/* ---------- plăcile de pe prima pagină ---------- */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:14px 0}
+.tile{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:18px;padding:18px;
+  background:var(--card);box-shadow:var(--shadow);min-height:132px}
+.tile b{font:700 21px/1.2 var(--hd);color:var(--navy-2)}
+.tile span{color:var(--ink-dim);font-size:15px}
+.tile .ico{font-size:26px;line-height:1}
+.tile.mare{background:linear-gradient(135deg,var(--navy-3),var(--navy-2));color:#fff;border-color:transparent}
+.tile.mare b{color:#fff}.tile.mare span{color:#dbe6ef}
+.tile.cald{background:linear-gradient(135deg,#A85D0C,#7E4207);color:#fff;border-color:transparent}
+.tile.cald b{color:#fff}.tile.cald span{color:#fbe9d2}
+@media (prefers-reduced-motion:no-preference){.tile{transition:transform .18s ease,box-shadow .18s ease}.tile:hover{transform:translateY(-3px);box-shadow:var(--shadow-up)}}
+
+/* ---------- insigne ---------- */
+.badge{display:inline-flex;align-items:center;gap:6px;font:800 12.5px/1 var(--bd);letter-spacing:.04em;border-radius:999px;padding:6px 11px;white-space:nowrap}
+.badge.obl{background:#0B6B3A;color:#fff}
+.badge.rec{background:#E9E4D6;color:#4A4234;border:1px solid var(--line-2)}
+.badge.ora{background:color-mix(in srgb,var(--navy) 10%,transparent);color:var(--navy-2)}
+.badge.arh{background:#FFF1CF;color:#6B4A00;border:1px solid #E6C77A}
+
+/* ---------- subgrupa + calendar ---------- */
+.seg{display:inline-flex;flex-wrap:wrap;gap:6px;border:1px solid var(--line);border-radius:999px;padding:5px;margin:4px 0 12px}
+.seg button{font:700 14.5px/1 var(--bd);border:0;border-radius:999px;padding:11px 16px;min-height:44px;background:transparent;color:var(--navy-2);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--navy);color:#fff}
+.cal{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.cal .zh{font:700 12px/1 var(--bd);color:var(--ink-dim);text-align:center;letter-spacing:.08em;text-transform:uppercase}
+.cal button{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;border:1px solid var(--line);border-radius:12px;background:var(--card);
+  padding:9px 10px;min-height:64px;cursor:pointer;font:600 13px/1.25 var(--bd);color:var(--ink)}
+.cal button b{font:800 15px/1 var(--bd);color:var(--navy-2)}
+.cal button .cods{font-size:12px;color:var(--ink-dim)}
+.cal button.trecut{background:color-mix(in srgb,var(--card) 70%,var(--paper-2))}
+.cal button.azi{border:2px solid var(--amber);box-shadow:0 0 0 3px var(--amber-soft)}
+.cal button[aria-current="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.cal button[aria-current="true"] b,.cal button[aria-current="true"] .cods{color:#fff}
+.cal .gol{visibility:hidden}
+.cal .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#0B6B3A;margin-left:4px;vertical-align:middle}
+@media(max-width:560px){.cal{gap:5px}.cal button{padding:7px 6px;min-height:58px;font-size:12px}.cal button .cods{display:none}}
+
+/* ---------- ziua și exercițiul ---------- */
+.zihead{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:20px 0 8px}
+.zihead h2{margin:0;font:700 clamp(22px,3.2vw,28px)/1.2 var(--hd);color:var(--navy-2);flex:1 1 300px}
+.btn{display:inline-flex;align-items:center;gap:7px;font:700 14.5px/1 var(--bd);border:1px solid var(--line-2);border-radius:999px;padding:10px 15px;min-height:44px;
+  background:var(--card);color:var(--navy-2);text-decoration:none;cursor:pointer}
+.btn.pri{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.verde{background:#0B6B3A;color:#fff;border-color:#0B6B3A}
+.btn:hover{border-color:var(--amber)}
+.btn[aria-disabled="true"]{opacity:.55;pointer-events:none}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.nota-sg1{border-left:5px solid #E6C77A;background:#FFF8E6;border-radius:12px;padding:12px 16px;margin:8px 0 12px}
+
+.ex{border:1px solid var(--line);border-radius:20px;background:var(--card);box-shadow:var(--shadow);margin:14px 0;overflow:hidden}
+.ex.obl{border:2px solid #0B6B3A}
+.ex .exh{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:16px clamp(14px,2.4vw,22px) 6px}
+.ex .cod{font:800 15px/1 var(--bd);color:#fff;background:var(--navy);border-radius:10px;padding:8px 10px}
+.ex.obl .cod{background:#0B6B3A}
+.ex h3{flex:1 1 280px;margin:0;font:700 clamp(19px,2.6vw,23px)/1.25 var(--hd);color:var(--navy-2)}
+.ex .exb{padding:4px clamp(14px,2.4vw,22px) 16px}
+.ex .teo{display:flex;flex-wrap:wrap;gap:6px 10px;margin:4px 0 8px;font-size:14.5px}
+.ex .teo a{font-weight:700}
+.ex details{border-top:1px solid var(--line);padding:2px 0}
+.ex details>summary{cursor:pointer;font:700 16px/1.3 var(--bd);color:var(--navy-2);padding:12px 0;min-height:44px;list-style-position:outside}
+.ex details>summary small{font-weight:500;color:var(--ink-dim)}
+.ex ol.pasi{padding-left:24px;margin:4px 0 10px}
+.ex ol.pasi li{margin:0 0 9px}
+.ex ul.chk{list-style:none;padding:0}
+.ex ul.chk li{padding-left:28px;position:relative;margin:0 0 6px}
+.ex ul.chk li::before{content:"☐";position:absolute;left:4px;color:var(--navy)}
+.ghref{font-size:14px;color:var(--ink-dim)}
+.subiect{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0}
+.subiect code{font-size:15px}
+.lacat{background:#F4F1E8;border:1px dashed var(--line-2);border-radius:12px;padding:12px 16px;color:var(--ink-dim)}
+.rezb{background:#F2F8F1;border:1px solid #B8D7B2;border-radius:14px;padding:14px 16px}
+.rezb h4{font:700 17px/1.3 var(--hd);color:#2F5228;margin:14px 0 6px}
+.tw{overflow-x:auto;margin:8px 0}
+.tw table,table.t{border-collapse:collapse;width:100%;font-size:15px;background:var(--card)}
+.tw th,.tw td,table.t th,table.t td{border:1px solid var(--line-2);padding:7px 9px;text-align:left;vertical-align:top}
+.tw th,table.t th{background:#E6EDF5;color:var(--navy-2)}
+.cadru{background:#F2F2F2;border-radius:10px;padding:10px 14px}
+.atentie{background:#FFF4D6;border-radius:10px;padding:10px 14px}
+.inpreg{color:var(--ink-dim);font-style:italic}
+
+/* ---------- lista tuturor exercițiilor ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+.chip{font:700 14px/1 var(--bd);border:1px solid var(--line-2);border-radius:999px;padding:10px 14px;min-height:44px;background:var(--card);color:var(--navy-2);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.lista{display:grid;gap:6px}
+.lista a{display:grid;grid-template-columns:62px 1fr auto;gap:10px;align-items:center;text-decoration:none;color:var(--ink);border:1px solid var(--line);
+  border-radius:12px;padding:9px 12px;background:var(--card);min-height:44px}
+.lista a b{color:var(--navy-2)}
+.lista a:hover{border-color:var(--amber)}
+@media(max-width:560px){.lista a{grid-template-columns:52px 1fr}.lista a .badge{grid-column:2;justify-self:start}}
+
+/* ---------- ghiduri, FAQ ---------- */
+.ghid-g{scroll-margin-top:80px}
+.ghid-g h3{font:700 21px/1.25 var(--hd);color:var(--navy-2);margin:0 0 6px}
+.ghid-g h4{font:700 16px/1.3 var(--bd);color:var(--amber-ink);margin:12px 0 4px}
+details.faq{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:0 14px;margin:0 0 8px}
+details.faq>summary{cursor:pointer;font-weight:700;padding:12px 0;min-height:44px;color:var(--navy-2)}
+.toc{display:flex;flex-wrap:wrap;gap:6px}
+.toc a{font-weight:700;font-size:14px;border:1px solid var(--line-2);border-radius:999px;padding:8px 12px;text-decoration:none;background:var(--card)}
+
+/* ---------- ecranul de sală ---------- */
+#ecran{position:fixed;inset:0;z-index:200;background:linear-gradient(135deg,var(--navy-3),var(--navy-2));color:#fff;display:none;flex-direction:column;padding:3vh 4vw;overflow:auto}
+#ecran.on{display:flex}
+#ecran .ecs{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+#ecran .ceas{font:700 clamp(40px,8vw,96px)/1 var(--hd)}
+#ecran h2{font:700 clamp(26px,4vw,48px)/1.15 var(--hd);color:#fff;margin:2vh 0 1vh}
+#ecran .pas{font:600 clamp(20px,2.6vw,32px)/1.35 var(--bd);color:var(--amber-soft)}
+#ecran ol{font-size:clamp(17px,1.9vw,24px);line-height:1.5}
+#ecran li.acum{color:#fff;font-weight:800}
+#ecran li.gata{opacity:.55;text-decoration:line-through}
+#ecran .gluma{margin-top:auto;font-style:italic;color:#cfe0ec;font-size:clamp(16px,1.7vw,21px)}
+#ecran button{position:absolute;top:14px;right:14px;font:700 16px/1 var(--bd);border-radius:999px;border:2px solid #fff;background:transparent;color:#fff;padding:10px 16px;cursor:pointer}
+
+/* ---------- subsol ---------- */
+.sitefoot{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--ink-dim);border-top:1px solid var(--line);padding-top:16px;margin-top:30px;padding-bottom:30px}
+@media print{.topbar,.azi,.btns,#ecran,.seg,.cal{display:none!important}.ex details{display:block}.ex details>*{display:block}}
+/* pe paginile noi bara de sus nu e în .wrap: fără margini negative (altfel apare derulare orizontală pe telefon) */
+body>nav.topbar{margin-inline:0;padding-inline:0}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ghiduri „Cum fac…” · Competențe digitale</title>
+<meta name="description" content="Pași simpli pentru operațiile de bază: captură de ecran, salvare, PDF, atașament, partajare, accesibilitate.">
+<link rel="stylesheet" href="stil.css">
+<link rel="stylesheet" href="nou.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Sari la conținut</a>
+<nav class="topbar" aria-label="Secțiunile site-ului" data-nav></nav>
+<main class="wrap" id="main">
+  <header class="top"><div><p class="eyebrow">Ghiduri „Cum fac…”</p><h1>Pașii de bază, explicați simplu</h1>
+  <p style="margin:6px 0 0;color:#e8eef4">Fiecare ghid: ce apeși, ce vezi pe ecran și ce faci dacă nu merge. Numele butoanelor sunt în română, iar în paranteză în engleză.</p></div></header>
+  <nav class="sec toc" id="toc" aria-label="Lista ghidurilor"></nav>
+  <div id="ghiduri"></div>
+  <footer class="sitefoot" data-foot></footer>
+</main>
+<script src="exercitii.js"></script>
+<script src="comun.js"></script>
+<script>
+(function(){ var G=window.GHIDURI, esc=U.esc, k=Object.keys(G);
+  document.getElementById("toc").innerHTML=k.map(function(x){return '<a href="#'+x+'">'+x+' · '+esc(G[x].titlu)+'</a>';}).join("");
+  document.getElementById("ghiduri").innerHTML=k.map(function(x){ var g=G[x];
+    return '<section class="sec card ghid-g" id="'+x+'" aria-labelledby="h'+x+'"><h3 id="h'+x+'">'+x+' · '+esc(g.titlu)+'</h3>'+
+      g.parti.map(function(p){ return '<h4>'+esc(p.t)+'</h4><ol>'+p.pasi.map(function(s){return '<li>'+s+'</li>';}).join("")+'</ol>'; }).join("")+
+      '<p class="btns"><a class="btn" href="#toc">↑ Lista ghidurilor</a><button class="btn" type="button" data-g="'+x+'">🔗 Copiază linkul ghidului</button></p></section>'; }).join("");
+  document.addEventListener("click",function(e){ var b=e.target.closest("[data-g]"); if(b) U.copiaza(U.baza()+"ghiduri.html#"+b.dataset.g,b); });
+  if(location.hash){ var el=document.querySelector(location.hash); if(el) el.scrollIntoView(); }
+})();
+</script>
+<script src="ui.js" defer></script>
+</body>
+</html>
