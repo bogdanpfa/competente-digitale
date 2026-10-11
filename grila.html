@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Grilă · Competențe digitale</title>
+<meta name="description" content="Teste grilă pentru exersat: întrebările oficiale ale cursului și întrebări din materie, cu explicații. Antrenament pe module și simulare de examen.">
+<link rel="stylesheet" href="stil.css">
+<link rel="stylesheet" href="nou.css">
+<style>
+/* ---------- pagina Grilă (stiluri proprii, peste nou.css) ---------- */
+.mod-alege{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:14px 0}
+.mod-alege .tile{cursor:pointer;text-align:left;font:inherit}
+.opt-of{display:flex;align-items:center;gap:10px;margin:6px 0 2px;font-weight:600;min-height:44px}
+.opt-of input{width:22px;height:22px;accent-color:var(--navy)}
+.qbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:0 0 10px}
+.qbar .prog{flex:1 1 200px;height:10px;border-radius:999px;background:var(--line);overflow:hidden}
+.qbar .prog i{display:block;height:100%;background:var(--navy);width:0}
+.qbar .ceas{font:800 18px/1 var(--bd);color:var(--navy-2);font-variant-numeric:tabular-nums}
+.qbar .ceas.putin{color:#A33A10}
+fieldset.q{border:0;margin:0;padding:0}
+fieldset.q legend{font:700 clamp(19px,2.6vw,23px)/1.35 var(--hd);color:var(--navy-2);margin:0 0 12px;padding:0}
+.vars{display:grid;gap:8px}
+.var{box-sizing:border-box;display:flex;flex-direction:row;flex-wrap:nowrap;align-items:flex-start;gap:12px;border:1px solid var(--line-2);border-radius:14px;padding:12px 14px;background:var(--card);cursor:pointer;min-height:48px;font-size:17px;line-height:1.4}
+.var input{width:22px;height:22px;margin:1px 0 0;flex:0 0 auto;accent-color:var(--navy)}
+.var:hover{border-color:var(--amber)}
+.var.ales{border-color:var(--navy);box-shadow:0 0 0 2px color-mix(in srgb,var(--navy) 25%,transparent)}
+.var.ok{border-color:#0B6B3A;background:#EEF7EF}
+.var.gresit{border-color:#A33A10;background:#FBEDE6}
+.var>span:first-of-type{flex:1 1 auto;min-width:0}
+.var .semn{font-weight:800;white-space:nowrap}
+.var.ok .semn{color:#0B6B3A}.var.gresit .semn{color:#A33A10}
+.fb{margin:12px 0 0;border-radius:12px;padding:12px 16px}
+.fb.ok{background:#EEF7EF;border-left:5px solid #0B6B3A}
+.fb.gresit{background:#FBEDE6;border-left:5px solid #A33A10}
+.fb b{display:block;margin-bottom:4px}
+.src{font-size:13px;color:var(--ink-dim);margin:0 0 8px}
+.src .badge{font-size:11.5px;padding:5px 9px}
+.rez-nota{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}
+.rez-nota .n{font:800 clamp(44px,8vw,64px)/1 var(--hd);color:var(--navy-2)}
+.rez-nota .n.sub{color:#A33A10}
+.rez-mod{display:grid;gap:6px;margin:10px 0}
+.rez-mod div{display:grid;grid-template-columns:1fr auto;gap:8px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--card)}
+.revizie{display:grid;gap:10px;margin:10px 0}
+.revizie .r{border:1px solid var(--line);border-left-width:5px;border-radius:12px;padding:10px 14px;background:var(--card)}
+.revizie .r.ok{border-left-color:#0B6B3A}.revizie .r.gresit{border-left-color:#A33A10}
+.revizie .r p{margin:4px 0}
+.harta-q{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0}
+.harta-q button{min-width:44px;min-height:44px;border:1px solid var(--line-2);border-radius:10px;background:var(--card);font:700 14px/1 var(--bd);color:var(--navy-2);cursor:pointer}
+.harta-q button.raspuns{background:color-mix(in srgb,var(--navy) 14%,var(--card))}
+.harta-q button[aria-current="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+[hidden]{display:none!important}
+.parola-f{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.parola-f input{font:500 17px/1.2 var(--bd);border:1px solid var(--line-2);border-radius:12px;padding:10px 14px;min-height:44px;box-sizing:border-box;flex:1 1 220px;max-width:340px;background:var(--card);color:var(--ink)}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Sari la conținut</a>
+<nav class="topbar" aria-label="Secțiunile site-ului" data-nav></nav>
+<main class="wrap" id="main">
+  <header class="top"><div><p class="eyebrow">Grilă · pentru exersat</p><h1>Teste grilă, cu explicații</h1>
+  <p style="margin:6px 0 0;color:#e8eef4">Întrebările oficiale ale cursului și întrebări din materia noastră. Fără cont și fără nume: nimeni nu vede ce răspunzi, nici formatorul.</p></div></header>
+
+  <!-- ===== parola grupei ===== -->
+  <section class="sec card" id="lacat" aria-labelledby="h-lacat">
+    <h2 id="h-lacat">Intră cu parola grupei</h2>
+    <p>Întrebările sunt protejate: le vede doar cine are parola. Parola o primești de la formator, la curs.</p>
+    <form id="fParola" class="parola-f" autocomplete="off">
+      <label for="parola" style="font-weight:700">Parola</label>
+      <input id="parola" name="parola" type="password" autocomplete="current-password" spellcheck="false" autocapitalize="off" required>
+      <button class="btn pri" type="submit" id="intra">Intră</button>
+    </form>
+    <p id="pMsg" role="alert" class="muted" style="min-height:1.5em"></p>
+    <p class="muted" style="font-size:14.5px">Nu contează majusculele și diacriticele. Cât timp ții pagina deschisă (și dacă o reîncarci), nu trebuie s-o scrii din nou.</p>
+  </section>
+
+  <!-- ===== alegerea ===== -->
+  <section class="sec" id="start" hidden aria-labelledby="h-start">
+    <h2 id="h-start">Ce vrei să faci?</h2>
+    <div class="mod-alege">
+      <button class="tile mare" type="button" data-mod="sim"><span class="ico" aria-hidden="true">⏱️</span><b>Simulare examen</b>
+        <span>20 de întrebări din toată materia (câte 4 din fiecare modul), 20 de minute. Afli nota la final, ca la proba scrisă.</span></button>
+    </div>
+    <h3 style="font:700 19px/1.3 var(--hd);color:var(--navy-2);margin:18px 0 4px">Antrenament pe un modul</h3>
+    <p class="muted" style="margin:0 0 8px">După fiecare răspuns vezi imediat dacă e corect și de ce. Fără limită de timp.</p>
+    <div class="mod-alege" id="module"></div>
+    <label class="opt-of"><input type="checkbox" id="doarOf"> Doar întrebările din testele oficiale</label>
+    <p class="muted" style="font-size:14.5px">La examen, proba scrisă are <b>20 de întrebări</b> din toată materia, fiecare cu <b>4 variante</b> și <b>un singur răspuns corect</b>. Nota minimă de trecere este <b>5</b>. Detalii pe pagina <a href="examen.html">Examen</a>.</p>
+  </section>
+
+  <!-- ===== testul ===== -->
+  <section class="sec card" id="test" hidden aria-labelledby="h-test">
+    <h2 id="h-test" class="muted" style="font:700 15px/1.3 var(--bd);margin:0 0 8px"></h2>
+    <div class="qbar"><span id="nr" aria-live="polite"></span><span class="prog" aria-hidden="true"><i id="bar"></i></span><span class="ceas" id="ceas" hidden></span></div>
+    <p class="src" id="src"></p>
+    <fieldset class="q"><legend id="intrebare" tabindex="-1"></legend><div class="vars" id="vars"></div></fieldset>
+    <div id="fb" aria-live="polite"></div>
+    <p class="btns">
+      <button class="btn" type="button" id="inapoi" hidden>← Înapoi</button>
+      <button class="btn pri" type="button" id="urm">Următoarea →</button>
+      <button class="btn verde" type="button" id="termina" hidden>Termină testul</button>
+      <button class="btn" type="button" id="renunta">Renunț</button>
+    </p>
+    <div class="harta-q" id="hartaQ" hidden aria-label="Mergi la întrebarea"></div>
+  </section>
+
+  <!-- ===== rezultatul ===== -->
+  <section class="sec card" id="rez" hidden aria-labelledby="h-rez">
+    <h2 id="h-rez" tabindex="-1">Rezultatul tău</h2>
+    <div class="rez-nota"><span class="n" id="nota"></span><span id="notaTxt"></span></div>
+    <div class="rez-mod" id="peMod"></div>
+    <p class="btns"><button class="btn pri" type="button" id="iar">Încă un test</button><button class="btn" type="button" id="doarGr">Arată doar greșelile</button></p>
+    <div class="revizie" id="revizie"></div>
+  </section>
+
+  <footer class="sitefoot" data-foot></footer>
+</main>
+<script src="exercitii.js"></script>
+<script src="comun.js"></script>
+<script src="grila_date.enc.js"></script>
+<script>
+/* Pagina Grilă: antrenament pe modul (feedback imediat) și simulare de examen (20 de întrebări, 20 de minute).
+   Nu salvează nimic: totul stă în memorie cât e deschisă pagina. */
+/* ---------- decriptarea întrebărilor cu parola grupei (WebCrypto: PBKDF2-SHA256 + AES-GCM) ---------- */
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); }, E = window.GRILA_ENC;
+  function norm(p) { return p.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " "); }
+  function b64(s) { var b = atob(s), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
+  function decripteaza(parola) {
+    var enc = new TextEncoder();
+    return crypto.subtle.importKey("raw", enc.encode(norm(parola)), "PBKDF2", false, ["deriveKey"])
+      .then(function (k) { return crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(E.salt), iterations: E.iter, hash: "SHA-256" }, k, { name: "AES-GCM", length: 256 }, false, ["decrypt"]); })
+      .then(function (key) { return crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(E.iv) }, key, b64(E.ct)); })
+      .then(function (buf) { return JSON.parse(new TextDecoder().decode(buf)); });
+  }
+  function deschide(parola, salveaza) {
+    $("intra").disabled = true; $("pMsg").textContent = "Se deschide…";
+    return decripteaza(parola).then(function (G) {
+      if (salveaza) { try { sessionStorage.setItem("grila_p", parola); } catch (e) {} }
+      $("lacat").hidden = true; $("start").hidden = false; $("pMsg").textContent = "";
+      initGrila(G);
+    }, function () {
+      try { sessionStorage.removeItem("grila_p"); } catch (e) {}
+      $("intra").disabled = false; $("pMsg").textContent = "Parola nu e corectă. Încearcă din nou.";
+      $("parola").select();
+    });
+  }
+  if (!E || !window.crypto || !crypto.subtle) { $("pMsg").textContent = "Browserul tău nu poate deschide pagina. Încearcă în Chrome, Edge sau Firefox, actualizate."; return; }
+  $("fParola").addEventListener("submit", function (e) { e.preventDefault(); deschide($("parola").value, true); });
+  var p = null; try { p = sessionStorage.getItem("grila_p"); } catch (e) {}
+  if (p) deschide(p, false); else $("parola").focus();
+})();
+
+function initGrila(G) {
+  "use strict";
+  window.GRILA = G;   // deschisă cu parola: o ținem la îndemână pentru pagină
+  var esc = U.esc, $ = function (id) { return document.getElementById(id); };
+  var LIT = ["a", "b", "c", "d"];
+  var T = null, ceasId = null;   // testul curent
+
+  /* amestecare Fisher–Yates */
+  function amesteca(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  /* o întrebare gata de afișat: variantele amestecate, cu indexul corect recalculat.
+     „Toate variantele” rămâne ultima, ca să aibă sens. */
+  function pregateste(q) {
+    var idx = [0, 1, 2, 3], toate = q.o.findIndex(function (x) { return /^Toate variantele/.test(x); });
+    var rest = amesteca(idx.filter(function (i) { return i !== toate; }));
+    if (toate >= 0) rest.push(toate);
+    return { q: q, ord: rest, c: rest.indexOf(q.c), r: null };
+  }
+  function bank(m) { var of = $("doarOf").checked; return G.q.filter(function (q) { return (!m || q.m === m) && (!of || q.s === "oficial"); }); }
+
+  /* ---------- ecranul de start ---------- */
+  $("module").innerHTML = G.module.map(function (m, i) {
+    return '<button class="tile" type="button" data-mod="' + m.id + '"><span class="ico" aria-hidden="true">' + ["🔎", "💬", "📝", "🛡️", "🧩"][i] + '</span><b>Modulul ' + (i + 1) + '</b><span>' + esc(m.titlu) + ' · <span class="nrq" data-m="' + m.id + '"></span></span></button>';
+  }).join("");
+  function numara() { [].forEach.call(document.querySelectorAll(".nrq"), function (s) { var n = bank(s.dataset.m).length; s.textContent = Math.min(15, n) + " întrebări din " + n; }); }
+  numara(); $("doarOf").addEventListener("change", numara);
+
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-mod]"); if (!b) return;
+    var m = b.dataset.mod;
+    if (m === "sim") {
+      var lista = [];
+      G.module.forEach(function (x) { lista = lista.concat(amesteca(bank(x.id)).slice(0, 4)); });
+      porneste({ tip: "sim", titlu: "Simulare examen · 20 de întrebări · 20 de minute", qs: amesteca(lista).map(pregateste), sec: 20 * 60 });
+    } else {
+      var mod = G.module.filter(function (x) { return x.id === m; })[0];
+      porneste({ tip: "ant", titlu: "Antrenament · " + mod.titlu, qs: amesteca(bank(m)).slice(0, 15).map(pregateste) });
+    }
+  });
+
+  /* ---------- testul ---------- */
+  function porneste(t) {
+    T = t; T.i = 0;
+    $("start").hidden = true; $("rez").hidden = true; $("test").hidden = false;
+    $("h-test").textContent = t.titlu;
+    var sim = t.tip === "sim";
+    $("ceas").hidden = !sim; $("inapoi").hidden = !sim; $("hartaQ").hidden = !sim; $("termina").hidden = !sim;
+    if (sim) {
+      T.final = Date.now() + t.sec * 1000; bate(); clearInterval(ceasId); ceasId = setInterval(bate, 1000);
+      $("hartaQ").innerHTML = T.qs.map(function (_, i) { return '<button type="button" data-i="' + i + '" aria-label="Întrebarea ' + (i + 1) + '">' + (i + 1) + '</button>'; }).join("");
+    }
+    arata(); window.scrollTo(0, 0);
+  }
+  function bate() {
+    var r = Math.max(0, Math.round((T.final - Date.now()) / 1000));
+    var c = $("ceas"); c.textContent = "⏱ " + Math.floor(r / 60) + ":" + String(r % 60).padStart(2, "0");
+    c.classList.toggle("putin", r <= 120);
+    if (r === 0) { clearInterval(ceasId); incheie(true); }
+  }
+  function arata() {
+    var x = T.qs[T.i], sim = T.tip === "sim", n = T.qs.length;
+    $("nr").textContent = "Întrebarea " + (T.i + 1) + " din " + n;
+    $("bar").style.width = Math.round(100 * T.i / n) + "%";
+    $("src").innerHTML = x.q.s === "oficial" ? '<span class="badge arh">Din testele oficiale</span>' : '<span class="badge rec">Din materia cursului</span>';
+    $("intrebare").textContent = (T.i + 1) + ". " + x.q.q;
+    $("vars").innerHTML = x.ord.map(function (oi, k) {
+      return '<label class="var" data-k="' + k + '"><input type="radio" name="v" value="' + k + '"' + (x.r === k ? " checked" : "") + (!sim && x.r !== null ? " disabled" : "") + '><span><b>' + LIT[k] + ')</b> ' + esc(x.q.o[oi]) + '</span><span class="semn"></span></label>';
+    }).join("");
+    $("fb").innerHTML = "";
+    if (!sim && x.r !== null) marcheaza(x);
+    if (sim) {
+      [].forEach.call($("vars").children, function (l) { l.classList.toggle("ales", +l.dataset.k === x.r); });
+      [].forEach.call($("hartaQ").children, function (b, i) { b.classList.toggle("raspuns", T.qs[i].r !== null); b.setAttribute("aria-current", i === T.i ? "true" : "false"); });
+      $("inapoi").disabled = T.i === 0;
+      $("urm").hidden = T.i === n - 1;
+    } else {
+      $("urm").hidden = false;
+      $("urm").textContent = T.i === n - 1 ? "Vezi rezultatul →" : "Următoarea →";
+      $("urm").disabled = x.r === null;
+    }
+  }
+  function marcheaza(x) {
+    [].forEach.call($("vars").children, function (l) {
+      var k = +l.dataset.k;
+      if (k === x.c) { l.classList.add("ok"); l.querySelector(".semn").textContent = "✓ corect"; }
+      else if (k === x.r) { l.classList.add("gresit"); l.querySelector(".semn").textContent = "✗ ales de tine"; }
+    });
+    var bine = x.r === x.c;
+    $("fb").innerHTML = '<div class="fb ' + (bine ? "ok" : "gresit") + '"><b>' + (bine ? "Corect!" : "Nu chiar. Răspunsul corect: " + LIT[x.c] + ")") + '</b>' + esc(x.q.e) + '</div>';
+  }
+  $("vars").addEventListener("change", function (e) {
+    var x = T.qs[T.i]; x.r = +e.target.value;
+    if (T.tip === "sim") { [].forEach.call($("vars").children, function (l) { l.classList.toggle("ales", +l.dataset.k === x.r); }); $("hartaQ").children[T.i].classList.add("raspuns"); }
+    else { [].forEach.call($("vars").querySelectorAll("input"), function (i) { i.disabled = true; }); marcheaza(x); $("urm").disabled = false; $("urm").focus(); }
+  });
+  $("urm").addEventListener("click", function () { if (T.i < T.qs.length - 1) { T.i++; arata(); $("intrebare").focus(); } else incheie(false); });
+  $("inapoi").addEventListener("click", function () { if (T.i > 0) { T.i--; arata(); $("intrebare").focus(); } });
+  $("hartaQ").addEventListener("click", function (e) { var b = e.target.closest("[data-i]"); if (b) { T.i = +b.dataset.i; arata(); $("intrebare").focus(); } });
+  $("termina").addEventListener("click", function () {
+    var lipsa = T.qs.filter(function (x) { return x.r === null; }).length;
+    if (lipsa && !confirmaInline(lipsa)) return;
+    incheie(false);
+  });
+  /* confirmare fără fereastră de dialog: primul click arată un avertisment, al doilea termină */
+  function confirmaInline(lipsa) {
+    var b = $("termina");
+    if (b.dataset.sigur === "1") { b.dataset.sigur = ""; return true; }
+    b.dataset.sigur = "1"; b.textContent = "Ai " + lipsa + " fără răspuns. Apasă din nou ca să termini";
+    setTimeout(function () { b.dataset.sigur = ""; b.textContent = "Termină testul"; }, 5000);
+    return false;
+  }
+  $("renunta").addEventListener("click", function () { clearInterval(ceasId); T = null; $("test").hidden = true; $("start").hidden = false; window.scrollTo(0, 0); });
+
+  /* ---------- rezultatul ---------- */
+  function incheie(timp) {
+    clearInterval(ceasId);
+    var n = T.qs.length, ok = T.qs.filter(function (x) { return x.r === x.c; }).length;
+    var nota = Math.round(ok / n * 1000) / 100, sim = T.tip === "sim";
+    $("test").hidden = true; $("rez").hidden = false;
+    $("nota").textContent = sim ? String(nota).replace(".", ",") : ok + "/" + n;
+    $("nota").classList.toggle("sub", sim && nota < 5);
+    $("notaTxt").innerHTML = (timp ? "<b>Timpul s-a terminat.</b> " : "") + ok + " răspunsuri corecte din " + n + "." +
+      (sim ? " Nota estimată: 0,5 puncte pe răspuns corect." + (nota >= 5 ? " La examen, cu nota asta treci proba scrisă (minimul e 5)." : " La examen, minimul pentru proba scrisă e 5: mai exersează modulele de mai jos.")
+           : (n === 15 ? " După baremul testelor oficiale (0,6 puncte pe răspuns corect + 1 din oficiu), nota ar fi <b>" + String(Math.round((1 + 0.6 * ok) * 100) / 100).replace(".", ",") + "</b>." : ""));
+    $("peMod").innerHTML = G.module.map(function (m, i) {
+      var q = T.qs.filter(function (x) { return x.q.m === m.id; }); if (!q.length) return "";
+      var b = q.filter(function (x) { return x.r === x.c; }).length;
+      return '<div><span>Modulul ' + (i + 1) + ' · ' + esc(m.titlu) + '</span><b>' + b + ' / ' + q.length + '</b></div>';
+    }).join("");
+    $("revizie").innerHTML = T.qs.map(function (x, i) {
+      var bine = x.r === x.c;
+      return '<div class="r ' + (bine ? "ok" : "gresit") + '"><p><b>' + (i + 1) + ". " + esc(x.q.q) + '</b></p>' +
+        '<p>' + (x.r === null ? "Fără răspuns." : "Răspunsul tău: " + LIT[x.r] + ") " + esc(x.q.o[x.ord[x.r]])) + (bine ? " ✓" : "") + '</p>' +
+        (bine ? "" : '<p><b>Corect: ' + LIT[x.c] + ") " + esc(x.q.o[x.ord[x.c]]) + '</b></p>') +
+        '<p class="muted">' + esc(x.q.e) + '</p></div>';
+    }).join("");
+    $("doarGr").textContent = "Arată doar greșelile"; $("doarGr").setAttribute("aria-pressed", "false");
+    $("h-rez").focus(); window.scrollTo(0, 0);
+  }
+  $("doarGr").addEventListener("click", function () {
+    var on = this.getAttribute("aria-pressed") !== "true"; this.setAttribute("aria-pressed", on ? "true" : "false");
+    this.textContent = on ? "Arată toate răspunsurile" : "Arată doar greșelile";
+    [].forEach.call($("revizie").children, function (r) { r.hidden = on && r.classList.contains("ok"); });
+  });
+  $("iar").addEventListener("click", function () { $("rez").hidden = true; $("start").hidden = false; window.scrollTo(0, 0); });
+}
+</script>
+<script src="ui.js" defer></script>
+</body>
+</html>

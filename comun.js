@@ -46,7 +46,7 @@
 
   /* ---------- meniul de sus ---------- */
   var PAG = [["index.html", "Acasă"], ["teorie.html", "Teorie"], ["practica.html", "Practică"], ["despre.html", "Despre curs"],
-             ["examen.html", "Examen"], ["ghiduri.html", "Ghiduri"], ["harta.html", "Harta"]];
+             ["examen.html", "Examen"], ["grila.html", "Grilă"], ["ghiduri.html", "Ghiduri"], ["harta.html", "Harta"]];
   var aici = location.pathname.split("/").pop() || "index.html";
   var nav = document.querySelector("[data-nav]");
   if (nav) {
