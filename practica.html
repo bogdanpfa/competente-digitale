@@ -117,7 +117,7 @@
     }
     h+='<p>'+e.pe_scurt+'</p><div class="btns">'+
       '<a class="btn pri" href="'+e.fisa+'" download>📄 Fișa (.docx)</a>'+
-      (e.pornire?'<a class="btn" href="'+e.pornire+'" download>⬇ Fișier de pornire</a>':'')+
+      ((e.pornire_var&&e.pornire_var.length)?e.pornire_var.map(function(v){return '<a class="btn" href="'+v.href+'" download>⬇ Varianta '+v.lit+'</a>';}).join(""):(e.pornire?'<a class="btn" href="'+e.pornire+'" download>⬇ Fișier de pornire</a>':''))+
       '<button class="btn" type="button" data-link="'+e.cod+'">🔗 Copiază linkul exercițiului</button></div>';
     h+='<details><summary>Ce ai învățat la teorie și îți folosește aici</summary><ul>'+e.recap.map(function(t){return '<li>'+t+'</li>';}).join("")+'</ul></details>';
     if(e.text_dat) h+='<details open><summary>Textul pe care îl folosești</summary>'+e.text_dat+'</details>';
@@ -150,9 +150,19 @@
     var d=C.cal[sel.sg][sel.zi-1], ex=U.exZi(sel.zi);
     var h='<div class="zihead"><h2>Ziua '+sel.zi+' · '+U.lung(d)+' · Subgrupa '+sel.sg+'</h2>'+
       '<button class="btn" type="button" id="cpZi">🔗 Copiază linkul zilei</button><button class="btn" type="button" id="ecr">🖥 Ecran de sală</button></div>';
-    if(sel.sg===1 && sel.zi<=6) h+='<div class="nota-sg1"><span class="badge arh">Arhivă SG1</span> În ziua asta, <b>Subgrupa 1</b> a lucrat temele vechi (vezi <a href="#hArh">Arhiva</a>). Exercițiile noi de mai jos le poți face pentru exercițiu, nu sunt cerute.'+(sel.zi===3?' <b>Excepție: E06 e obligatoriu</b> și pentru Subgrupa 1 (îl faci în ziua 16).':'')+'</div>';
-    if(sel.sg===1 && sel.zi===16) h+='<div class="nota-sg1"><b>Subgrupa 1:</b> azi recuperezi <a href="#E06">E06 – mesajul jignitor</a> (obligatoriu, intră în Nota 1).</div>';
-    h+=ex.map(exercitiu).join("");
+    var noi=ex.map(exercitiu).join("");
+    if(sel.sg===1 && sel.zi<=6){
+      /* SG1, zilele 1–6: întâi temele vechi lucrate efectiv, apoi exercițiile noi, restrânse */
+      var vechi=window.ARHIVA_SG1.filter(function(a){return (a[5]||[]).indexOf(sel.zi)>=0;});
+      h+='<div class="nota-sg1"><span class="badge arh">Subgrupa 1</span> În ziua asta ați lucrat <b>temele de mai jos</b>. Ele rămân valabile, la fel și notele date.'+(sel.zi===3?' <b>Atenție: E06 e obligatoriu și pentru voi</b> (îl faceți în ziua 16).':'')+'</div>';
+      h+=vechi.map(function(a){ return '<article class="ex'+(a[4]?' obl':'')+'"><div class="exh"><span class="cod">'+a[0]+'</span><h3>'+esc(a[1])+'</h3>'+
+        (a[4]?'<span class="badge obl">'+esc(a[4])+' (dată)</span>':'<span class="badge rec">Recomandat</span>')+'</div><div class="exb"><div class="btns">'+
+        '<a class="btn pri" href="fise/'+a[2]+'" download>📄 Fișa (.docx)</a><a class="btn verde" href="fise/'+a[3]+'" download>✅ Rezolvarea</a></div></div></article>'; }).join("");
+      h+='<details class="card" style="margin-top:14px"><summary style="cursor:pointer;font-weight:700;min-height:44px;padding-top:10px">Exercițiile noi din ziua asta ('+ex.map(function(e){return e.cod;}).join(", ")+'): opționale pentru Subgrupa 1 (Subgrupa 2 le lucrează la curs)</summary>'+noi+'</details>';
+    } else {
+      if(sel.sg===1 && sel.zi===16) h+='<div class="nota-sg1"><b>Subgrupa 1:</b> azi recuperezi <a href="#E06">E06 – mesajul jignitor</a> (obligatoriu, intră în Nota 1).</div>';
+      h+=noi;
+    }
     var nav='<div class="btns">'+(sel.zi>1?'<button class="btn" type="button" data-go="'+(sel.zi-1)+'">← Ziua '+(sel.zi-1)+'</button>':'')+(sel.zi<17?'<button class="btn" type="button" data-go="'+(sel.zi+1)+'">Ziua '+(sel.zi+1)+' →</button>':'')+'</div>';
     $("zi").innerHTML=h+nav;
   }
