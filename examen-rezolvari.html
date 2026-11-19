@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Rezolvări proba practică · Competențe digitale</title>
+<link rel="stylesheet" href="stil.css">
+<link rel="stylesheet" href="nou.css">
+<style>
+.parola-f{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.parola-f input{font:500 17px/1.2 var(--bd);border:1px solid var(--line-2);border-radius:12px;padding:10px 14px;min-height:44px;box-sizing:border-box;flex:1 1 220px;max-width:340px;background:var(--card);color:var(--ink)}
+.ex-s{margin:16px 0;scroll-margin-top:80px}.ex-s h3{font:700 21px/1.25 var(--hd);color:var(--navy-2);margin:0 0 4px}.ex-s h4{margin:14px 0 4px;color:var(--navy-2)}
+.ex-meta{margin:0 0 8px;font-size:15px}.ex-box{border-left:5px solid var(--navy);background:color-mix(in srgb,var(--navy) 6%,transparent);padding:8px 12px;border-radius:8px}
+.ex-box.verde{border-left-color:#0B6B3A;background:#EEF6F0}
+.ex-cuprins{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}.ex-cuprins a{display:inline-flex;align-items:center;font:700 14px/1 var(--bd);border:1px solid var(--line);border-radius:999px;padding:9px 11px;min-height:36px;text-decoration:none;color:var(--navy-2);background:var(--card)}
+.ex-s details{margin-top:8px}.ex-s summary{cursor:pointer;font-weight:700;color:var(--navy-2)}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Sari la conținut</a>
+<nav class="topbar" aria-label="Secțiunile site-ului" data-nav></nav>
+<main class="wrap" id="main">
+  <header class="top"><div><p class="eyebrow">Proba practică · pentru formator</p><h1>Rezolvări model S01–S30</h1>
+  <p style="margin:6px 0 0;color:#e8eef4">Pentru corectare. Fiecare rezolvare are link către subiectul ei.</p></div></header>
+  <p class="btns" style="margin-top:18px"><a class="btn pri" href="examen.html#subiecte">← Toate subiectele (pagina Examen)</a></p>
+  <section class="sec" aria-labelledby="h-rez">
+    <h2 id="h-rez">Rezolvări și bareme</h2>
+    <div class="card" data-ex-lacat="rezolvari" data-tinta="listaR">
+    <h3 style="margin-top:0">Parola formatorului</h3>
+    <p>Pagina e doar pentru corectare. Linkul către subiecte cere separat parola de examen (o singură dată pe sesiune).</p>
+    <form class="parola-f" autocomplete="off">
+      <label for="p-rezolvari" style="font-weight:700">Parola</label>
+      <input id="p-rezolvari" name="parola-rezolvari" type="password" autocomplete="current-password" spellcheck="false" autocapitalize="off" required>
+      <button class="btn pri" type="submit">Deschide</button>
+    </form>
+    <p role="alert" class="muted" style="min-height:1.5em"></p>
+    <p class="muted" style="font-size:14.5px">Nu contează majusculele și diacriticele.</p>
+  </div>
+    <div id="listaR" hidden></div>
+  </section>
+  <footer class="sitefoot" data-foot></footer>
+</main>
+<script src="exercitii.js"></script>
+<script src="comun.js"></script>
+<script src="examen_rezolvari.enc.js"></script>
+<script src="examen_practic.js"></script>
+<script src="ui.js" defer></script>
+</body>
+</html>
