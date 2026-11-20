@@ -7,8 +7,8 @@
 (function () {
   "use strict";
   var esc = function (t) { var e = document.createElement("div"); e.textContent = t == null ? "" : String(t); return e.innerHTML; };
-  /* parola: litere mici, fără diacritice, spații simple (la fel ca la criptare) */
-  function norm(p) { return p.trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, " "); }
+  /* parola: litere mici, fără diacritice, fără spații (la fel ca la criptare) */
+  function norm(p) { return p.trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, ""); }
   function b64(s) { var b = atob(s), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
   function decripteaza(E, parola) {
     var enc = new TextEncoder();
@@ -107,6 +107,11 @@
       });
     }
     if (!E || !window.crypto || !crypto.subtle) { msg.textContent = "Browserul tău nu poate deschide această parte. Încearcă în Chrome, Edge sau Firefox, actualizate."; return; }
+    /* ochișorul: arată / ascunde parola */
+    var ochi = document.createElement("button"); ochi.type = "button"; ochi.className = "btn ochi"; ochi.textContent = "👁";
+    ochi.title = "Arată / ascunde parola"; ochi.setAttribute("aria-label", "Arată parola"); ochi.setAttribute("aria-pressed", "false");
+    inp.insertAdjacentElement("afterend", ochi);
+    ochi.addEventListener("click", function () { var v = inp.type === "password"; inp.type = v ? "text" : "password"; ochi.setAttribute("aria-pressed", v); ochi.setAttribute("aria-label", v ? "Ascunde parola" : "Arată parola"); inp.focus(); });
     form.addEventListener("submit", function (e) { e.preventDefault(); deschide(inp.value, true); });
     var p = null; try { p = sessionStorage.getItem(cheie); } catch (e) {}
     if (p) deschide(p, false);
