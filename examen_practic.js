@@ -41,14 +41,23 @@
       '<ol class="ex-pasi" style="--c:#' + b.culoare + '">' + b.pasi.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ol>";
   }
   var art = function (b, inner) { return '<article class="card ex-s" id="bilet-' + b.nr + '" tabindex="-1" style="border-top:6px solid #' + b.culoare + '">' + inner + "</article>"; };
-  function bilet(b) { return art(b, cap(b) + corp(b) + "<details><summary>Baremul (100 de puncte)</summary>" + barem(b) + "</details>"); }
+  function fisiere(b) {
+    if (!b.model) return "";
+    return '<h4>Fișierele model (cum arată un răspuns corect)</h4><ul class="ex-fis">' + b.model.map(function (f) {
+      return '<li><a href="#" data-nr="' + b.nr + '" data-f="' + esc(f) + '">⬇ ' + esc(f) + "</a></li>"; }).join("") + "</ul>";
+  }
+  function raspBilet(b) {
+    if (!b.rasp) return "";
+    return '<details class="ex-rasp"><summary>Răspuns și fișierele model</summary>' +
+      (b.rez_tabel ? "<h4>Tabelul corect</h4>" + tabel(b.rez_tabel, b.culoare, true) : "") +
+      "<h4>Ce trebuie să vadă evaluatorul</h4><ul>" + b.rasp.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>" + fisiere(b) + "</details>";
+  }
+  function bilet(b) { return art(b, cap(b) + corp(b) + "<details><summary>Baremul (100 de puncte)</summary>" + barem(b) + "</details>" + raspBilet(b)); }
   function raspuns(b) {
     return art(b, cap(b) + '<p><a class="btn" href="examen.html#bilet-' + b.nr + '">Vezi biletul ' + b.nr + " →</a></p>" +
       "<details><summary>Cerințele biletului</summary>" + corp(b) + "</details>" +
       (b.rez_tabel ? "<h4>Tabelul corect</h4>" + tabel(b.rez_tabel, b.culoare, true) : "") +
       "<h4>Ce trebuie să vadă evaluatorul</h4><ul>" + b.rasp.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>" +
-      (b.model ? '<h4>Fișierele model (cum arată un răspuns corect)</h4><p class="muted" style="font-size:14.5px">' + b.model.map(esc).join(" · ") +
-        '</p><p><button class="btn pri" type="button" data-model="' + b.nr + '">⬇ Descarcă fișierele model (.zip)</button> <span class="muted" data-model-msg="' + b.nr + '"></span></p>' : "") +
       "<h4>Barem</h4>" + barem(b));
   }
   function cuprins(L) {
@@ -56,22 +65,23 @@
       return '<a href="#bilet-' + b.nr + '" title="' + esc(b.familie + ": " + b.titlu) + '" style="background:#' + b.culoare + '">' + b.nr + "</a>"; }).join("") + "</nav>";
   }
 
-  /* ---------- fișierele model: o arhivă .zip pe bilet, criptată cu parola răspunsurilor, adusă doar la primul clic ---------- */
+  /* ---------- fișierele model: criptate cu parola biletelor, aduse doar la primul clic, descărcate fișier cu fișier ---------- */
   function pregatesteModele(tinta, parola) {
     var arhive = null;
     tinta.addEventListener("click", function (e) {
-      var btn = e.target.closest("[data-model]"); if (!btn) return;
-      var nr = btn.getAttribute("data-model"), msg = tinta.querySelector('[data-model-msg="' + nr + '"]');
-      btn.disabled = true; msg.textContent = "Se pregătește arhiva…";
+      var btn = e.target.closest("[data-f]"); if (!btn) return;
+      e.preventDefault();
+      var nr = btn.getAttribute("data-nr"), f = btn.getAttribute("data-f"), vechi = btn.textContent;
+      btn.textContent = "⏳ " + f + " (se pregătește…)";
       (arhive ? Promise.resolve(arhive) : fetch("examen_fisiere.enc.json", { cache: "no-store" }).then(function (r) { if (!r.ok) throw 0; return r.json(); })
         .then(function (E) { return decripteaza(E, parola); }).then(function (A) { arhive = A; return A; }))
         .then(function (A) {
-          var u = b64(A[nr]), a = document.createElement("a");
-          a.href = URL.createObjectURL(new Blob([u], { type: "application/zip" }));
-          a.download = "Bilet_" + String(nr).padStart(2, "0") + "_fisiere_model.zip"; document.body.appendChild(a); a.click(); a.remove();
+          var a = document.createElement("a");
+          a.href = URL.createObjectURL(new Blob([b64(A[nr][f])], { type: "application/octet-stream" }));
+          a.download = f; document.body.appendChild(a); a.click(); a.remove();
           setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
-          msg.textContent = "✓ Descărcat."; btn.disabled = false;
-        }, function () { msg.textContent = "Nu s-a putut descărca. Reîncarcă pagina și încearcă din nou."; btn.disabled = false; });
+          btn.textContent = "✓ " + f;
+        }, function () { btn.textContent = vechi + " — nu s-a putut descărca, reîncarcă pagina"; });
     });
   }
 
@@ -84,7 +94,7 @@
       btn.disabled = true; msg.textContent = "Se deschide…";
       return decripteaza(E, parola).then(function (L) {
         if (salveaza) { try { sessionStorage.setItem(cheie, parola); } catch (e) {} }
-        if (tip === "rezolvari") pregatesteModele(tinta, parola);
+        if (tip === "subiecte") pregatesteModele(tinta, parola);
         box.hidden = true; msg.textContent = "";
         tinta.innerHTML = cuprins(L) + L.map(tip === "rezolvari" ? raspuns : bilet).join("");
         tinta.hidden = false;
