@@ -1,8 +1,8 @@
 /* =====================================================================
    examen_practic.js — biletele probei practice (1–30) și răspunsurile lor,
    CRIPTATE (AES-GCM, cheie PBKDF2-SHA256), ca la pagina Grilă.
-   examen.html → biletele (parola de examen) · examen-rezolvari.html → răspunsurile (parola formatorului).
-   Fiecare pagină are <div data-ex-lacat="subiecte|rezolvari" data-tinta="…"> + fișierul .enc.js corespunzător.
+   examen.html → biletele (parola de examen) + testele teoretice V1–V5 (parola grilei) · examen-rezolvari.html → răspunsurile (parola formatorului).
+   Fiecare pagină are <div data-ex-lacat="subiecte|rezolvari|teorie" data-tinta="…"> + fișierul .enc.js corespunzător.
    ===================================================================== */
 (function () {
   "use strict";
@@ -65,6 +65,28 @@
       return '<a href="#bilet-' + b.nr + '" title="' + esc(b.familie + ": " + b.titlu) + '" style="background:#' + b.culoare + '">' + b.nr + "</a>"; }).join("") + "</nav>";
   }
 
+
+  /* ---------- testele teoretice: Variantele 1–5, câte 20 de întrebări, răspunsul corect ascuns până la buton ---------- */
+  function testeTeorie(L) {
+    var nav = '<nav class="ex-cuprins" aria-label="Variantele">' + L.map(function (t) {
+      return '<a href="#varianta-' + t.v + '" style="background:var(--navy)">Varianta ' + t.v + "</a>"; }).join("") + "</nav>";
+    return nav + L.map(function (t) {
+      return '<article class="card ex-s tt" id="varianta-' + t.v + '" tabindex="-1" style="border-top:6px solid var(--navy)">' +
+        "<h3>Varianta " + t.v + "</h3>" +
+        '<p class="muted ex-meta">20 de întrebări · un singur răspuns corect la fiecare întrebare</p>' +
+        '<ol class="tt-q">' + t.q.map(function (q) {
+          return '<li value="' + q.nr + '"><p class="tt-e">' + esc(q.q) + '</p><ol class="tt-o" type="a">' + q.o.map(function (o, j) {
+            return "<li" + (j === q.c ? ' class="ok"' : "") + ">" + esc(o) + "</li>"; }).join("") + "</ol></li>"; }).join("") + "</ol>" +
+        '<p><button type="button" class="btn pri tt-btn" aria-pressed="false">Arată răspunsurile</button></p></article>';
+    }).join("");
+  }
+  /* butonul „Arată / Ascunde răspunsurile” la fiecare variantă */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest(".tt-btn"); if (!b) return;
+    var art = b.closest(".tt"), on = art.classList.toggle("arata");
+    b.textContent = on ? "Ascunde răspunsurile" : "Arată răspunsurile"; b.setAttribute("aria-pressed", on);
+  });
+
   /* ---------- fișierele model: criptate cu parola biletelor, aduse doar la primul clic, descărcate fișier cu fișier ---------- */
   function pregatesteModele(tinta, parola) {
     var arhive = null;
@@ -87,7 +109,7 @@
 
   /* ---------- lacătul ---------- */
   document.querySelectorAll("[data-ex-lacat]").forEach(function (box) {
-    var tip = box.getAttribute("data-ex-lacat"), E = tip === "rezolvari" ? window.EXR_ENC : window.EXS_ENC;
+    var tip = box.getAttribute("data-ex-lacat"), E = tip === "rezolvari" ? window.EXR_ENC : tip === "teorie" ? window.EXT_ENC : window.EXS_ENC;
     var cheie = "ex_" + tip, form = box.querySelector("form"), inp = form.querySelector("input"), btn = form.querySelector("button"),
         msg = box.querySelector("[role=alert]"), tinta = document.getElementById(box.getAttribute("data-tinta"));
     function deschide(parola, salveaza) {
@@ -96,11 +118,11 @@
         if (salveaza) { try { sessionStorage.setItem(cheie, parola); } catch (e) {} }
         if (tip === "subiecte") pregatesteModele(tinta, parola);
         box.hidden = true; msg.textContent = "";
-        tinta.innerHTML = cuprins(L) + L.map(tip === "rezolvari" ? raspuns : bilet).join("");
+        tinta.innerHTML = tip === "teorie" ? testeTeorie(L) : cuprins(L) + L.map(tip === "rezolvari" ? raspuns : bilet).join("");
         tinta.hidden = false;
         /* venit printr-un link de tip examen.html#bilet-5: ducem cititorul la bilet */
         var h = location.hash.slice(1), el = h && document.getElementById(h);
-        if (el && /^bilet-\d+$/.test(h)) { el.scrollIntoView(); el.focus({ preventScroll: true }); }
+        if (el && /^(bilet|varianta)-\d+$/.test(h)) { el.scrollIntoView(); el.focus({ preventScroll: true }); }
       }, function () {
         try { sessionStorage.removeItem(cheie); } catch (e) {}
         btn.disabled = false; msg.textContent = "Parola nu e corectă. Încearcă din nou."; inp.select();
