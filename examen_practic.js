@@ -1,7 +1,7 @@
 /* =====================================================================
    examen_practic.js — biletele probei practice (1–30) și răspunsurile lor,
    CRIPTATE (AES-GCM, cheie PBKDF2-SHA256), ca la pagina Grilă.
-   examen.html → biletele (parola de examen) + testele teoretice V1–V5 (parola grilei) · examen-rezolvari.html → răspunsurile (parola formatorului).
+   examen.html → testele teoretice V1–V5 + biletele, sub o singură parolă (parola de examen) · examen-rezolvari.html → răspunsurile (parola formatorului).
    Fiecare pagină are <div data-ex-lacat="subiecte|rezolvari|teorie" data-tinta="…"> + fișierul .enc.js corespunzător.
    ===================================================================== */
 (function () {
@@ -114,12 +114,15 @@
         msg = box.querySelector("[role=alert]"), tinta = document.getElementById(box.getAttribute("data-tinta"));
     function deschide(parola, salveaza) {
       btn.disabled = true; msg.textContent = "Se deschide…";
-      return decripteaza(E, parola).then(function (L) {
+      var tinta2 = document.getElementById(box.getAttribute("data-tinta2") || "");
+      return Promise.all([decripteaza(E, parola), tinta2 && window.EXT_ENC ? decripteaza(window.EXT_ENC, parola) : null]).then(function (R) {
+        var L = R[0], T = R[1];
         if (salveaza) { try { sessionStorage.setItem(cheie, parola); } catch (e) {} }
         if (tip === "subiecte") pregatesteModele(tinta, parola);
         box.hidden = true; msg.textContent = "";
-        tinta.innerHTML = tip === "teorie" ? testeTeorie(L) : cuprins(L) + L.map(tip === "rezolvari" ? raspuns : bilet).join("");
+        tinta.innerHTML = tip === "teorie" ? testeTeorie(L) : (T ? "<h2>Biletele probei practice</h2>" : "") + cuprins(L) + L.map(tip === "rezolvari" ? raspuns : bilet).join("");
         tinta.hidden = false;
+        if (T) { tinta2.innerHTML = "<h2>Testele teoretice · Variantele 1–5</h2>" + testeTeorie(T); tinta2.hidden = false; }
         /* venit printr-un link de tip examen.html#bilet-5: ducem cititorul la bilet */
         var h = location.hash.slice(1), el = h && document.getElementById(h);
         if (el && /^(bilet|varianta)-\d+$/.test(h)) { el.scrollIntoView(); el.focus({ preventScroll: true }); }

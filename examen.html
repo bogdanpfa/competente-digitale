@@ -49,22 +49,6 @@
     <p><b>Cum te pregătești:</b> refaci testele de la <a href="teorie.html">Teorie</a> (fiecare zi are testele cu rezolvări) și exersezi pe pagina <a href="grila.html">Grilă</a>, cu întrebările din testele oficiale și o simulare de 20 de întrebări în 20 de minute. Întrebările de examen sunt din aceeași materie.</p></div>
   </section>
 
-  <section class="sec" id="teste-teorie" aria-labelledby="h-tt">
-    <h2 id="h-tt">Testele teoretice · Variantele 1–5</h2>
-    <div class="card" data-ex-lacat="teorie" data-tinta="listaT">
-    <h3 style="margin-top:0">Intră cu parola de la Grilă</h3>
-    <p>Cele 5 variante ale testului teoretic, cu câte 20 de întrebări. La fiecare variantă, butonul „Arată răspunsurile” marchează răspunsul corect.</p>
-    <form class="parola-f" autocomplete="off">
-      <label for="p-teorie" style="font-weight:700">Parola</label>
-      <input id="p-teorie" name="parola-teorie" type="password" autocomplete="off" spellcheck="false" autocapitalize="off" required>
-      <button class="btn pri" type="submit">Deschide</button>
-    </form>
-    <p role="alert" class="muted" style="min-height:1.5em"></p>
-    <p class="muted" style="font-size:14.5px">Nu contează majusculele, diacriticele și spațiile. Apasă 👁 ca să vezi ce ai scris.</p>
-  </div>
-    <div id="listaT" hidden></div>
-  </section>
-
   <section class="sec" aria-labelledby="h2">
     <h2 id="h2">Proba 2 · practică</h2>
     <div class="card"><ul>
@@ -76,10 +60,10 @@
   </section>
 
   <section class="sec" id="subiecte" aria-labelledby="h-sub">
-    <h2 id="h-sub">Biletele probei practice</h2>
-    <div class="card" data-ex-lacat="subiecte" data-tinta="listaS">
+    <h2 id="h-sub">Materialele examenului</h2>
+    <div class="card" data-ex-lacat="subiecte" data-tinta="listaS" data-tinta2="listaT">
     <h3 style="margin-top:0">Intră cu parola de examen</h3>
-    <p>Biletele se deschid cu parola primită de la formator sau de la organizator, în ziua probei.</p>
+    <p>O singură parolă deschide testele teoretice (Variantele 1–5) și biletele probei practice (1–30). Parola o primești de la formator sau de la organizator.</p>
     <form class="parola-f" autocomplete="off">
       <label for="p-subiecte" style="font-weight:700">Parola</label>
       <input id="p-subiecte" name="parola-subiecte" type="password" autocomplete="off" spellcheck="false" autocapitalize="off" required>
@@ -88,6 +72,7 @@
     <p role="alert" class="muted" style="min-height:1.5em"></p>
     <p class="muted" style="font-size:14.5px">Nu contează majusculele, diacriticele și spațiile. Apasă 👁 ca să vezi ce ai scris.</p>
   </div>
+    <div id="teste-teorie"><div id="listaT" hidden></div></div>
     <div id="listaS" hidden></div>
   </section>
 
